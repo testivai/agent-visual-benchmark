@@ -9,7 +9,7 @@
     "node": ">=22.12"
   },
   "scripts": {
-    "test": "node --test \"harness/**/*.test.mjs\" \"oracle/lib/**/*.test.mjs\"",
+    "test": "node --test \"harness/**/*.test.mjs\" \"oracle/lib/**/*.test.mjs\" \"tools/**/*.test.mjs\"",
     "test:functional": "playwright test -c app/playwright.config.ts",
     "validate": "node harness/validate.mjs",
     "visibility": "node harness/visibility.mjs",

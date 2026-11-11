@@ -36,6 +36,11 @@ test('elements are keyed by their first class, or by tag for common tags, with a
   assert.equal(elements['.btn[0]'].href, 'x.html');
 });
 
+test('a stray line break is an element like any other', async () => {
+  const { elements } = await measure('<p>one</p><br><br><p>two</p>');
+  assert.deepEqual(Object.keys(elements).sort(), ['br[0]', 'br[1]', 'p[0]', 'p[1]']);
+});
+
 test('boxes are in page coordinates, whatever the scroll position', async () => {
   const page = await browser.newPage({ viewport: { width: 800, height: 600 } });
   await page.setContent('<body style="margin:0"><div style="height:2000px"></div><p class="deep" style="margin:0;height:30px;width:200px">x</p></body>');

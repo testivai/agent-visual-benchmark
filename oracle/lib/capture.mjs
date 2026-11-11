@@ -9,7 +9,7 @@ export function measurePage() {
   const LANDMARK_TAGS = new Set([
     'h1', 'h2', 'h3', 'h4', 'p', 'a', 'button', 'input', 'select', 'textarea', 'label', 'img',
     'table', 'thead', 'tbody', 'tr', 'th', 'td', 'ul', 'ol', 'li', 'dl', 'dt', 'dd',
-    'form', 'header', 'footer', 'main', 'nav', 'section', 'aside', 'small', 'strong',
+    'form', 'header', 'footer', 'main', 'nav', 'section', 'aside', 'small', 'strong', 'br', 'hr',
   ]);
   const SAMPLE_POINTS = [[0.5, 0.5], [0.25, 0.25], [0.75, 0.25], [0.25, 0.75], [0.75, 0.75]];
   const round = (n) => Math.round(n * 100) / 100;
