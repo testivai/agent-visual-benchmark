@@ -1,0 +1,1 @@
+- `npx playwright test tests/visual.spec.ts` compares each page, at desktop and phone size, with approved screenshots; the differences are saved as images in `test-results/`.

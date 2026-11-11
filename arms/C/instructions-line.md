@@ -1,0 +1,1 @@
+- `npx playwright test tests/visual.spec.ts` compares each page, at desktop and phone size, with approved baselines; results are in `visual-report/results.json` and the `testivai` tools.
