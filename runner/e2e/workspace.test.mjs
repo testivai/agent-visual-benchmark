@@ -45,7 +45,9 @@ for (const arm of ['A', 'B', 'C']) {
     t.after(() => fs.rmSync(runDir, { recursive: true, force: true }));
     const ws = buildWorkspace({ benchRoot: REPO_ROOT, taskId: 't01', arm, templateDir: template.dir, runDir });
 
-    assert.ok(!ws.includes('t01') && !ws.includes(`-${arm}`), 'the path says nothing about the task or arm');
+    // the name is fixed: nothing about the task or the arm goes into it (the
+    // random part of runDir can spell anything, so it is not checked)
+    assert.equal(ws, path.join(runDir, 'project'));
     assert.deepEqual(checkWorkspace(ws, { arm, benchRoot: REPO_ROOT, requireGit: true }), []);
     assert.equal(fs.readFileSync(path.join(ws, 'CLAUDE.md'), 'utf8'), instructionsFor(arm));
 
