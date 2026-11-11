@@ -2,7 +2,9 @@
 // line and its environment. Pure: nothing is written or started here.
 import path from 'node:path';
 
-const ALLOWED_TOOLS = ['Bash', 'Edit', 'Write', 'Read', 'Glob', 'Grep', 'NotebookEdit', 'TodoWrite', 'Task'];
+// --bare mode gives the agent exactly these three built-in tools, whatever
+// --tools asks for (checked with Claude Code 2.1.322). Bash covers the rest.
+const ALLOWED_TOOLS = ['Bash', 'Edit', 'Read'];
 
 export function buildSettings({ arm, benchRoot, isolation, allowedNetwork }) {
   const settings = {

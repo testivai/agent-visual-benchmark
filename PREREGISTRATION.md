@@ -141,9 +141,9 @@ detect: TODO
   is a class of bug where a pixel comparison is at its best, so its absence favours neither B nor
   C in the scoring, but it narrows what "visual bug" means here.
 - A small static site. Real applications have dynamic content and more noise.
-- The agent runs in a harness that differs from everyday use: `--bare` mode, no memory or plugins,
-  Bash in a sandbox (on Linux each command has its own `localhost`), and an instruction to end with a
-  STATUS line. The same in every arm.
+- The agent runs in a harness that differs from everyday use: `--bare` mode, whose only built-in
+  tools are Bash, Read and Edit; no memory or plugins; Bash in a sandbox (on Linux each command has
+  its own `localhost`); and an instruction to end with a STATUS line. The same in every arm.
 - TODO: anything else
 
 ## Deviations

@@ -24,6 +24,8 @@ export function classifyAgentRun({ parsed, agentRes, config, arm }) {
   if (parsed.subtype !== 'success' || parsed.isError) {
     return agentError(`the agent ended with ${parsed.subtype}${parsed.isError ? ' (is_error)' : ''}: ${String(parsed.finalText).slice(0, 300)}`);
   }
+  const web = (parsed.tools ?? []).filter((t) => t === 'WebFetch' || t === 'WebSearch');
+  if (web.length > 0) return agentError(`the agent had ${web.join(' and ')}: the run was not isolated`);
   if (parsed.model && parsed.model !== config.agent.model) {
     return agentError(`the agent ran on model ${parsed.model}, not the pinned ${config.agent.model}`);
   }

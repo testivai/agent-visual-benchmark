@@ -54,6 +54,7 @@ function agentFields(parsed, agentRes, stopReason) {
     model_reported: parsed.model,
     models_used: parsed.models,
     claude_code_version: parsed.claudeCodeVersion,
+    tools: parsed.tools,
     turns: parsed.turns,
     tokens: parsed.tokens,
     cost_usd: parsed.costUsd,

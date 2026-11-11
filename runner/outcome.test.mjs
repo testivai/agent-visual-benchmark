@@ -29,6 +29,12 @@ test('a crash or an error from the agent is an error, not a failure', () => {
   assert.equal(flagged.error.stage, 'agent');
 });
 
+test('a web tool in the agent\'s tool list is an error: the run would not be isolated', () => {
+  assert.equal(classify({ tools: ['Bash', 'Edit', 'Read'] }, {}).error, null);
+  assert.match(classify({ tools: ['Bash', 'Edit', 'Read', 'WebFetch'] }, {}).error.message, /WebFetch/);
+  assert.match(classify({ tools: ['Bash', 'WebSearch'] }, {}).error.message, /WebSearch/);
+});
+
 test('a different model than the one pinned is an error', () => {
   const r = classify({ model: 'claude-sonnet-5-5' }, {});
   assert.match(r.error.message, /model/);

@@ -4,11 +4,10 @@ import { buildSettings, buildMcpConfig, buildClaudeArgs, buildAgentEnv } from '.
 
 const agent = { command: ['claude'], model: 'claude-opus-5-5', effort: null, maxTurns: 60, maxBudgetUsdPerRun: 10, timeLimitMinutes: 30 };
 
-test('every arm may run commands and edit files; only C may use the testivai tools', () => {
+test('every arm may use the three tools of bare mode; only C may use the testivai tools', () => {
   for (const arm of ['A', 'B', 'C']) {
     const s = buildSettings({ arm, benchRoot: '/b/bench', isolation: 'sandbox', allowedNetwork: ['registry.npmjs.org'] });
-    for (const tool of ['Bash', 'Edit', 'Write', 'Read']) assert.ok(s.permissions.allow.includes(tool), `${arm} ${tool}`);
-    assert.equal(s.permissions.allow.includes('mcp__testivai'), arm === 'C');
+    assert.deepEqual(s.permissions.allow, ['Bash', 'Edit', 'Read', ...(arm === 'C' ? ['mcp__testivai'] : [])]);
   }
 });
 

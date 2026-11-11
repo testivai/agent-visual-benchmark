@@ -11,9 +11,12 @@ in `arms/<arm>/files/` and one line of the instructions. This page puts them sid
   (`--bare` mode does not read `CLAUDE.md` by itself). The base text is
   [`base/CLAUDE.md`](base/CLAUDE.md).
 - The task's prompt, word for word from `tasks/<id>/task.json`.
-- Claude Code's default tool set, allowed without asking: Bash, Read, Edit, Write, Glob, Grep,
-  NotebookEdit, TodoWrite, Task. WebFetch and WebSearch are denied. So is reading or editing the
-  benchmark's own directory.
+- Claude Code's tools in `--bare` mode: Bash, Read and Edit, allowed without asking. That is the
+  whole built-in set in this mode (Claude Code 2.1.322 gives these three whatever `--tools` asks
+  for); there is no Write, Glob, Grep, TodoWrite or Task tool, and Bash does what they would. Read
+  shows images, so the agent can look at screenshots and diffs. Web tools are not available, and a
+  run whose tool list includes one is an error. Reading or editing the benchmark's own directory is
+  denied. Each run records the tool list Claude Code reported.
 - The same limits: `runner.config.json` (turns, time, spend per run).
 
 ## What differs

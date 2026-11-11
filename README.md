@@ -149,9 +149,10 @@ Read this before trusting a number.
    app with the task's seed, the arm's files and baselines, `CLAUDE.md`, one git commit, and the
    arm's packages. `oracle/`, `tasks/`, `TASKS.md`, other arms' files and anything mentioning the
    benchmark are refused before the agent starts (`runner/workspace.mjs`).
-2. **Agent.** Claude Code in print mode: `--bare` (no hooks, plugins, memory or user settings), an
-   empty config directory, the pinned model, `dontAsk` permissions with an explicit allow list, web
-   tools denied, the benchmark directory denied, Bash in the sandbox, turn, time and spend limits.
+2. **Agent.** Claude Code in print mode: `--bare` (no hooks, plugins, memory or user settings, and
+   only the API key for auth), an empty config directory, the pinned model, `dontAsk` permissions,
+   the tools Bash, Read and Edit (plus the testivai tools in arm C), the benchmark directory denied,
+   Bash in the sandbox, turn, time and spend limits.
    Only `ANTHROPIC_API_KEY` and a few named variables reach it (`runner/claude.mjs`).
 3. **Score.** The workspace's `site/` is copied into a clean copy of the app and scored there by the
    oracle and the functional suite. Changes to tests, baselines, tool configuration or packages are
