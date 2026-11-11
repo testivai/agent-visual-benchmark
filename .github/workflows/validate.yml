@@ -1,0 +1,34 @@
+name: validate
+
+# Proves, on a machine other than the author's, that every task still behaves:
+# the seed fails the scorer, the reference passes, the wrong fix is rejected.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Unit tests (harness, oracle library, authoring tools)
+        run: npm test
+      - name: Patches are what their edits produce
+        run: node tools/author.mjs --check
+      - name: Validate every task
+        run: npm run validate
