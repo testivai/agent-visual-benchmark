@@ -19,13 +19,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 75
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
+      # No --with-deps: the runner image already has every library Chromium needs,
+      # and the extra system fonts it would fetch from the apt mirror are not used
+      # (the app serves its own font; fallbacks are measured on this machine).
+      - run: npx playwright install chromium
       - name: Unit tests (harness, oracle library, authoring tools)
         run: npm test
       - name: Patches are what their edits produce
