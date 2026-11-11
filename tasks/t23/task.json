@@ -1,0 +1,9 @@
+{
+  "id": "t23",
+  "type": "change",
+  "category": "shared-css",
+  "pages": [
+    "about"
+  ],
+  "prompt": "On the About page, centre the content of the team cards: the round initials, the name and the role."
+}

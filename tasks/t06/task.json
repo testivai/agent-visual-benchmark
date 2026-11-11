@@ -1,0 +1,9 @@
+{
+  "id": "t06",
+  "type": "fix",
+  "category": "missing-or-duplicated",
+  "pages": [
+    "products"
+  ],
+  "prompt": "Something is wrong with how the products page looks since the last change. Please find it and fix it."
+}

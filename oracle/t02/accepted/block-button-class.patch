@@ -1,0 +1,29 @@
+diff --git a/site/contact.html b/site/contact.html
+index 572bd7c..02b3693 100644
+--- a/site/contact.html
++++ b/site/contact.html
+@@ -73,7 +73,7 @@
+               </label>
+               <p class="form-error" data-error-for="consent" hidden></p>
+             </div>
+-            <button class="btn btn-primary" type="submit">Send message</button>
++            <button class="btn btn-primary btn-block" type="submit">Send message</button>
+           </form>
+         </div>
+         <aside class="card">
+diff --git a/site/css/components.css b/site/css/components.css
+index 0da5da2..57e9ad3 100644
+--- a/site/css/components.css
++++ b/site/css/components.css
+@@ -117,6 +117,11 @@
+   font-size: 16px;
+ }
+ 
++.btn-block {
++  display: flex;
++  width: 100%;
++}
++
+ .btn[disabled] {
+   opacity: 0.5;
+   cursor: not-allowed;

@@ -1,0 +1,29 @@
+diff --git a/site/css/components.css b/site/css/components.css
+index 0da5da2..d9c6db3 100644
+--- a/site/css/components.css
++++ b/site/css/components.css
+@@ -96,6 +96,11 @@
+   background: var(--color-brand-dark);
+ }
+ 
++.btn-success {
++  background: var(--color-success);
++  color: #ffffff;
++}
++
+ .btn-secondary {
+   background: var(--color-surface);
+   color: var(--color-ink);
+diff --git a/site/pricing.html b/site/pricing.html
+index 4c2ff21..7ed8961 100644
+--- a/site/pricing.html
++++ b/site/pricing.html
+@@ -62,7 +62,7 @@
+               <li>Free shipping and returns</li>
+               <li>Early access to new products</li>
+             </ul>
+-            <a class="btn btn-primary" href="contact.html">Choose Pro</a>
++            <a class="btn btn-success" href="contact.html">Choose Pro</a>
+           </div>
+           <div class="plan">
+             <h2 class="plan-name">Team</h2>

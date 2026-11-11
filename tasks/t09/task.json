@@ -1,0 +1,9 @@
+{
+  "id": "t09",
+  "type": "fix",
+  "category": "layout-shift",
+  "pages": [
+    "orders"
+  ],
+  "prompt": "Something looks wrong on the orders page since the last change. Can you fix it?"
+}

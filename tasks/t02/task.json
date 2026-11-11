@@ -1,0 +1,9 @@
+{
+  "id": "t02",
+  "type": "change",
+  "category": "shared-css",
+  "pages": [
+    "contact"
+  ],
+  "prompt": "On the contact page, make the Send message button as wide as the form fields above it."
+}

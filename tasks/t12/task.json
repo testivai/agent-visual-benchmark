@@ -1,0 +1,9 @@
+{
+  "id": "t12",
+  "type": "fix",
+  "category": "stacking-order",
+  "pages": [
+    "home"
+  ],
+  "prompt": "Something is wrong with how the home page looks since the last change. Please find it and fix it."
+}

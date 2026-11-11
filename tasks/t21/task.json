@@ -1,0 +1,9 @@
+{
+  "id": "t21",
+  "type": "change",
+  "category": "shared-css",
+  "pages": [
+    "products"
+  ],
+  "prompt": "On the products page, set the two section headings (All products, Bundles) in capitals, 16px, with the letters spaced 0.08em apart."
+}

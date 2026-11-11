@@ -1,0 +1,13 @@
+diff --git a/site/orders.html b/site/orders.html
+index 87a5524..92072c2 100644
+--- a/site/orders.html
++++ b/site/orders.html
+@@ -61,7 +61,7 @@
+       <div class="container">
+         <br>
+         <br>
+-        <h2 class="section-title">Recent orders</h2>
++        <h2 class="section-title" style="margin-top: -40px">Recent orders</h2>
+         <div class="table-wrap">
+           <table class="table">
+             <thead>

@@ -1,0 +1,9 @@
+{
+  "id": "t01",
+  "type": "fix",
+  "category": "stacking-order",
+  "pages": [
+    "pricing"
+  ],
+  "prompt": "The pricing page looks off since the last change. Can you take a look and fix it?"
+}

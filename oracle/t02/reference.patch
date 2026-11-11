@@ -1,0 +1,15 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..90a66c7 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -250,6 +250,10 @@
+   align-items: start;
+ }
+ 
++.page-contact .form .btn {
++  width: 100%;
++}
++
+ .info-list dt {
+   margin-top: var(--space-4);
+   font-size: 13px;

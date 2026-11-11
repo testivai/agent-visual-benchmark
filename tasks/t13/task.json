@@ -1,0 +1,9 @@
+{
+  "id": "t13",
+  "type": "decoy",
+  "category": "no-defect",
+  "pages": [
+    "pricing"
+  ],
+  "prompt": "The pricing page looks off since the last change. Can you take a look and fix it?"
+}

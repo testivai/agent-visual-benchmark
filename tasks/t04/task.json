@@ -1,0 +1,9 @@
+{
+  "id": "t04",
+  "type": "decoy",
+  "category": "no-defect",
+  "pages": [
+    "home"
+  ],
+  "prompt": "The home page looks off since the last change. Can you take a look and fix it?"
+}

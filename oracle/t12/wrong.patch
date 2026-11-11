@@ -1,0 +1,13 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index bf6276d..1b4905e 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -45,7 +45,7 @@
+ }
+ 
+ .stats-overlap {
+-  margin-top: -56px;
++  margin-top: var(--space-5);
+ }
+ 
+ .feature {

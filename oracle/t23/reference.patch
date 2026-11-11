@@ -1,0 +1,20 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..4e7ac36 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -298,6 +298,15 @@
+   color: var(--color-brand-dark);
+ }
+ 
++.member .card-body {
++  text-align: center;
++}
++
++.member .avatar {
++  margin-right: auto;
++  margin-left: auto;
++}
++
+ .timeline {
+   padding-left: var(--space-5);
+   border-left: 2px solid var(--color-line);

@@ -1,0 +1,13 @@
+diff --git a/site/css/base.css b/site/css/base.css
+index c3a28bb..43892a1 100644
+--- a/site/css/base.css
++++ b/site/css/base.css
+@@ -17,6 +17,8 @@ body {
+   line-height: 1.5;
+   color: var(--color-ink);
+   background: var(--color-bg);
++  -webkit-font-smoothing: antialiased;
++  text-rendering: geometricPrecision;
+ }
+ 
+ h1,

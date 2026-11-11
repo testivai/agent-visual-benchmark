@@ -1,0 +1,9 @@
+{
+  "id": "t24",
+  "type": "decoy",
+  "category": "no-defect",
+  "pages": [
+    "about"
+  ],
+  "prompt": "Something is wrong with how the about page looks since the last change. Please find it and fix it."
+}

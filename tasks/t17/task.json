@@ -1,0 +1,9 @@
+{
+  "id": "t17",
+  "type": "fix",
+  "category": "overflow-or-clipping",
+  "pages": [
+    "products"
+  ],
+  "prompt": "The products page does not look right since the last change. Can you fix it?"
+}

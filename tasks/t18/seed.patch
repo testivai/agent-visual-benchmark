@@ -1,0 +1,10 @@
+diff --git a/site/assets/hero.svg b/site/assets/hero.svg
+index 1f7efd8..34f915d 100644
+--- a/site/assets/hero.svg
++++ b/site/assets/hero.svg
+@@ -1,4 +1,4 @@
+-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 280" width="420" height="280">
++<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 380" width="420" height="380">
+   <rect x="0.5" y="0.5" width="419" height="279" rx="18.5" fill="#ffffff" stroke="#d8dee4"/>
+   <rect x="24.4" y="196.3" width="371.2" height="12.6" rx="6.3" fill="#155e75"/>
+   <rect x="52.7" y="208.9" width="10.4" height="46.3" fill="#155e75"/>

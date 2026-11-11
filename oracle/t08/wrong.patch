@@ -1,0 +1,13 @@
+diff --git a/site/css/tokens.css b/site/css/tokens.css
+index f9f3f8e..3a6beec 100644
+--- a/site/css/tokens.css
++++ b/site/css/tokens.css
+@@ -41,7 +41,7 @@
+   --shadow-sm: 0 1px 2px rgba(31, 35, 40, 0.08);
+   --shadow-md: 0 8px 24px rgba(31, 35, 40, 0.12);
+ 
+-  --font-sans: 'Acme Sans', system-ui, sans-serif;
++  --font-sans: 'Acme Sans', 'Inter', 'Helvetica Neue', Arial, sans-serif;
+   --content-width: 1040px;
+   --header-height: 64px;
+ }

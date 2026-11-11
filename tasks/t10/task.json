@@ -1,0 +1,9 @@
+{
+  "id": "t10",
+  "type": "fix",
+  "category": "overflow-or-clipping",
+  "pages": [
+    "contact"
+  ],
+  "prompt": "A customer says the contact page looks broken since yesterday's update. Can you sort it out?"
+}

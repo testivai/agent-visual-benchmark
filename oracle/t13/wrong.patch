@@ -1,0 +1,13 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 0f22806..001b62d 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -169,7 +169,7 @@
+ 
+ .plan-ribbon {
+   position: absolute;
+-  top: -13px;
++  top: -12px;
+   left: 50%;
+   z-index: 1;
+   padding: 3px 12px;

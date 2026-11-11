@@ -1,0 +1,14 @@
+{
+  "id": "t19",
+  "type": "decoy",
+  "category": "no-defect",
+  "pages": [
+    "home",
+    "products",
+    "pricing",
+    "orders",
+    "contact",
+    "about"
+  ],
+  "prompt": "The site looks different since the last change. Can you take a look and fix it?"
+}

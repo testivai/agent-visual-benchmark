@@ -1,0 +1,16 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..708dee6 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -2,6 +2,11 @@
+ 
+ /* Home */
+ 
++.page-home .lede,
++.page-home .card p {
++  color: #3d4650;
++}
++
+ .hero {
+   position: relative;
+   overflow: hidden;
