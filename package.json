@@ -3,17 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Task set and hidden scoring for a study of whether a coding agent fixes visual UI bugs more often with a visual testing tool than without",
+  "description": "Tasks, hidden scoring and a runner for a study of whether a coding agent fixes visual UI bugs more often with a visual testing tool than without",
   "license": "MIT",
   "engines": {
     "node": ">=22.12"
   },
   "scripts": {
-    "test": "node --test \"harness/**/*.test.mjs\" \"oracle/lib/**/*.test.mjs\" \"tools/**/*.test.mjs\"",
+    "test": "node --test \"harness/**/*.test.mjs\" \"oracle/lib/**/*.test.mjs\" \"tools/**/*.test.mjs\" \"runner/*.test.mjs\" \"analysis/*.test.mjs\"",
+    "test:runner": "node --test --test-concurrency=1 \"runner/e2e/*.test.mjs\"",
     "test:functional": "playwright test -c app/playwright.config.ts",
     "validate": "node harness/validate.mjs",
     "visibility": "node harness/visibility.mjs",
-    "author": "node tools/author.mjs"
+    "author": "node tools/author.mjs",
+    "runner": "node runner/run.mjs",
+    "analyze": "node analysis/analyze.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

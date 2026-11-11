@@ -1,0 +1,18 @@
+{
+  "agent": {
+    "command": ["claude"],
+    "claudeCodeVersion": "2.1.322",
+    "model": "claude-opus-5-5",
+    "effort": null,
+    "maxTurns": 60,
+    "maxBudgetUsdPerRun": 10,
+    "timeLimitMinutes": 30
+  },
+  "isolation": "sandbox",
+  "allowedNetwork": ["registry.npmjs.org"],
+  "arms": ["A", "B", "C"],
+  "repeats": { "pilot": 3, "full": 5 },
+  "pilot": { "fixCategories": 2, "change": 1, "decoy": 1 },
+  "seeds": { "pilotTasks": 20261111, "order": 7919 },
+  "concurrency": 1
+}

@@ -7,6 +7,7 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { REPO_ROOT, makeWorkspace, removeWorkspace, hashTree, diffTrees } from '../../harness/workspace.mjs';
 import { startStaticServer } from '../../harness/static-server.mjs';
+import { withLock } from '../../harness/lock.mjs';
 import { captureSnapshot } from './capture.mjs';
 import { buildScope } from './compare.mjs';
 
@@ -18,7 +19,6 @@ const sha = (...parts) => {
   return h.digest('hex').slice(0, 20);
 };
 const read = (file) => (fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '');
-const sleep = (ms) => new Promise((done) => setTimeout(done, ms));
 
 // A change to how the site is measured must not reuse old measurements.
 const measurementVersion = () => sha(
@@ -26,28 +26,6 @@ const measurementVersion = () => sha(
   read(path.join(HERE, 'views.mjs')),
   read(path.join(REPO_ROOT, 'node_modules', '@playwright', 'test', 'package.json')),
 );
-
-async function withLock(file, fn) {
-  const lock = `${file}.lock`;
-  fs.mkdirSync(path.dirname(file), { recursive: true });
-  for (let waited = 0; ; waited += 250) {
-    try {
-      fs.mkdirSync(lock);
-      break;
-    } catch (err) {
-      if (err.code !== 'EEXIST') throw err;
-      const age = Date.now() - fs.statSync(lock, { throwIfNoEntry: false })?.mtimeMs;
-      if (age > 10 * 60 * 1000) fs.rmSync(lock, { recursive: true, force: true });
-      if (waited > 10 * 60 * 1000) throw new Error(`timed out waiting for ${lock}`);
-      await sleep(250);
-    }
-  }
-  try {
-    return await fn();
-  } finally {
-    fs.rmSync(lock, { recursive: true, force: true });
-  }
-}
 
 async function cached(name, compute) {
   const file = path.join(CACHE_DIR, `${name}.json`);

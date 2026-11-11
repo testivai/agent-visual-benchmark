@@ -35,3 +35,5 @@ jobs:
         run: node tools/author.mjs --check
       - name: Validate every task
         run: npm run validate
+      - name: Runner end to end, with the fake agent (no model is called)
+        run: npm run test:runner
