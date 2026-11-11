@@ -1,0 +1,10 @@
+diff --git a/site/style.css b/site/style.css
+index b4a92d2..4858c8a 100644
+--- a/site/style.css
++++ b/site/style.css
+@@ -1,4 +1,4 @@
+ /* tidied */
+ body { margin: 0; font-family: sans-serif; }
+ #title { color: rgb(0, 0, 255); margin: 16px; }
+-#note { color: rgb(0, 0, 0); margin: 16px; }
++#note { color: rgb(120, 120, 120); margin: 16px; }

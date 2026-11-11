@@ -1,0 +1,7 @@
+{
+  "id": "good-decoy",
+  "type": "decoy",
+  "category": "no-defect",
+  "pages": ["home"],
+  "prompt": "The home page looks a bit different since the last change. Can you check it?"
+}

@@ -1,0 +1,7 @@
+{
+  "id": "lint-bad",
+  "type": "fix",
+  "category": "style-only",
+  "pages": ["home"],
+  "prompt": "The .title on the home page looks off since the last change."
+}

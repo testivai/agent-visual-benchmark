@@ -1,0 +1,7 @@
+{
+  "id": "weak-wrong",
+  "type": "fix",
+  "category": "style-only",
+  "pages": ["home"],
+  "prompt": "The home page is off since the last change."
+}
