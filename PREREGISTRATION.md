@@ -23,9 +23,16 @@ Same agent, same model, same task prompts, same turn and time limits. Only the t
 | B, pixel | A, plus Playwright's built-in screenshot comparison and the diff images |
 | C, TestivAI | A, plus TestivAI capture, its MCP server and `results.json` |
 
+The runner takes these from `runner.config.json` and `arms/`. The committed values are a starting
+point, not a decision: Claude Code 2.1.322, model `claude-opus-5-5`, effort not set (Claude Code's
+default for that version), 60 turns, 30 minutes and $10 per run; Playwright 1.63.0,
+`@testivai/witness-playwright` 2.1.3, `@testivai/witness` 2.7.2, `@testivai/mcp` 0.9.4; B and C capture
+1280x800 and 390x844. `arms/README.md` lists every difference between the arms.
+
 - Agent and version: TODO
 - Model and exact id: TODO
-- Turn limit: TODO. Time limit: TODO
+- Effort level: TODO
+- Turn limit: TODO. Time limit: TODO. Spend cap per run: TODO
 - Versions of Playwright, `@testivai/witness-playwright`, `@testivai/mcp`: TODO (pinned, exact)
 - Viewports at which arms B and C capture: TODO. **Decide this knowingly:** tasks t05 and t20 are
   defects under the 720px breakpoint only (see `TASKS.md`, "Flags"). If B and C capture at desktop
@@ -43,8 +50,9 @@ Same agent, same model, same task prompts, same turn and time limits. Only the t
 
 - Task set: this repository at commit TODO (`TASKS.md` lists the tasks; `npm run validate` is green).
 - Repeats per task per arm: TODO (the plan says 5: 24 x 3 x 5 = 360 runs)
-- Order of runs: randomised across arms, seed recorded: TODO
-- Which runs count: every run in `results/runs.jsonl`. A run that ends in a harness error is retried
+- Order of runs: randomised across arms, seed recorded: TODO (`seeds.order` in `runner.config.json`;
+  the pilot's tasks are chosen with `seeds.pilotTasks`)
+- Which runs count: every run in `results/full/runs.jsonl`. A run that ends in a harness error is retried
   once and both attempts stay in the file. Rule for a run that errors twice: TODO
 
 ## 5. Outcome of one run
@@ -54,9 +62,14 @@ comparison (see `README.md`, "How a run is scored").
 
 - fix and change tasks: **success** = `score.spec.ts` passes AND `collateral.spec.ts` passes
 - decoy tasks: **success** = no file under `site/` changed
-- Edits to test files, baselines or tool configuration count as: TODO (the plan says failure)
+- Edits to test files, baselines or tool configuration count as: TODO (the plan says failure). The
+  runner implements failure for any edit, deletion or addition under `tests/` (new test files
+  excepted), the baseline directories, `.testivai/`, the Playwright config, `package*.json` and
+  `node_modules/` (`runner/tamper.mjs`).
 - `false_done` = the agent claimed it was done AND the run is not a success. How "claimed done" is
-  read from the transcript: TODO
+  read from the transcript: TODO. The runner reads the last `STATUS: DONE` or `STATUS: NOT DONE` line
+  of the agent's final message, which every arm's instructions ask for; a run without one makes no
+  claim and is counted apart.
 
 ## 6. Primary metric
 
@@ -88,7 +101,8 @@ Success rate, arm C against arm B.
 
 - Per-arm success rate with a 95% Wilson interval: for description only.
 - C against B, and C against A: paired by task, difference in per-task success rate, with a
-  bootstrap interval over tasks (TODO: number of resamples, interval level, seed).
+  bootstrap interval over tasks (TODO: number of resamples, interval level, seed). The analysis code
+  uses 10,000 resamples, a 95% percentile interval and seed 1 (`analysis/analyze.mjs`).
 - Test and threshold for H1: TODO
 - Corrections for several comparisons: TODO
 - The tasks where B beat C are listed as prominently as the tasks where C beat B.
@@ -127,6 +141,9 @@ detect: TODO
   is a class of bug where a pixel comparison is at its best, so its absence favours neither B nor
   C in the scoring, but it narrows what "visual bug" means here.
 - A small static site. Real applications have dynamic content and more noise.
+- The agent runs in a harness that differs from everyday use: `--bare` mode, no memory or plugins,
+  Bash in a sandbox (on Linux each command has its own `localhost`), and an instruction to end with a
+  STATUS line. The same in every arm.
 - TODO: anything else
 
 ## Deviations

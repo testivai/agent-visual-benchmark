@@ -6,10 +6,11 @@ A task set and hidden scoring for one question:
 > it cannot?
 
 The study compares three arms of the same agent: blind (code and functional tests only), pixel
-(Playwright's built-in screenshot comparison) and TestivAI. This repository is **part 1**: the app,
-the 24 tasks and the scorer. The runner that executes an agent on each task is part 2 and is not
-here yet. The plan and the numbers to fix in advance are in [PREREGISTRATION.md](PREREGISTRATION.md);
-the tasks are listed in [TASKS.md](TASKS.md).
+(Playwright's built-in screenshot comparison) and TestivAI. This repository holds the app, the 24
+tasks and the hidden scorer (part 1), and the runner that puts an agent on each task under each arm,
+scores what it leaves and analyses the results (part 2). The plan and the numbers to fix in advance
+are in [PREREGISTRATION.md](PREREGISTRATION.md); the tasks are listed in [TASKS.md](TASKS.md); the arms
+side by side in [arms/README.md](arms/README.md); how to run it in [RUNNING.md](RUNNING.md).
 
 The result will be published whichever way it falls. Two rules keep it worth publishing:
 
@@ -36,6 +37,13 @@ oracle/              HIDDEN from the agent
   visibility.json          whether a screenshot shows each seed (measured)
 harness/             npm run validate, throw-away workspaces, the spec runner
 tools/               authoring: patches from edits, TASKS.md, the font and image builds
+arms/                what differs between the arms: their files and one instruction line
+runner/              builds each workspace, starts the agent, scores the result (npm run runner)
+analysis/            npm run analyze: rates, paired comparison, summary.md, CSVs
+results/<phase>/     the runs, transcripts and diffs, once a phase has run
+runner.config.json   model, limits, isolation, seeds
+BUDGET.md            the spend limit, set by the maintainer
+CHANGES_AFTER_PILOT.md  every change made after seeing pilot scores
 ```
 
 Task ids (`t01` to `t24`) say nothing about the task, and fix and decoy tasks share the same report
@@ -47,7 +55,8 @@ sentences, so neither an id nor a prompt gives the type away.
 npm install            # Playwright 1.63.0 (pinned), pixelmatch, pngjs
 npx playwright install chromium   # once, if the browser is not installed
 
-npm test               # the harness's and the oracle library's own tests
+npm test               # the harness's, oracle library's, runner's and analysis's own tests
+npm run test:runner    # the runner end to end with a fake agent (real workspaces and scoring, no model)
 npm run validate       # every task, on three states; exits 1 if any task misbehaves
 npm run validate -- --task t03,t07
 npm run test:functional  # the app's functional suite on the clean app
@@ -56,7 +65,14 @@ node harness/inspect.mjs t03   # what a task's patches change, in measured terms
 npm run visibility     # re-measure what screenshots show -> oracle/visibility.json
 npm run author         # regenerate every patch from oracle/<id>/edits.mjs
 node tools/tasks-table.mjs     # regenerate TASKS.md
+
+npm run runner -- plan --phase pilot    # the pilot's runs, in order (free)
+npm run runner -- check                 # preflight (free)
+npm run analyze -- --phase pilot        # results/pilot/summary.md
 ```
+
+The commands that start a real agent (`probe`, `dry-run`, `start`) and the order to use them in are
+in [RUNNING.md](RUNNING.md).
 
 ### What `npm run validate` proves
 
@@ -127,15 +143,31 @@ Read this before trusting a number.
   correct solution could still be scored as collateral damage. When a run fails only on collateral
   in a change task, read the diff before counting it.
 
-## For the runner (part 2)
+## How a run works (part 2)
 
-- The agent's workspace is a copy of `app/` with the task's `seed.patch` applied, in a fresh git
-  repository with one commit. Nothing else from this repository goes in: not `oracle/`, `tasks/`,
-  `TASKS.md`, `harness/` or `tools/`. Give the agent only the `prompt` from `task.json`.
-- Score a workspace with `runOracleSpecs({ benchRoot, appDir, specs })` and `runFunctional({ appDir })`
-  from `harness/run-specs.mjs`. Both return `passed`, `failed` or `error` per spec.
-- `PREREGISTRATION.md` has two decisions the runner depends on: the viewports at which arms B and C
-  capture, and whether decoys are in the primary metric.
+1. **Workspace.** A fresh directory with a name that says nothing (`/tmp/avb-…/project`): the clean
+   app with the task's seed, the arm's files and baselines, `CLAUDE.md`, one git commit, and the
+   arm's packages. `oracle/`, `tasks/`, `TASKS.md`, other arms' files and anything mentioning the
+   benchmark are refused before the agent starts (`runner/workspace.mjs`).
+2. **Agent.** Claude Code in print mode: `--bare` (no hooks, plugins, memory or user settings), an
+   empty config directory, the pinned model, `dontAsk` permissions with an explicit allow list, web
+   tools denied, the benchmark directory denied, Bash in the sandbox, turn, time and spend limits.
+   Only `ANTHROPIC_API_KEY` and a few named variables reach it (`runner/claude.mjs`).
+3. **Score.** The workspace's `site/` is copied into a clean copy of the app and scored there by the
+   oracle and the functional suite. Changes to tests, baselines, tool configuration or packages are
+   tampering and make the run a failure (`runner/tamper.mjs`). The transcript and the diff are kept,
+   with credentials removed.
+4. **Record.** One line per attempt in `results/<phase>/runs.jsonl`. A run that ends in an error is
+   retried once; a run that hits a limit is scored as it stands. Runs go in an order shuffled from a
+   recorded seed, so drift in the model service over time does not line up with one arm.
+
+A run succeeds when `score` and `collateral` pass and nothing was tampered with. It is a false
+"done" when the agent ends with `STATUS: DONE` and the run did not succeed.
+
+The runner's own logic is tested with a fake agent (`runner/fake-claude.mjs`, same arguments and
+output format as `claude -p`): a reference fix scores success, a wrong fix failure, doing nothing
+fails a fix task and passes a decoy, a crash is an error retried once, editing a baseline is
+tampering, a hang is stopped at the time limit (`runner/e2e/run.test.mjs`).
 
 ## Adding or changing a task
 
