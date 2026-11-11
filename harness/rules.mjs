@@ -4,6 +4,7 @@
 //   seed       clean app + seed.patch (what the agent starts from)
 //   reference  seed + reference.patch (one correct solution)
 //   wrong      seed + wrong.patch     (a fix that only hides the symptom)
+//   accepted   seed + accepted/*.patch (other correct solutions, optional)
 //
 // An outcome is 'passed', 'failed' or 'error'. 'error' means the spec did not
 // run to a verdict (crash, timeout, no tests): it never counts as a fail.
@@ -50,12 +51,15 @@ function checkWrong(outcomes) {
   return problems;
 }
 
-export function checkTaskOutcomes({ type, seed, reference, wrong }) {
+// accepted: { '<file>.patch': outcomes } for oracle/<id>/accepted/*.patch, other
+// correct solutions the scorer must not reject.
+export function checkTaskOutcomes({ type, seed, reference, wrong, accepted = {} }) {
   const expected = EXPECT[type];
   if (!expected) return [`unknown task type "${type}"`];
   return [
     ...checkState('seed', seed, expected.seed),
     ...checkState('reference', reference, expected.reference),
+    ...Object.entries(accepted).flatMap(([name, outcomes]) => checkState(`accepted/${name}`, outcomes, expected.reference)),
     ...checkWrong(wrong),
   ];
 }

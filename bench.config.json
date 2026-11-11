@@ -1,0 +1,16 @@
+{
+  "pages": ["home", "products", "pricing", "orders", "contact", "about"],
+  "idPattern": "^t\\d{2}$",
+  "minTasks": 18,
+  "fixCategories": [
+    "layout-shift",
+    "style-only",
+    "missing-or-duplicated",
+    "overflow-or-clipping",
+    "stacking-order",
+    "failed-web-font",
+    "breakpoint-only"
+  ],
+  "minPerFixCategory": 2,
+  "bannedText": ["testivai", "witness"]
+}

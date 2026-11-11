@@ -46,14 +46,26 @@ export function loadTasks(benchRoot) {
     });
 }
 
-const STATES = {
-  seed: (t) => [path.join(t.dir, 'seed.patch')],
-  reference: (t) => [path.join(t.dir, 'seed.patch'), path.join(t.oracleDir, 'reference.patch')],
-  wrong: (t) => [path.join(t.dir, 'seed.patch'), path.join(t.oracleDir, 'wrong.patch')],
-};
+export function acceptedPatches(oracleDir) {
+  return filesIn(path.join(oracleDir, 'accepted')).filter((f) => f.endsWith('.patch'));
+}
 
-async function measureState(benchRoot, t, state, keep) {
-  const ws = makeWorkspace({ appDir: path.join(benchRoot, 'app'), patches: STATES[state](t), label: 'validate' });
+// state name -> the patches that make it, applied in order to the clean app
+function statesOf(t) {
+  const seed = path.join(t.dir, 'seed.patch');
+  const states = {
+    seed: [seed],
+    reference: [seed, path.join(t.oracleDir, 'reference.patch')],
+    wrong: [seed, path.join(t.oracleDir, 'wrong.patch')],
+  };
+  for (const name of acceptedPatches(t.oracleDir)) {
+    states[`accepted/${name}`] = [seed, path.join(t.oracleDir, 'accepted', name)];
+  }
+  return states;
+}
+
+async function measureState(benchRoot, t, state, patches, keep) {
+  const ws = makeWorkspace({ appDir: path.join(benchRoot, 'app'), patches, label: 'validate' });
   try {
     const score = path.join(t.oracleDir, 'score.spec.ts');
     const collateral = path.join(t.oracleDir, 'collateral.spec.ts');
@@ -75,9 +87,9 @@ async function validateTask(benchRoot, t, config, keep) {
   const problems = lintTask(t, config);
   const result = { id: t.id, type: t.task.type, category: t.task.category, problems, outcomes: {}, details: {} };
   if (ORACLE_FILES.some((f) => !t.oracleFiles.includes(f)) || !t.taskFiles.includes('seed.patch')) return result;
-  for (const state of Object.keys(STATES)) {
+  for (const [state, patches] of Object.entries(statesOf(t))) {
     try {
-      const { outcome, detail } = await measureState(benchRoot, t, state, keep);
+      const { outcome, detail } = await measureState(benchRoot, t, state, patches, keep);
       result.outcomes[state] = outcome;
       result.details[state] = detail;
     } catch (err) {
@@ -85,7 +97,9 @@ async function validateTask(benchRoot, t, config, keep) {
       return result;
     }
   }
-  problems.push(...checkTaskOutcomes({ type: t.task.type, ...result.outcomes }));
+  const { seed, reference, wrong, ...rest } = result.outcomes;
+  const accepted = Object.fromEntries(Object.entries(rest).map(([k, v]) => [k.replace(/^accepted\//, ''), v]));
+  problems.push(...checkTaskOutcomes({ type: t.task.type, seed, reference, wrong, accepted }));
   return result;
 }
 

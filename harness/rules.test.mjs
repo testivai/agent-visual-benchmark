@@ -90,3 +90,12 @@ test('a missing outcome is reported, not treated as a pass', () => {
 test('an unknown task type is reported', () => {
   assert.match(checkTaskOutcomes({ ...fix(), type: 'other' }).join('\n'), /unknown task type/i);
 });
+
+test('an accepted alternative solution must pass everything, like the reference', () => {
+  const task = fix({ accepted: { 'override.patch': ok } });
+  assert.deepEqual(checkTaskOutcomes(task), []);
+  const bad = fix({ accepted: { 'override.patch': { ...ok, collateral: 'failed' }, 'other.patch': ok } });
+  const problems = checkTaskOutcomes(bad).join('\n');
+  assert.match(problems, /accepted\/override\.patch: collateral must pass, but it failed/);
+  assert.doesNotMatch(problems, /other\.patch/);
+});
