@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home · Acme Storefront</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body class="page-home">
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <img class="brand-mark" src="assets/logo.svg" width="28" height="28" alt="">
+        <span class="brand-name">Acme Storefront</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Main">
+        <a class="nav-link" href="index.html" aria-current="page">Home</a>
+        <a class="nav-link" href="products.html">Products</a>
+        <a class="nav-link" href="pricing.html">Pricing</a>
+        <a class="nav-link" href="orders.html">Orders</a>
+        <a class="nav-link" href="about.html">About</a>
+        <a class="nav-link" href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <h1>Small things that make a desk feel like yours</h1>
+          <p class="lede">Lamps, mugs and mats, made in small batches and shipped the same day.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary btn-lg" href="products.html">Browse products</a>
+            <a class="btn btn-secondary btn-lg" href="pricing.html">See plans</a>
+          </div>
+        </div>
+        <img class="hero-art" src="assets/hero.svg" width="420" height="280" alt="A desk with a lamp, a monitor, a plant and a mug">
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="stats stats-overlap">
+        <div class="stat">
+          <p class="stat-value">12,400</p>
+          <p class="stat-label">orders shipped this year</p>
+        </div>
+        <div class="stat">
+          <p class="stat-value">4.8 / 5</p>
+          <p class="stat-label">average review score</p>
+        </div>
+        <div class="stat">
+          <p class="stat-value">30 days</p>
+          <p class="stat-label">to change your mind</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">Featured this week</h2>
+        <div class="card feature">
+          <div class="feature-art"></div>
+          <div class="feature-copy">
+            <h3>Aurora Lamp</h3>
+            <p>Soft gradient light for long evenings. Dimmable, USB-C, and calm on the eyes.</p>
+            <div class="price">$49</div>
+            <a class="btn btn-primary" href="products.html">View the lamp</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">Why Acme</h2>
+        <div class="cards">
+          <div class="card perk">
+            <div class="card-body">
+              <h3>Fast shipping</h3>
+              <p>Orders leave the warehouse the same day.</p>
+            </div>
+          </div>
+          <div class="card perk">
+            <div class="card-body">
+              <h3>Easy returns</h3>
+              <p>Thirty days, no questions, free labels.</p>
+            </div>
+          </div>
+          <div class="card perk">
+            <div class="card-body">
+              <h3>Real support</h3>
+              <p>A person answers within one business day.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="card newsletter">
+          <div>
+            <h2>One email a month</h2>
+            <p>New products and the occasional discount. Nothing else.</p>
+          </div>
+          <div>
+            <form class="form form-inline" id="newsletter-form" novalidate>
+              <label class="visually-hidden" for="newsletter-email">Email address</label>
+              <input class="form-input" id="newsletter-email" name="email" type="email" placeholder="you@example.com" data-validate="email">
+              <button class="btn btn-primary" type="submit">Subscribe</button>
+            </form>
+            <p class="form-note muted" id="newsletter-note">We never share your address.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 Acme Storefront. Small things for busy desks.</p>
+      <div class="footer-links">
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

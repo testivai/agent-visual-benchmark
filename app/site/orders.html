@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders · Acme Storefront</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body class="page-orders">
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <img class="brand-mark" src="assets/logo.svg" width="28" height="28" alt="">
+        <span class="brand-name">Acme Storefront</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Main">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="products.html">Products</a>
+        <a class="nav-link" href="pricing.html">Pricing</a>
+        <a class="nav-link" href="orders.html" aria-current="page">Orders</a>
+        <a class="nav-link" href="about.html">About</a>
+        <a class="nav-link" href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container page-head">
+      <h1>Orders</h1>
+      <p class="lede">Your recent orders and where they are.</p>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="stats">
+          <div class="stat">
+            <p class="stat-value">24</p>
+            <p class="stat-label">orders this year</p>
+          </div>
+          <div class="stat">
+            <p class="stat-value">2</p>
+            <p class="stat-label">on their way</p>
+          </div>
+          <div class="stat">
+            <p class="stat-value">$1,182</p>
+            <p class="stat-label">spent this year</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">Recent orders</h2>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Order</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th class="num">Total</th>
+                <th class="num" aria-label="Actions"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#1042</td>
+                <td data-col="date">12 May 2026</td>
+                <td data-col="customer">Dana Whitfield</td>
+                <td data-col="status"><span class="pill pill-ok">Delivered</span></td>
+                <td class="num" data-col="total">$67.00</td>
+                <td class="num"><button class="btn btn-secondary btn-sm" type="button" data-order="#1042">View</button></td>
+              </tr>
+              <tr>
+                <td>#1041</td>
+                <td data-col="date">9 May 2026</td>
+                <td data-col="customer">Dana Whitfield</td>
+                <td data-col="status"><span class="pill pill-warn">On its way</span></td>
+                <td class="num" data-col="total">$129.00</td>
+                <td class="num"><button class="btn btn-secondary btn-sm" type="button" data-order="#1041">View</button></td>
+              </tr>
+              <tr>
+                <td>#1038</td>
+                <td data-col="date">28 Apr 2026</td>
+                <td data-col="customer">Dana Whitfield</td>
+                <td data-col="status"><span class="pill pill-ok">Delivered</span></td>
+                <td class="num" data-col="total">$32.00</td>
+                <td class="num"><button class="btn btn-secondary btn-sm" type="button" data-order="#1038">View</button></td>
+              </tr>
+              <tr>
+                <td>#1035</td>
+                <td data-col="date">14 Apr 2026</td>
+                <td data-col="customer">Dana Whitfield</td>
+                <td data-col="status"><span class="pill pill-err">Refunded</span></td>
+                <td class="num" data-col="total">$18.00</td>
+                <td class="num"><button class="btn btn-secondary btn-sm" type="button" data-order="#1035">View</button></td>
+              </tr>
+              <tr>
+                <td>#1031</td>
+                <td data-col="date">2 Apr 2026</td>
+                <td data-col="customer">Dana Whitfield</td>
+                <td data-col="status"><span class="pill pill-ok">Delivered</span></td>
+                <td class="num" data-col="total">$49.00</td>
+                <td class="num"><button class="btn btn-secondary btn-sm" type="button" data-order="#1031">View</button></td>
+              </tr>
+              <tr>
+                <td>#1027</td>
+                <td data-col="date">21 Mar 2026</td>
+                <td data-col="customer">Dana Whitfield</td>
+                <td data-col="status"><span class="pill pill-warn">On its way</span></td>
+                <td class="num" data-col="total">$22.00</td>
+                <td class="num"><button class="btn btn-secondary btn-sm" type="button" data-order="#1027">View</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-tools">
+          <p>Showing 1 to 6 of 24</p>
+          <div class="pager">
+            <button class="btn btn-secondary btn-sm" type="button" disabled>Previous</button>
+            <button class="btn btn-secondary btn-sm" type="button">Next</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="modal-overlay" id="order-modal" hidden>
+      <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="order-modal-title">
+        <div class="modal-header">
+          <h2 id="order-modal-title">Order <span data-field="id"></span></h2>
+          <button class="modal-close" type="button" aria-label="Close" data-modal-close>×</button>
+        </div>
+        <div class="modal-body">
+          <dl class="detail-list">
+            <dt>Date</dt>
+            <dd data-field="date"></dd>
+            <dt>Customer</dt>
+            <dd data-field="customer"></dd>
+            <dt>Status</dt>
+            <dd data-field="status"></dd>
+            <dt>Total</dt>
+            <dd data-field="total"></dd>
+          </dl>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-modal-close>Close</button>
+          <a class="btn btn-primary" href="contact.html">Ask about this order</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 Acme Storefront. Small things for busy desks.</p>
+      <div class="footer-links">
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

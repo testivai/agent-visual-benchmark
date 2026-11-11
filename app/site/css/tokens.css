@@ -1,0 +1,47 @@
+/* Design tokens and the web font. Every other stylesheet uses these. */
+
+@font-face {
+  font-family: 'Acme Sans';
+  src: url('../fonts/acme-sans.woff2') format('woff2');
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --color-ink: #1f2328;
+  --color-muted: #59636e;
+  --color-line: #d8dee4;
+  --color-bg: #f6f8fa;
+  --color-surface: #ffffff;
+  --color-brand: #0e7490;
+  --color-brand-dark: #155e75;
+  --color-brand-tint: #ecfeff;
+  --color-success: #1a7f37;
+  --color-success-tint: #e8f6ee;
+  --color-danger: #cf222e;
+  --color-danger-tint: #fdecea;
+  --color-warning: #9a6700;
+  --color-warning-tint: #fff8c5;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(31, 35, 40, 0.08);
+  --shadow-md: 0 8px 24px rgba(31, 35, 40, 0.12);
+
+  --font-sans: 'Acme Sans', system-ui, sans-serif;
+  --content-width: 1040px;
+  --header-height: 64px;
+}
