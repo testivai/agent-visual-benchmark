@@ -9,6 +9,7 @@
 //   leave-server  start a child process, then finish normally, leaving it running
 //   leak-key      print the API key in the final message
 //   error-result  end with an error_during_execution result
+//   usage-limit   end as Claude Code does when a subscription's limit is reached
 //   max-turns     end with an error_max_turns result
 //   touch-baseline  apply the patch, then overwrite one baseline file
 //   wrong-model   report a different model than the one asked for, then work 2 s later
@@ -135,6 +136,7 @@ const MODES = {
   'leave-server'() { startChild(); MODES.apply(); },
   'leak-key'() { finish(`My key is ${env.ANTHROPIC_API_KEY}.\nSTATUS: DONE`); process.stderr.write(`warn ${env.ANTHROPIC_API_KEY}\n`); },
   'error-result'() { result({ subtype: 'error_during_execution', is_error: true }); },
+  'usage-limit'() { result({ is_error: true, result: `Claude AI usage limit reached|${Math.floor(Date.now() / 1000) + 5}` }); },
   'max-turns'() { applyPatch(); result({ subtype: 'error_max_turns', num_turns: 61 }); },
   'touch-baseline'() { applyPatch(); touchBaseline(); finish('Updated the screenshots.\nSTATUS: DONE'); },
 };

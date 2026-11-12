@@ -129,7 +129,8 @@ test('tasks no arm can tell apart (all 0% or all 100%) are listed', () => {
 });
 
 test('the summary shows where B beat C as prominently as the reverse, and makes no significance claim in a pilot', () => {
-  const md = renderSummary(result, { phase: 'pilot' });
+  const md = renderSummary(result, { phase: 'pilot', model: 'sonnet' });
+  assert.match(md, /^# Results: sonnet, pilot$/m);
   const bc = md.indexOf('## Tasks where B beat C');
   const cb = md.indexOf('## Tasks where C beat B');
   assert.ok(bc > 0 && cb > 0, 'both sections, at the same heading level');

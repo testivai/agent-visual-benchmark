@@ -199,3 +199,50 @@ test('a run that starts with a tool it must not have is stopped, recorded as a s
   assert.match(records[0].error.message, /WebFetch/);
   assert.equal(records[0].success, undefined);
 });
+
+test('a run cut off by a usage limit waits for the reset and runs again, without spending its retry', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'avb-results-'));
+  const waits = [];
+  const plan = { phase: 'test', seed: 1, runs: [
+    { runId: 'limit-a', order: 1, task: 't13', arm: 'A', repeat: 1 },
+    { runId: 'limit-b', order: 2, task: 't13', arm: 'B', repeat: 1 },
+  ] };
+  // limit-a: limit, then fine. limit-b: limit, crash, crash: two real errors end it.
+  const modes = { 'limit-a': ['usage-limit', 'apply'], 'limit-b': ['usage-limit', 'crash', 'crash', 'apply'] };
+  const records = await executePlan({
+    benchRoot: REPO_ROOT, config: { ...testConfig(), concurrency: 1 }, plan, resultsDir: dir, context,
+    extraEnvFor: (run, attempt) => ({ FAKE_CLAUDE_MODE: modes[run.runId][attempt - 1], FAKE_CLAUDE_PATCH: EMPTY }),
+    sleep: async (ms) => { waits.push(ms); },
+  });
+  const a = records.filter((r) => r.run_id === 'limit-a');
+  assert.deepEqual(a.map((r) => [r.attempt, r.error?.stage ?? null]), [[1, 'limit'], [2, null]]);
+  assert.match(a[0].error.message, /usage limit/);
+  assert.ok(a[0].error.resume_at, 'the reset time is recorded');
+  assert.equal(a[1].success, true);
+  const b = records.filter((r) => r.run_id === 'limit-b');
+  assert.deepEqual(b.map((r) => [r.attempt, r.error?.stage ?? null]), [[1, 'limit'], [2, 'agent'], [3, 'agent']]);
+  assert.equal(waits.length, 2);
+  assert.ok(waits.every((ms) => ms >= 60000 && ms <= 2 * 60000), `waited until the reset plus a minute: ${waits}`);
+});
+
+test('a run whose last attempt hit a limit is not finished: running the plan again resumes it', async () => {
+  const { finishedRuns } = await import('../execute.mjs');
+  assert.deepEqual([...finishedRuns([
+    { run_id: 'x', attempt: 1, error: { stage: 'limit' } },
+    { run_id: 'y', attempt: 1, error: { stage: 'limit' } }, { run_id: 'y', attempt: 2, error: null },
+    { run_id: 'z', attempt: 1, error: { stage: 'agent' } }, { run_id: 'z', attempt: 2, error: { stage: 'limit' } },
+    { run_id: 'w', attempt: 1, error: { stage: 'agent' } }, { run_id: 'w', attempt: 2, error: { stage: 'limit' } }, { run_id: 'w', attempt: 3, error: { stage: 'agent' } },
+  ])].sort(), ['w', 'y']);
+});
+
+test('the cost of a run on another provider comes from its prices; Claude Code\'s figure is kept apart', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'avb-results-'));
+  const priced = { ...testConfig(), agent: { ...testConfig().agent, provider: 'anthropic-compatible', baseUrl: 'https://example.invalid/anthropic', authTokenEnv: 'NONE',
+    pricesPerMillionUsd: { input: 0.3, cacheRead: 0.006, cacheWrite: 0.3, output: 1.2 } } };
+  const plan = { phase: 'test', seed: 1, runs: [{ runId: 'cost-001', order: 1, task: 't13', arm: 'A', repeat: 1 }] };
+  const [r] = await executePlan({ benchRoot: REPO_ROOT, config: priced, plan, resultsDir: dir, context, extraEnvFor: () => ({ FAKE_CLAUDE_MODE: 'apply', FAKE_CLAUDE_PATCH: EMPTY }) });
+  // the fake reports 1000 input and 200 output tokens, and $0.123 from Claude Code
+  assert.ok(Math.abs(r.cost_usd - (1000 * 0.3 + 200 * 1.2) / 1e6) < 1e-12);
+  assert.equal(r.cost_source, 'provider prices');
+  assert.equal(r.claude_code_cost_estimate, 0.123);
+});

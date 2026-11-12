@@ -12,31 +12,33 @@ function file(text) {
   return f;
 }
 
-test('the budget is read from its line; TODO or missing means not set', () => {
-  assert.equal(readBudget(file('# Budget\n\nbudget_usd: 150\n')), 150);
-  assert.equal(readBudget(file('budget_usd: 99.5 \n')), 99.5);
-  assert.equal(readBudget(file('budget_usd: TODO\n')), null);
-  assert.equal(readBudget(file('nothing here\n')), null);
-  assert.equal(readBudget('/no/such/BUDGET.md'), null);
+test('the budget is read per model; TODO or missing means not set', () => {
+  const f = file('# Budget\n\nbudget_usd.sonnet: subscription\nbudget_usd.deepseek: 20\nbudget_usd.opus: TODO\n');
+  assert.equal(readBudget(f, 'sonnet'), 'subscription');
+  assert.equal(readBudget(f, 'deepseek'), 20);
+  assert.equal(readBudget(f, 'opus'), null);
+  assert.equal(readBudget(f, 'other'), null);
+  assert.equal(readBudget(file('budget_usd.deepseek: 99.5 \n'), 'deepseek'), 99.5);
+  assert.equal(readBudget('/no/such/BUDGET.md', 'deepseek'), null);
 });
 
 const dry = { cost_usd: 2, seconds: 300, config_hash: 'h1' };
 
 test('no dry run: refuse', () => {
-  const g = gate({ plannedRuns: 54, dryRun: null, budgetUsd: 500, confirm: false });
+  const g = gate({ plannedRuns: 54, dryRun: null, budget: 500, confirm: false });
   assert.equal(g.ok, false);
   assert.match(g.lines.join('\n'), /54 runs/);
   assert.match(g.lines.join('\n'), /dry run/i);
 });
 
 test('no budget: refuse, even with --confirm', () => {
-  const g = gate({ plannedRuns: 54, dryRun: dry, budgetUsd: null, confirm: true });
+  const g = gate({ plannedRuns: 54, dryRun: dry, budget: null, confirm: true });
   assert.equal(g.ok, false);
   assert.match(g.lines.join('\n'), /BUDGET\.md/);
 });
 
 test('within budget: go, and say the estimate', () => {
-  const g = gate({ plannedRuns: 54, dryRun: dry, budgetUsd: 200, confirm: false });
+  const g = gate({ plannedRuns: 54, dryRun: dry, budget: 200, confirm: false });
   assert.equal(g.ok, true);
   assert.equal(g.estimateUsd, 108);
   assert.match(g.lines.join('\n'), /\$108\.00/);
@@ -44,9 +46,17 @@ test('within budget: go, and say the estimate', () => {
 });
 
 test('over budget: refuse unless confirmed', () => {
-  assert.equal(gate({ plannedRuns: 54, dryRun: dry, budgetUsd: 100, confirm: false }).ok, false);
-  assert.match(gate({ plannedRuns: 54, dryRun: dry, budgetUsd: 100, confirm: false }).lines.join('\n'), /--confirm/);
-  assert.equal(gate({ plannedRuns: 54, dryRun: dry, budgetUsd: 100, confirm: true }).ok, true);
+  assert.equal(gate({ plannedRuns: 54, dryRun: dry, budget: 100, confirm: false }).ok, false);
+  assert.match(gate({ plannedRuns: 54, dryRun: dry, budget: 100, confirm: false }).lines.join('\n'), /--confirm/);
+  assert.equal(gate({ plannedRuns: 54, dryRun: dry, budget: 100, confirm: true }).ok, true);
+});
+
+test('a subscription has no dollar budget: go once there is a dry run, and say the estimate is not a bill', () => {
+  const g = gate({ plannedRuns: 54, dryRun: dry, budget: 'subscription', confirm: false });
+  assert.equal(g.ok, true);
+  assert.match(g.lines.join('\n'), /subscription/);
+  assert.match(g.lines.join('\n'), /API-equivalent/);
+  assert.equal(gate({ plannedRuns: 54, dryRun: null, budget: 'subscription', confirm: false }).ok, false);
 });
 
 test('the dry run must match the current settings', () => {

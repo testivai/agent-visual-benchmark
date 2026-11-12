@@ -1,6 +1,8 @@
 #!/usr/bin/env node
-// npm run analyze -- --phase pilot|full
-// Reads results/<phase>/runs.jsonl, writes results/<phase>/summary.md and CSVs.
+// npm run analyze -- --model <id> --phase pilot|full
+// Reads results/<model>/<phase>/runs.jsonl, writes summary.md and csv/ next to it.
+// --model defaults to the primary model in runner.config.json. Each model is
+// analysed on its own: models are never pooled.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -152,10 +154,10 @@ function pilotSection(result) {
   ];
 }
 
-export function renderSummary(result, { phase }) {
+export function renderSummary(result, { phase, model }) {
   const arms = Object.keys(result.perArm);
   const lines = [
-    `# Results: ${phase}`,
+    `# Results: ${model ? `${model}, ` : ''}${phase}`,
     '',
     `Runs: ${result.runs.total} (${result.runs.attempts} attempts). Scored: ${result.runs.scored}. Errors: ${result.runs.errors} (excluded from the rates below, listed at the end).`,
     '',
@@ -193,14 +195,21 @@ export function toCsv(rows, columns) {
   return `${[columns.join(','), ...rows.map((r) => columns.map((c) => cell(r[c])).join(','))].join('\n')}\n`;
 }
 
-const RUN_COLUMNS = ['phase', 'run_id', 'order', 'attempt', 'task', 'task_type', 'task_category', 'arm', 'repeat', 'model', 'success', 'fixed',
-  'collateral_clean', 'tampered', 'claimed_done', 'false_done', 'stop_reason', 'turns', 'tokens', 'cost_usd', 'seconds', 'flags', 'error'];
+const RUN_COLUMNS = ['phase', 'run_id', 'order', 'attempt', 'task', 'task_type', 'task_category', 'arm', 'repeat', 'model_id', 'model', 'success', 'fixed',
+  'collateral_clean', 'tampered', 'claimed_done', 'false_done', 'stop_reason', 'turns', 'tokens', 'cost_usd', 'cost_source', 'seconds', 'flags', 'error'];
+
+function primaryModelId(root) {
+  const config = JSON.parse(fs.readFileSync(path.join(root, 'runner.config.json'), 'utf8'));
+  return Object.entries(config.models).find(([, m]) => m.primary)?.[0];
+}
 
 function main() {
   const argv = process.argv.slice(2);
-  const phase = argv.includes('--phase') ? argv[argv.indexOf('--phase') + 1] : 'pilot';
+  const value = (flag, fallback) => (argv.includes(flag) ? argv[argv.indexOf(flag) + 1] : fallback);
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-  const dir = path.join(root, 'results', phase);
+  const phase = value('--phase', 'pilot');
+  const model = value('--model', primaryModelId(root));
+  const dir = path.join(root, 'results', model, phase);
   const file = path.join(dir, 'runs.jsonl');
   if (!fs.existsSync(file)) {
     console.error(`no ${path.relative(root, file)} yet`);
@@ -209,7 +218,7 @@ function main() {
   const records = fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
   const result = analyze(records, {});
   fs.mkdirSync(path.join(dir, 'csv'), { recursive: true });
-  fs.writeFileSync(path.join(dir, 'summary.md'), renderSummary(result, { phase }));
+  fs.writeFileSync(path.join(dir, 'summary.md'), renderSummary(result, { phase, model }));
   fs.writeFileSync(path.join(dir, 'csv', 'runs.csv'), toCsv(records, RUN_COLUMNS));
   fs.writeFileSync(path.join(dir, 'csv', 'per_task.csv'), toCsv(result.perTask, ['task', 'type', 'category', 'A', 'nA', 'B', 'nB', 'C', 'nC']));
   const armRows = Object.entries(result.perArm).map(([arm, s]) => ({ arm, n: s.n, successes: s.successes, rate: s.wilson.rate, low: s.wilson.low, high: s.wilson.high,

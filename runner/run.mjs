@@ -127,7 +127,7 @@ function cmdCheck(config) {
 
 function gateFor(config, args, plannedRuns) {
   const dryRuns = readRecords(path.join(args.resultsDir, 'dry-run.jsonl'));
-  return gate({ plannedRuns, dryRun: latestDryRun(dryRuns, configHash(config)), budgetUsd: readBudget(args.budgetFile), confirm: args.confirm });
+  return gate({ plannedRuns, dryRun: latestDryRun(dryRuns, configHash(config)), budget: readBudget(args.budgetFile, config.model), confirm: args.confirm });
 }
 
 async function cmdDryRun(config, args) {

@@ -1,11 +1,17 @@
-// Whether a phase may start: a budget set by the maintainer, a dry run on the
-// current settings, and the estimate within the budget (or confirmed).
+// Whether a phase may start: a budget for the model set by the maintainer, a
+// dry run on the current settings, and the estimate within the budget (or
+// confirmed). A model on a subscription has no dollar budget.
 import fs from 'node:fs';
 
-export function readBudget(file) {
+const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+// `budget_usd.<model>: <dollars>` or `budget_usd.<model>: subscription`.
+export function readBudget(file, modelId) {
   if (!fs.existsSync(file)) return null;
-  const m = fs.readFileSync(file, 'utf8').match(/^budget_usd:\s*([0-9]+(?:\.[0-9]+)?)\s*$/m);
-  return m ? Number(m[1]) : null;
+  const m = fs.readFileSync(file, 'utf8').match(new RegExp(`^budget_usd\\.${escape(modelId)}:\\s*(\\S+)\\s*$`, 'm'));
+  if (!m) return null;
+  if (m[1] === 'subscription') return 'subscription';
+  return /^[0-9]+(?:\.[0-9]+)?$/.test(m[1]) ? Number(m[1]) : null;
 }
 
 export function latestDryRun(records, configHash) {
@@ -14,21 +20,35 @@ export function latestDryRun(records, configHash) {
 
 const usd = (n) => `$${n.toFixed(2)}`;
 
-export function gate({ plannedRuns, dryRun, budgetUsd, confirm }) {
+function estimateLines(dryRun, plannedRuns, label) {
+  const estimateUsd = dryRun.cost_usd * plannedRuns;
+  const hours = (dryRun.seconds * plannedRuns) / 3600;
+  return {
+    estimateUsd,
+    lines: [
+      `one dry run: ${usd(dryRun.cost_usd)} (${label}), ${Math.round(dryRun.seconds)} s`,
+      `estimate for ${plannedRuns} runs: ${usd(estimateUsd)} ${label}, about ${hours.toFixed(1)} hours one at a time (a single run is a rough guide)`,
+    ],
+  };
+}
+
+export function gate({ plannedRuns, dryRun, budget, confirm }) {
   const lines = [`planned: ${plannedRuns} runs`];
   if (!dryRun) {
     return { ok: false, lines: [...lines, 'no dry run on the current settings: run `npm run runner -- dry-run` first'] };
   }
-  const estimateUsd = dryRun.cost_usd * plannedRuns;
-  const hours = (dryRun.seconds * plannedRuns) / 3600;
-  lines.push(`one dry run cost ${usd(dryRun.cost_usd)} and took ${Math.round(dryRun.seconds)} s`);
-  lines.push(`estimate for ${plannedRuns} runs: ${usd(estimateUsd)}, about ${hours.toFixed(1)} hours one at a time (a single run is a rough guide)`);
-  if (budgetUsd === null) {
-    return { ok: false, estimateUsd, lines: [...lines, 'no budget: set budget_usd in BUDGET.md'] };
+  if (budget === 'subscription') {
+    const e = estimateLines(dryRun, plannedRuns, 'API-equivalent');
+    return { ok: true, estimateUsd: e.estimateUsd, lines: [...lines, ...e.lines, 'subscription: no dollar budget; usage counts against the plan\'s limits, and runs pause when a limit is hit'] };
   }
-  lines.push(`budget: ${usd(budgetUsd)}`);
-  if (estimateUsd > budgetUsd && !confirm) {
-    return { ok: false, estimateUsd, lines: [...lines, 'the estimate is over the budget: re-run with --confirm to go ahead anyway'] };
+  const e = estimateLines(dryRun, plannedRuns, 'at the model\'s prices');
+  lines.push(...e.lines);
+  if (budget === null) {
+    return { ok: false, estimateUsd: e.estimateUsd, lines: [...lines, 'no budget for this model: set budget_usd.<model> in BUDGET.md'] };
   }
-  return { ok: true, estimateUsd, lines };
+  lines.push(`budget: ${usd(budget)}`);
+  if (e.estimateUsd > budget && !confirm) {
+    return { ok: false, estimateUsd: e.estimateUsd, lines: [...lines, 'the estimate is over the budget: re-run with --confirm to go ahead anyway'] };
+  }
+  return { ok: true, estimateUsd: e.estimateUsd, lines };
 }

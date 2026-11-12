@@ -23,7 +23,7 @@ function fakeSetup() {
     models: { fake: { model: 'claude-fake-1', provider: 'anthropic-api-key', primary: true } },
   };
   fs.writeFileSync(path.join(dir, 'config.json'), JSON.stringify(cfg));
-  fs.writeFileSync(path.join(dir, 'BUDGET.md'), 'budget_usd: TODO\n');
+  fs.writeFileSync(path.join(dir, 'BUDGET.md'), 'budget_usd.fake: TODO\n');
   return dir;
 }
 
@@ -88,7 +88,7 @@ test('a dry run records one run apart, then start refuses until a budget is set,
   assert.equal(noBudget.status, 1);
   assert.match(noBudget.stdout, /BUDGET\.md/);
 
-  fs.writeFileSync(path.join(dir, 'BUDGET.md'), 'budget_usd: 5\n');
+  fs.writeFileSync(path.join(dir, 'BUDGET.md'), 'budget_usd.fake: 5\n');
   const over = cli(dir, 'start', '--phase', 'pilot');
   assert.equal(over.status, 1);
   assert.match(over.stdout, /--confirm/);

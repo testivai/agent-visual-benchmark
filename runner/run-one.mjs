@@ -8,6 +8,7 @@ import { runAgent } from './agent.mjs';
 import { parseStream, readStatus, shortcutFlags } from './transcript.mjs';
 import { classifyAgentRun, runOutcome } from './outcome.mjs';
 import { startupProblems } from './startup.mjs';
+import { usageLimit, runCost } from './limits.mjs';
 import { snapshotFiles, tamperCheck } from './tamper.mjs';
 import { scoreWorkspace, finalDiff } from './score.mjs';
 import { scrub, secretValues } from './scrub.mjs';
@@ -56,6 +57,15 @@ function baseRecord({ run, phase, attempt, task, config, context }) {
   };
 }
 
+// Claude Code prices every token at Anthropic's rates; another provider's
+// model is priced from the config.
+function costFields(parsed, agent) {
+  const prices = agent.pricesPerMillionUsd;
+  return prices
+    ? { cost_usd: runCost(parsed.tokens, prices), cost_source: 'provider prices', claude_code_cost_estimate: parsed.costUsd }
+    : { cost_usd: parsed.costUsd, cost_source: 'Claude Code estimate', claude_code_cost_estimate: parsed.costUsd };
+}
+
 function agentFields(parsed, agentRes, stopReason) {
   return {
     seconds: Math.round(agentRes.seconds * 10) / 10,
@@ -66,7 +76,6 @@ function agentFields(parsed, agentRes, stopReason) {
     tools: parsed.tools,
     turns: parsed.turns,
     tokens: parsed.tokens,
-    cost_usd: parsed.costUsd,
     status_line: readStatus(parsed.finalText),
     permission_denials: parsed.permissionDenials,
   };
@@ -115,8 +124,11 @@ export async function runOne({ benchRoot, config, run, phase, attempt, resultsDi
       onStartup: (init) => startupProblems(init, { arm: run.arm, model: config.agent.model }),
     });
     const parsed = parseStream(agentRes.stdout);
-    const { stopReason, error } = classifyAgentRun({ parsed, agentRes, config, arm: run.arm });
-    Object.assign(record, agentFields(parsed, agentRes, stopReason));
+    const limit = agentRes.timedOut || agentRes.stoppedAtStartup ? null : usageLimit(parsed, agentRes);
+    const { stopReason, error } = limit
+      ? { stopReason: 'limit', error: { stage: 'limit', message: limit.message, resume_at: limit.resetAt } }
+      : classifyAgentRun({ parsed, agentRes, config, arm: run.arm });
+    Object.assign(record, agentFields(parsed, agentRes, stopReason), costFields(parsed, config.agent));
     if (error) return { ...record, error };
     return { ...record, ...(await scoreFields({ benchRoot, run, ws, before, parsed, resultsDir, attempt, secrets })) };
   } catch (err) {
