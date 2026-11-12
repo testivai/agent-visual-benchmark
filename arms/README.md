@@ -7,17 +7,18 @@ in `arms/<arm>/files/` and one line of the instructions. This page puts them sid
 
 - The app with the task's seed applied, in a fresh git repository with one commit ("Initial commit").
 - The functional tests (`tests/functional.spec.ts`), Playwright 1.63.0 and its Chromium, installed.
-- `CLAUDE.md` in the workspace, also passed to the agent with `--append-system-prompt-file`
-  (`--bare` mode does not read `CLAUDE.md` by itself). The base text is
-  [`base/CLAUDE.md`](base/CLAUDE.md).
+- `CLAUDE.md` in the workspace, given to the agent once, with `--append-system-prompt-file`
+  (Claude Code's own loading of `CLAUDE.md` is switched off, so it is not given twice). The base text
+  is [`base/CLAUDE.md`](base/CLAUDE.md).
 - The task's prompt, word for word from `tasks/<id>/task.json`.
-- Claude Code's tools in `--bare` mode: Bash, Read and Edit, allowed without asking. That is the
-  whole built-in set in this mode (Claude Code 2.1.322 gives these three whatever `--tools` asks
-  for); there is no Write, Glob, Grep, TodoWrite or Task tool, and Bash does what they would. Read
-  shows images, so the agent can look at screenshots and diffs. Web tools are not available, and a
-  run whose tool list includes one is an error. Reading or editing the benchmark's own directory is
-  denied. Each run records the tool list Claude Code reported.
-- The same limits: `runner.config.json` (turns, time, spend per run).
+- Claude Code's tools Bash, Read and Edit (`--tools Bash,Edit,Read`), allowed without asking, and
+  nothing else: no Write, Glob, Grep, TodoWrite or Task tool (Bash does what they would), no web
+  tools, no plugins or skills. Read shows images, so the agent can look at screenshots and diffs.
+  A run whose startup report shows any other tool is stopped before it starts work. Reading or
+  editing the directory that holds the benchmark is denied. Each run records the tool list Claude
+  Code reported.
+- The same limits: `runner.config.json` (turns, time, spend per run), and the same model within a
+  study (Sonnet 5.5, Opus 5.5 or DeepSeek-V4.1-Flash; each model is a study of its own).
 
 ## What differs
 

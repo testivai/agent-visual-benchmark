@@ -40,7 +40,8 @@ tools/               authoring: patches from edits, TASKS.md, the font and image
 arms/                what differs between the arms: their files and one instruction line
 runner/              builds each workspace, starts the agent, scores the result (npm run runner)
 analysis/            npm run analyze: rates, paired comparison, summary.md, CSVs
-results/<phase>/     the runs, transcripts and diffs, once a phase has run
+results/<model>/<phase>/  the runs, transcripts and diffs, once a phase has run
+docs/phase0-findings.md   what was checked on the real models before any scored run
 runner.config.json   model, limits, isolation, seeds
 BUDGET.md            the spend limit, set by the maintainer
 CHANGES_AFTER_PILOT.md  every change made after seeing pilot scores
@@ -149,18 +150,26 @@ Read this before trusting a number.
    app with the task's seed, the arm's files and baselines, `CLAUDE.md`, one git commit, and the
    arm's packages. `oracle/`, `tasks/`, `TASKS.md`, other arms' files and anything mentioning the
    benchmark are refused before the agent starts (`runner/workspace.mjs`).
-2. **Agent.** Claude Code in print mode: `--bare` (no hooks, plugins, memory or user settings, and
-   only the API key for auth), an empty config directory, the pinned model, `dontAsk` permissions,
-   the tools Bash, Read and Edit (plus the testivai tools in arm C), the benchmark directory denied,
-   Bash in the sandbox, turn, time and spend limits.
-   Only `ANTHROPIC_API_KEY` and a few named variables reach it (`runner/claude.mjs`).
+2. **Agent.** Claude Code in print mode, locked down the same way for every model
+   (`runner/claude.mjs`): the pinned model; exactly the tools Bash, Read and Edit (plus the testivai
+   tools in arm C); no plugins, skills, hooks, memory or user settings; an empty config directory;
+   `dontAsk` permissions; the instructions given once; Bash in the sandbox, with the web blocked and
+   the directory that holds the benchmark unreadable (without naming it); turn, time and spend
+   limits. Only the login the model needs reaches it: nothing for the subscription models (the
+   machine's Claude login), the provider's endpoint and key for DeepSeek. When Claude Code's startup
+   report shows anything else, the run is stopped at once (`runner/startup.mjs`). What was checked,
+   on the real models, is in `docs/phase0-findings.md`.
 3. **Score.** The workspace's `site/` is copied into a clean copy of the app and scored there by the
    oracle and the functional suite. Changes to tests, baselines, tool configuration or packages are
    tampering and make the run a failure (`runner/tamper.mjs`). The transcript and the diff are kept,
    with credentials removed.
-4. **Record.** One line per attempt in `results/<phase>/runs.jsonl`. A run that ends in an error is
-   retried once; a run that hits a limit is scored as it stands. Runs go in an order shuffled from a
-   recorded seed, so drift in the model service over time does not line up with one arm.
+4. **Record.** One line per attempt in `results/<model>/<phase>/runs.jsonl`. A run that ends in an
+   error is retried once; a run that hits a turn or time limit is scored as it stands; a run cut off by
+   a usage limit waits for the reset and runs again. Runs go in an order shuffled from a recorded seed,
+   so drift in the model service over time does not line up with one arm.
+
+The study runs on three models, each a study of its own: Sonnet 5.5 (primary) and Opus 5.5 on the
+maintainer's Claude subscription, and DeepSeek-V4.1-Flash on its API. `RUNNING.md` has the details.
 
 A run succeeds when `score` and `collateral` pass and nothing was tampered with. It is a false
 "done" when the agent ends with `STATUS: DONE` and the run did not succeed.
