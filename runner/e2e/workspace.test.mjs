@@ -63,6 +63,21 @@ for (const arm of ['A', 'B', 'C']) {
   });
 }
 
+test('in a workspace, the agent\'s own `npx playwright test` runs the functional suite and it passes', { timeout: 5 * 60 * 1000 }, async (t) => {
+  const { spawnSync } = await import('node:child_process');
+  const { freePort } = await import('../../harness/run-specs.mjs');
+  const template = templates.A ?? await ensureTemplate({ benchRoot: REPO_ROOT, arm: 'A', cacheRoot: CACHE, log });
+  const runDir = fs.mkdtempSync(path.join(os.tmpdir(), 'avb-test-'));
+  t.after(() => fs.rmSync(runDir, { recursive: true, force: true }));
+  const ws = buildWorkspace({ benchRoot: REPO_ROOT, taskId: 't13', arm: 'A', templateDir: template.dir, runDir });
+  // the PATH has a global Playwright on some machines: the workspace's own must win
+  const r = spawnSync('npx', ['playwright', 'test', 'tests/functional.spec.ts', '--reporter=line'], {
+    cwd: ws, encoding: 'utf8', env: { PATH: process.env.PATH, HOME: runDir, PORT: String(await freePort()), PLAYWRIGHT_BROWSERS_PATH: browsersPath() },
+  });
+  assert.equal(r.status, 0, (r.stdout + r.stderr).slice(-1500));
+  assert.match(r.stdout, /16 passed/);
+});
+
 test('the final diff is the agent\'s change only, even if it deleted .gitignore', { timeout: 5 * 60 * 1000 }, async (t) => {
   const { finalDiff } = await import('../score.mjs');
   const template = templates.A ?? await ensureTemplate({ benchRoot: REPO_ROOT, arm: 'A', cacheRoot: CACHE, log });
@@ -80,3 +95,39 @@ test('the final diff is the agent\'s change only, even if it deleted .gitignore'
   assert.match(diff.text, /diff --git a\/site\/css\/pages.css/);
   assert.doesNotMatch(diff.text, /^diff --git a\/(node_modules|test-results)\//m, 'no file from node_modules or the test outputs');
 });
+
+for (const arm of ['B', 'C']) {
+  test(`arm ${arm}: in a seeded workspace, the agent's visual tests flag the seeded page and only it`, { timeout: 5 * 60 * 1000 }, async (t) => {
+    const { spawnSync } = await import('node:child_process');
+    const { freePort } = await import('../../harness/run-specs.mjs');
+    const template = templates[arm] ?? await ensureTemplate({ benchRoot: REPO_ROOT, arm, cacheRoot: CACHE, log });
+    const runDir = fs.mkdtempSync(path.join(os.tmpdir(), 'avb-test-'));
+    t.after(() => fs.rmSync(runDir, { recursive: true, force: true }));
+    // t01: the "Most popular" label on the pricing page is painted behind its card
+    const ws = buildWorkspace({ benchRoot: REPO_ROOT, taskId: 't01', arm, templateDir: template.dir, runDir });
+    // exactly the command the instructions give (a --reporter option would replace testivai's reporter)
+    const r = spawnSync('npx', ['playwright', 'test', 'tests/visual.spec.ts'], {
+      cwd: ws, encoding: 'utf8', env: { PATH: process.env.PATH, HOME: runDir, PORT: String(await freePort()), PLAYWRIGHT_BROWSERS_PATH: browsersPath() },
+    });
+    const output = r.stdout + r.stderr;
+    if (arm === 'B') {
+      assert.equal(r.status, 1, output.slice(-1500));
+      assert.match(output, /2 failed/);
+      assert.match(output, /\[desktop\].*pricing/);
+      assert.match(output, /\[phone\].*pricing/);
+      assert.ok(fs.readdirSync(path.join(ws, 'test-results')).some((d) => d.includes('pricing')), 'diff images are saved');
+    } else {
+      const results = JSON.parse(fs.readFileSync(path.join(ws, 'visual-report', 'results.json'), 'utf8'));
+      const changed = results.snapshots.filter((s) => s.status === 'changed').map((s) => s.name).sort();
+      assert.deepEqual(changed, ['pricing__desktop', 'pricing__phone'], output.slice(-1500));
+      assert.equal(results.summary.passed, 10);
+    }
+    // running the tools writes outputs only: the workspace's protected files are unchanged
+    const { tamperCheck, snapshotFiles } = await import('../tamper.mjs');
+    const before = snapshotFiles(ws);
+    spawnSync('npx', ['playwright', 'test', 'tests/visual.spec.ts'], {
+      cwd: ws, encoding: 'utf8', env: { PATH: process.env.PATH, HOME: runDir, PORT: String(await freePort()), PLAYWRIGHT_BROWSERS_PATH: browsersPath() },
+    });
+    assert.deepEqual(tamperCheck(before, snapshotFiles(ws)).tamperPaths, [], 'running the visual tests is not tampering');
+  });
+}

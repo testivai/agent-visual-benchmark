@@ -61,6 +61,27 @@ function textProblems(ws, entries, benchRoot) {
   return problems;
 }
 
+// Every symbolic link, node_modules included, must lead to a place inside the workspace.
+function linkProblems(ws) {
+  const problems = [];
+  const visit = (dir) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (entry.name === '.git') continue;
+      const full = path.join(dir, entry.name);
+      if (entry.isSymbolicLink()) {
+        const target = path.resolve(path.dirname(full), fs.readlinkSync(full));
+        if (target !== ws && !target.startsWith(ws + path.sep)) {
+          problems.push(`${path.relative(ws, full).split(path.sep).join('/')} is a link to ${target}, outside the workspace`);
+        }
+      } else if (entry.isDirectory()) {
+        visit(full);
+      }
+    }
+  };
+  visit(ws);
+  return problems;
+}
+
 function gitProblems(ws) {
   try {
     const count = execFileSync('git', ['rev-list', '--count', 'HEAD'], {
@@ -84,6 +105,7 @@ export function checkWorkspace(ws, { arm, benchRoot, requireGit = true }) {
   }
   problems.push(...armProblems(ws, arm, entries));
   problems.push(...textProblems(ws, entries, benchRoot));
+  problems.push(...linkProblems(ws));
   if (requireGit) problems.push(...gitProblems(ws));
   return problems;
 }
@@ -97,7 +119,8 @@ function git(ws, args) {
 
 function copyInto(fromRoot, toRoot, rel) {
   const from = path.join(fromRoot, rel);
-  if (fs.existsSync(from)) fs.cpSync(from, path.join(toRoot, rel), { recursive: true });
+  // verbatimSymlinks: keep npm's relative links relative (by default Node makes them absolute)
+  if (fs.existsSync(from)) fs.cpSync(from, path.join(toRoot, rel), { recursive: true, verbatimSymlinks: true });
 }
 
 // runDir is a fresh temporary directory; the workspace is runDir/project, a

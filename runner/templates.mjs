@@ -12,6 +12,8 @@ import { freePort } from '../harness/run-specs.mjs';
 import { withLock } from '../harness/lock.mjs';
 import { armFilesDir, BASELINE_DIRS } from './arms.mjs';
 
+// Bump to rebuild every cached template (2: links in node_modules kept relative).
+const TEMPLATE_FORMAT = 2;
 const OUTPUTS = ['test-results', 'playwright-report', 'visual-report', path.join('.testivai', 'temp')];
 
 export function browsersPath(env = process.env) {
@@ -23,7 +25,7 @@ export function browsersPath(env = process.env) {
 
 export function templateKey({ benchRoot, arm }) {
   return crypto.createHash('sha256')
-    .update(arm)
+    .update(`${arm} format ${TEMPLATE_FORMAT}`)
     .update(hashTree(path.join(benchRoot, 'app')))
     .update(hashTree(armFilesDir(arm)))
     .update(`${process.version} ${process.platform} ${process.arch}`)
@@ -107,7 +109,7 @@ async function createTemplate({ benchRoot, arm, key, final, log }) {
   const info = { arm, key, dir: final, baselineCount: countBaselines(dir, arm), node: process.version, createdAt: new Date().toISOString() };
   fs.mkdirSync(path.dirname(final), { recursive: true });
   fs.rmSync(final, { recursive: true, force: true });
-  fs.cpSync(dir, final, { recursive: true });
+  fs.cpSync(dir, final, { recursive: true, verbatimSymlinks: true });
   fs.writeFileSync(path.join(final, '.template.json'), `${JSON.stringify(info, null, 2)}\n`);
   fs.rmSync(holder, { recursive: true, force: true });
   return info;

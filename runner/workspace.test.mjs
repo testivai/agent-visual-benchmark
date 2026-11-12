@@ -67,6 +67,19 @@ test('another arm\'s files may not be in a workspace', () => {
   assert.match(problems({ ...BASE, ...C_FILES, 'tests/visual.spec.ts-snapshots/a.png': 'png' }, 'C').join('\n'), /snapshots/);
 });
 
+test('a link that points outside the workspace is refused, wherever it is', () => {
+  const ws = tree({ ...BASE });
+  try {
+    fs.mkdirSync(path.join(ws, 'node_modules', '.bin'), { recursive: true });
+    fs.symlinkSync('../@playwright/test/index.js', path.join(ws, 'node_modules', '.bin', 'ok'));
+    assert.deepEqual(checkWorkspace(ws, { arm: 'A', benchRoot: BENCH, requireGit: false }), []);
+    fs.symlinkSync('/tmp/somewhere/cli.js', path.join(ws, 'node_modules', '.bin', 'playwright'));
+    assert.match(checkWorkspace(ws, { arm: 'A', benchRoot: BENCH, requireGit: false }).join('\n'), /node_modules\/\.bin\/playwright.*outside/);
+  } finally {
+    removeWorkspace(ws);
+  }
+});
+
 test('an arm\'s own files must be there', () => {
   assert.match(problems(BASE, 'B').join('\n'), /visual\.spec\.ts/);
   assert.match(problems({ ...BASE, 'tests/visual.spec.ts': 'v' }, 'C').join('\n'), /baselines/);
