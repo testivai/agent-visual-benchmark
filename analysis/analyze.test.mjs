@@ -33,8 +33,16 @@ test('the bootstrap is reproducible from its seed and brackets the mean', () => 
   assert.deepEqual(a, b);
   close(a.mean, 0.4);
   assert.ok(a.low < a.mean && a.mean < a.high);
-  assert.deepEqual(bootstrapMean([0.5, 0.5, 0.5], { resamples: 500, seed: 1 }), { mean: 0.5, low: 0.5, high: 0.5, n: 3 });
-  assert.deepEqual(bootstrapMean([], { resamples: 10, seed: 1 }), { mean: null, low: null, high: null, n: 0 });
+  assert.deepEqual(bootstrapMean([0.5, 0.5, 0.5], { resamples: 500, seed: 1 }), { mean: 0.5, low: 0.5, high: 0.5, lowerOneSided: 0.5, n: 3 });
+  assert.deepEqual(bootstrapMean([], { resamples: 10, seed: 1 }), { mean: null, low: null, high: null, lowerOneSided: null, n: 0 });
+});
+
+test('the one-sided 95% lower bound is the 5th percentile of the resampled means', () => {
+  const values = [0, 0.2, 0.4, 1, 0.6, 0.8, 0.2, 0];
+  const b = bootstrapMean(values, { resamples: 4000, seed: 5 });
+  assert.ok(b.low < b.lowerOneSided && b.lowerOneSided < b.mean, `${b.low} < ${b.lowerOneSided} < ${b.mean}`);
+  // the same resamples, cut at 90% two-sided, give the same lower end
+  close(bootstrapMean(values, { resamples: 4000, seed: 5, level: 0.9 }).low, b.lowerOneSided);
 });
 
 test('the last attempt of each run is the one that counts', () => {
@@ -52,6 +60,8 @@ test('the last attempt of each run is the one that counts', () => {
 //   d1 (decoy):     A 2/2, B 0/2, C 2/2
 const SUCCESS = { t1: { A: [0, 0], B: [1, 0], C: [1, 1] }, t2: { A: [1, 0], B: [1, 1], C: [1, 0] }, d1: { A: [1, 1], B: [0, 0], C: [1, 1] } };
 const META = { t1: ['fix', 'style-only'], t2: ['fix', 'stacking-order'], d1: ['decoy', 'no-defect'] };
+// runs that removed the symptom without restoring the values: a lenient success only
+const LENIENT_ONLY = new Set(['t1/A/0']);
 
 function records() {
   const out = [];
@@ -62,7 +72,7 @@ function records() {
         n += 1;
         out.push({
           phase: 'pilot', run_id: `p-${n}`, attempt: 1, task, arm, repeat: i + 1, task_type: META[task][0], task_category: META[task][1],
-          success: Boolean(ok), fixed: Boolean(ok), collateral_clean: arm === 'B' && task === 'd1' ? false : true, tampered: false,
+          success: Boolean(ok), fixed: Boolean(ok), lenient_success: Boolean(ok) || LENIENT_ONLY.has(`${task}/${arm}/${i}`), collateral_clean: arm === 'B' && task === 'd1' ? false : true, tampered: false,
           claimed_done: true, false_done: !ok, turns: 10 + n, tokens: { input: 1000, output: 100, cacheRead: 0, cacheWrite: 0 },
           cost_usd: 1, seconds: 100, flags: arm === 'B' && i === 0 ? ['viewed_baseline'] : [], stop_reason: 'completed', error: null,
         });
@@ -91,13 +101,37 @@ test('per-task rates are the mean of the repeats', () => {
   assert.deepEqual([t2.A, t2.B, t2.C], [0.5, 1, 0.5]);
 });
 
-test('the paired comparison is per task, then averaged over tasks', () => {
-  // C-B per task: t1 1-0.5 = 0.5, t2 0.5-1 = -0.5, d1 1-0 = 1 -> mean 1/3
-  close(result.paired['C-B'].mean, 1 / 3);
-  assert.equal(result.paired['C-B'].n, 3);
-  // C-A: t1 1, t2 0, d1 0 -> 1/3
-  close(result.paired['C-A'].mean, 1 / 3);
-  assert.ok(result.paired['C-B'].low <= result.paired['C-B'].mean);
+test('the primary comparison is paired by task over the fix and change tasks only', () => {
+  // C-B per task: t1 1-0.5 = 0.5, t2 0.5-1 = -0.5 -> mean 0; the decoy is not in it
+  close(result.primary['C-B'].mean, 0);
+  assert.equal(result.primary['C-B'].n, 2);
+  // C-A: t1 1, t2 0 -> 0.5
+  close(result.primary['C-A'].mean, 0.5);
+  const cb = result.primary['C-B'];
+  assert.ok(cb.low <= cb.lowerOneSided && cb.lowerOneSided <= cb.mean);
+  assert.deepEqual(result.primary.tasks, ['t1', 't2']);
+});
+
+test('decoys are compared on their own', () => {
+  // d1: C 1 - B 0
+  close(result.decoys['C-B'].mean, 1);
+  assert.equal(result.decoys['C-B'].n, 1);
+  assert.deepEqual(result.decoys.tasks, ['d1']);
+});
+
+test('the lenient rate: the symptom gone, over the fix and change tasks', () => {
+  assert.deepEqual([result.lenient.perArm.A.successes, result.lenient.perArm.A.n], [2, 4]);
+  assert.deepEqual([result.lenient.perArm.C.successes, result.lenient.perArm.C.n], [3, 4]);
+  // C-A lenient: t1 1 - 0.5 = 0.5, t2 0.5 - 0.5 = 0 -> 0.25
+  close(result.lenient.paired['C-A'].mean, 0.25);
+  assert.equal(result.lenient.paired['C-A'].n, 2);
+});
+
+test('runs with no lenient verdict are left out of the lenient rate only', () => {
+  const recs = records().map((r) => (r.run_id === 'p-1' ? { ...r, lenient_success: null } : r));
+  const r = analyze(recs, { arms: ['A', 'B', 'C'], resamples: 100, seed: 1 });
+  assert.equal(r.lenient.perArm.A.n, 3);
+  assert.equal(r.perArm.A.n, 6);
 });
 
 test('tasks where B beat C are listed, and tasks where C beat B', () => {
@@ -143,4 +177,64 @@ test('the summary shows where B beat C as prominently as the reverse, and makes 
 
 test('CSV quotes what needs quoting', () => {
   assert.equal(toCsv([{ a: 1, b: 'x,y' }, { a: 2, b: 'say "hi"' }], ['a', 'b']), 'a,b\n1,"x,y"\n2,"say ""hi"""\n');
+});
+
+test('more than 5% of runs ending in two errors is said before any result', () => {
+  // 1 of 19 runs = 5.3%
+  assert.equal(result.runs.errorShare > 0.05, true);
+  const md = renderSummary(result, { phase: 'full', model: 'sonnet', primary: true });
+  const warning = md.search(/more than 5% of runs/i);
+  assert.ok(warning > 0 && warning < md.indexOf('## Per arm'), 'before the results');
+  const fewer = analyze(records().filter((r) => r.run_id !== 'p-err'), { arms: ['A', 'B', 'C'], resamples: 100, seed: 1 });
+  assert.doesNotMatch(renderSummary(fewer, { phase: 'full', model: 'sonnet', primary: true }), /more than 5% of runs/i);
+});
+
+// 20 fix tasks, one run per arm each; C succeeds on `cWins` tasks where B fails.
+function study(cWins) {
+  const out = [];
+  for (let t = 0; t < 20; t++) {
+    for (const arm of ['A', 'B', 'C']) {
+      const ok = arm === 'C' ? t < cWins || t >= 10 : t >= 10;
+      out.push({ run_id: `s${t}${arm}`, attempt: 1, task: `t${String(t).padStart(2, '0')}`, arm, task_type: 'fix', task_category: 'c',
+        success: ok, lenient_success: ok, error: null, flags: [] });
+    }
+  }
+  return out;
+}
+
+const KILL = 'TestivAI did not measurably help over a pixel comparison in this study';
+
+test('the kill line is judged only in the full study of the primary model', () => {
+  const weak = analyze(study(1), { arms: ['A', 'B', 'C'], resamples: 2000, seed: 1 }); // C-B = 5 points
+  assert.match(renderSummary(weak, { phase: 'full', model: 'sonnet', primary: true }), new RegExp(KILL));
+  assert.doesNotMatch(renderSummary(weak, { phase: 'pilot', model: 'sonnet', primary: true }), new RegExp(KILL));
+  const replication = renderSummary(weak, { phase: 'full', model: 'opus', primary: false });
+  assert.doesNotMatch(replication, new RegExp(KILL));
+  assert.match(replication, /replication/i);
+});
+
+test('the kill line: under 10 points, or a one-sided interval that reaches 0', () => {
+  const strong = analyze(study(8), { arms: ['A', 'B', 'C'], resamples: 2000, seed: 1 }); // C-B = 40 points
+  assert.equal(strong.primary['C-B'].lowerOneSided > 0, true);
+  const md = renderSummary(strong, { phase: 'full', model: 'sonnet', primary: true });
+  assert.doesNotMatch(md, new RegExp(KILL));
+  assert.match(md, /H1 is supported/);
+  const weak = analyze(study(1), { arms: ['A', 'B', 'C'], resamples: 2000, seed: 1 });
+  assert.match(renderSummary(weak, { phase: 'full', model: 'sonnet', primary: true }), /H1 is not supported/);
+});
+
+test('the kill line is reached by an interval that reaches 0, even at 10 points or more', () => {
+  // C beats B on 4 tasks, B beats C on 2, the rest tie: mean +10 points, a wide interval
+  const recs = [];
+  for (let t = 0; t < 20; t++) {
+    const b = t >= 4 && t < 6 ? true : t >= 10;
+    const c = t < 4 ? true : t >= 4 && t < 6 ? false : t >= 10;
+    for (const [arm, ok] of [['A', false], ['B', b], ['C', c]]) {
+      recs.push({ run_id: `k${t}${arm}`, attempt: 1, task: `t${String(t).padStart(2, '0')}`, arm, task_type: 'fix', task_category: 'c', success: ok, error: null, flags: [] });
+    }
+  }
+  const r = analyze(recs, { arms: ['A', 'B', 'C'], resamples: 2000, seed: 1 });
+  close(r.primary['C-B'].mean, 0.1);
+  assert.ok(r.primary['C-B'].lowerOneSided <= 0, `lower bound ${r.primary['C-B'].lowerOneSided}`);
+  assert.match(renderSummary(r, { phase: 'full', model: 'sonnet', primary: true }), new RegExp(KILL));
 });

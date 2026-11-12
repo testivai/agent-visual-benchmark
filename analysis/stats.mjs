@@ -29,11 +29,12 @@ function percentile(sorted, q) {
   return sorted[lo] + (sorted[hi] - sorted[lo]) * (i - lo);
 }
 
-// Percentile bootstrap of the mean. The unit resampled is whatever `values`
+// Percentile bootstrap of the mean, with the two-sided interval and the
+// lower bound of the one-sided interval at the same level. The unit resampled is whatever `values`
 // holds: here, one value per task, because repeats of one task are not
 // independent of each other.
 export function bootstrapMean(values, { resamples = 10000, seed = 1, level = 0.95 } = {}) {
-  if (values.length === 0) return { mean: null, low: null, high: null, n: 0 };
+  if (values.length === 0) return { mean: null, low: null, high: null, lowerOneSided: null, n: 0 };
   const random = mulberry32(seed);
   const means = [];
   for (let r = 0; r < resamples; r++) {
@@ -43,7 +44,14 @@ export function bootstrapMean(values, { resamples = 10000, seed = 1, level = 0.9
   }
   means.sort((a, b) => a - b);
   const tail = (1 - level) / 2;
-  return { mean: mean(values), low: percentile(means, tail), high: percentile(means, 1 - tail), n: values.length };
+  return {
+    mean: mean(values),
+    low: percentile(means, tail),
+    high: percentile(means, 1 - tail),
+    // the one-sided interval at the same level: everything above this bound
+    lowerOneSided: percentile(means, 1 - level),
+    n: values.length,
+  };
 }
 
 // The last attempt of each run, in the order runs first appear.

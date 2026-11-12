@@ -39,13 +39,14 @@ function byGroup(scored, arms, key) {
   return out;
 }
 
-function perTask(scored, arms) {
+// One row per task: each arm's rate over its repeats, by `key` (success or lenient_success).
+function perTask(scored, arms, key = 'success') {
   return [...new Set(scored.map((r) => r.task))].sort().map((task) => {
     const runs = scored.filter((r) => r.task === task);
     const row = { task, type: runs[0].task_type, category: runs[0].task_category };
     for (const arm of arms) {
       const mine = runs.filter((r) => r.arm === arm);
-      row[arm] = mine.length ? count(mine, (r) => r.success === true) / mine.length : null;
+      row[arm] = mine.length ? count(mine, (r) => r[key] === true) / mine.length : null;
       row[`n${arm}`] = mine.length;
     }
     return row;
@@ -55,6 +56,28 @@ function perTask(scored, arms) {
 function paired(tasks, [x, y], options) {
   const diffs = tasks.filter((t) => t[x] !== null && t[y] !== null).map((t) => t[x] - t[y]);
   return bootstrapMean(diffs, options);
+}
+
+// C-B, C-A and B-A, paired by task, over the given task rows.
+function pairedSet(tasks, arms, options) {
+  const pairs = PAIRS.filter(([x, y]) => arms.includes(x) && arms.includes(y));
+  return { tasks: tasks.map((t) => t.task), ...Object.fromEntries(pairs.map((p) => [`${p[0]}-${p[1]}`, paired(tasks, p, options)])) };
+}
+
+// PREREGISTRATION.md, section 7: the primary metric is over the fix and change
+// tasks; decoys are their own result.
+const isDecoy = (r) => r.task_type === 'decoy';
+
+// Section 8: the symptom gone, values restored or not, over the fix and change tasks.
+// A run without a lenient verdict is left out of this rate only.
+function lenientStats(primaryRuns, arms, options) {
+  const judged = primaryRuns.filter((r) => typeof r.lenient_success === 'boolean');
+  const perArm = Object.fromEntries(arms.map((arm) => {
+    const mine = judged.filter((r) => r.arm === arm);
+    const successes = count(mine, (r) => r.lenient_success === true);
+    return [arm, { n: mine.length, successes, wilson: wilson(successes, mine.length) }];
+  }));
+  return { perArm, paired: pairedSet(perTask(judged, arms, 'lenient_success'), arms, options) };
 }
 
 function flagCounts(scored, arms) {
@@ -84,13 +107,17 @@ export function analyze(records, { arms = ['A', 'B', 'C'], resamples = 10000, se
   const meanPerRun = costs.length ? costs.reduce((s, c) => s + c, 0) / costs.length : null;
   const secs = scored.map((r) => r.seconds).filter((s) => typeof s === 'number');
   return {
-    runs: { total: finals.length, scored: scored.length, errors: errored.length, attempts: records.length },
+    runs: {
+      total: finals.length, scored: scored.length, errors: errored.length, attempts: records.length, errorShare: finals.length ? errored.length / finals.length : 0,
+    },
     errored: errored.map((r) => ({ run_id: r.run_id, task: r.task, arm: r.arm, stage: r.error.stage, message: r.error.message })),
     perArm: Object.fromEntries(arms.map((arm) => [arm, armStats(scored.filter((r) => r.arm === arm))])),
     byType: byGroup(scored, arms, 'task_type'),
     byCategory: byGroup(scored, arms, 'task_category'),
     perTask: tasks,
-    paired: Object.fromEntries(PAIRS.filter(([x, y]) => arms.includes(x) && arms.includes(y)).map((p) => [`${p[0]}-${p[1]}`, paired(tasks, p, options)])),
+    primary: pairedSet(tasks.filter((t) => !isDecoy({ task_type: t.type })), arms, options),
+    decoys: pairedSet(tasks.filter((t) => isDecoy({ task_type: t.type })), arms, options),
+    lenient: lenientStats(scored.filter((r) => !isDecoy(r)), arms, options),
     bBeatC: tasks.filter((t) => t.B !== null && t.C !== null && t.B > t.C),
     cBeatB: tasks.filter((t) => t.B !== null && t.C !== null && t.C > t.B),
     extremes: extremes(tasks, arms),
@@ -141,6 +168,67 @@ function taskRows(tasks, arms) {
   ];
 }
 
+function pairedTable(set) {
+  const rows = Object.entries(set).filter(([key]) => key !== 'tasks');
+  return [
+    '| comparison | tasks | mean difference | 95% bootstrap interval | one-sided 95%: above |',
+    '| --- | --- | --- | --- | --- |',
+    ...rows.map(([pair, p]) => `| ${pair} | ${p.n} | ${signed(p.mean)} | ${signed(p.low)} to ${signed(p.high)} | ${signed(p.lowerOneSided)} |`),
+  ];
+}
+
+const KILL_POINTS = 0.10;
+
+// PREREGISTRATION.md, sections 4 and 10: H1 and the kill line, judged on the
+// primary model's full study only.
+function verdictSection(result, { phase, primary }) {
+  if (phase !== 'full') return [];
+  if (!primary) {
+    return ['This model is a replication (PREREGISTRATION.md, section 4): its comparisons are description, not a test of H1.', ''];
+  }
+  const cb = result.primary['C-B'];
+  if (!cb || cb.mean === null) return ['## H1 and the kill line', '', 'No C-B comparison: no paired fix or change tasks.', ''];
+  const supported = cb.lowerOneSided > 0;
+  const killed = cb.mean < KILL_POINTS || cb.lowerOneSided <= 0;
+  return [
+    '## H1 and the kill line (preregistered)',
+    '',
+    `- C − B over the ${cb.n} fix and change tasks: ${signed(cb.mean)}; one-sided 95% interval: above ${signed(cb.lowerOneSided)}.`,
+    `- ${supported ? 'H1 is supported' : 'H1 is not supported'}: the one-sided interval ${supported ? 'lies above' : 'reaches'} 0.`,
+    killed
+      ? '- The kill line was reached (under 10 points, or the one-sided interval reaches 0): TestivAI did not measurably help over a pixel comparison in this study.'
+      : '- The kill line was not reached: the difference is at least 10 points and the one-sided interval lies above 0.',
+    '',
+  ];
+}
+
+function lenientSection(result, arms) {
+  const l = result.lenient;
+  return [
+    '## Lenient rate: the symptom gone, values restored or not (fix and change tasks)',
+    '',
+    `| arm | ${arms.join(' | ')} |`,
+    `| --- | ${arms.map(() => '---').join(' | ')} |`,
+    `| lenient success | ${arms.map((a) => `${l.perArm[a].successes}/${l.perArm[a].n} ${ci(l.perArm[a].wilson)}`).join(' | ')} |`,
+    `| strict success | ${arms.map((a) => strictPrimary(result, a)).join(' | ')} |`,
+    '',
+    ...pairedTable(l.paired),
+    '',
+  ];
+}
+
+function strictPrimary(result, arm) {
+  const groups = ['fix', 'change'].map((type) => result.byType[type]?.[arm]).filter(Boolean);
+  const k = groups.reduce((sum, g) => sum + g.successes, 0);
+  const n = groups.reduce((sum, g) => sum + g.n, 0);
+  return `${k}/${n} ${ci(wilson(k, n))}`;
+}
+
+function errorWarning(result) {
+  if (result.runs.errorShare <= 0.05) return [];
+  return [`**More than 5% of runs ended in an error twice (${pct(result.runs.errorShare)}).** They are left out of every rate below and listed at the end.`, ''];
+}
+
 function pilotSection(result) {
   const c = result.cost;
   return [
@@ -154,23 +242,25 @@ function pilotSection(result) {
   ];
 }
 
-export function renderSummary(result, { phase, model }) {
+export function renderSummary(result, { phase, model, primary = false }) {
   const arms = Object.keys(result.perArm);
   const lines = [
     `# Results: ${model ? `${model}, ` : ''}${phase}`,
     '',
     `Runs: ${result.runs.total} (${result.runs.attempts} attempts). Scored: ${result.runs.scored}. Errors: ${result.runs.errors} (excluded from the rates below, listed at the end).`,
     '',
+    ...errorWarning(result),
   ];
   if (phase === 'pilot') {
     lines.push('**This is the pilot. It is too small for conclusions: no significance claims are made from it.** It measures cost and finds broken or uninformative tasks.', '');
   }
+  lines.push(...verdictSection(result, { phase, primary }));
   lines.push('## Per arm', '', ...armTable(result, arms), '');
-  lines.push('## Paired by task', '', 'Each task\'s success rate is the mean of its repeats; the difference is averaged over tasks, with a percentile bootstrap over tasks '
+  lines.push('## Paired by task: fix and change tasks (the primary metric)', '', 'Each task\'s success rate is the mean of its repeats; the difference is averaged over tasks, with a percentile bootstrap over tasks '
     + `(${result.bootstrap.resamples} resamples, seed ${result.bootstrap.seed}).`, '');
-  lines.push('| comparison | tasks | mean difference | 95% bootstrap interval |', '| --- | --- | --- | --- |');
-  for (const [pair, p] of Object.entries(result.paired)) lines.push(`| ${pair} | ${p.n} | ${signed(p.mean)} | ${signed(p.low)} to ${signed(p.high)} |`);
-  lines.push('');
+  lines.push(...pairedTable(result.primary), '');
+  lines.push('## Decoys, on their own', '', ...pairedTable(result.decoys), '');
+  lines.push(...lenientSection(result, arms));
   lines.push('## Tasks where B beat C', '', ...taskRows(result.bBeatC, arms), '');
   lines.push('## Tasks where C beat B', '', ...taskRows(result.cBeatB, arms), '');
   lines.push('## By task type', '', ...groupTable(result.byType, arms, 'type'), '');
@@ -196,7 +286,7 @@ export function toCsv(rows, columns) {
 }
 
 const RUN_COLUMNS = ['phase', 'run_id', 'order', 'attempt', 'task', 'task_type', 'task_category', 'arm', 'repeat', 'model_id', 'model', 'success', 'fixed',
-  'collateral_clean', 'tampered', 'claimed_done', 'false_done', 'stop_reason', 'turns', 'tokens', 'cost_usd', 'cost_source', 'seconds', 'flags', 'error'];
+  'symptom_fixed', 'lenient_success', 'collateral_clean', 'tampered', 'claimed_done', 'false_done', 'stop_reason', 'turns', 'tokens', 'cost_usd', 'cost_source', 'seconds', 'flags', 'error'];
 
 function primaryModelId(root) {
   const config = JSON.parse(fs.readFileSync(path.join(root, 'runner.config.json'), 'utf8'));
@@ -218,7 +308,7 @@ function main() {
   const records = fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
   const result = analyze(records, {});
   fs.mkdirSync(path.join(dir, 'csv'), { recursive: true });
-  fs.writeFileSync(path.join(dir, 'summary.md'), renderSummary(result, { phase, model }));
+  fs.writeFileSync(path.join(dir, 'summary.md'), renderSummary(result, { phase, model, primary: model === primaryModelId(root) }));
   fs.writeFileSync(path.join(dir, 'csv', 'runs.csv'), toCsv(records, RUN_COLUMNS));
   fs.writeFileSync(path.join(dir, 'csv', 'per_task.csv'), toCsv(result.perTask, ['task', 'type', 'category', 'A', 'nA', 'B', 'nB', 'C', 'nC']));
   const armRows = Object.entries(result.perArm).map(([arm, s]) => ({ arm, n: s.n, successes: s.successes, rate: s.wilson.rate, low: s.wilson.low, high: s.wilson.high,
