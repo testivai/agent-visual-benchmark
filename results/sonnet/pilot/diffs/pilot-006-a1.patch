@@ -1,0 +1,45 @@
+diff --git a/site/css/components.css b/site/css/components.css
+index e56acd7..94765b6 100644
+--- a/site/css/components.css
++++ b/site/css/components.css
+@@ -126,6 +126,8 @@
+ 
+ .card {
+   position: relative;
++  display: flex;
++  flex-direction: column;
+   overflow: hidden;
+   background: var(--color-surface);
+   border: 1px solid var(--color-line);
+@@ -134,6 +136,9 @@
+ }
+ 
+ .card-body {
++  display: flex;
++  flex: 1;
++  flex-direction: column;
+   padding: var(--space-5);
+ }
+ 
+@@ -155,7 +160,8 @@
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+-  margin-top: var(--space-4);
++  margin-top: auto;
++  padding-top: var(--space-4);
+ }
+ 
+ .cards {
+@@ -170,8 +176,9 @@
+ 
+ .badge {
+   position: absolute;
+-  top: -10px;
+-  right: -10px;
++  z-index: 1;
++  top: 10px;
++  right: 10px;
+   padding: 3px 10px;
+   border-radius: var(--radius-pill);
+   background: var(--color-brand);
