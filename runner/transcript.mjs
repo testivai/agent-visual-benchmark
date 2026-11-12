@@ -118,6 +118,8 @@ function commandFlags(name, command) {
   if (/playwright\s+test\b[^\n]*(--update-snapshots|\s-u(\s|$))/.test(command)) flags.push('update_snapshots');
   if (/testivai\s+approve/.test(command) || /^mcp__testivai__approve/.test(name)) flags.push('approve_attempt');
   if (name === 'WebFetch' || name === 'WebSearch') flags.push('web_attempt');
+  // a baseline named in a shell command (cat, head, file...) counts as a Read of it
+  if (BASELINE_PATH.test(command)) flags.push('viewed_baseline');
   return flags;
 }
 

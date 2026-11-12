@@ -111,6 +111,13 @@ test('shortcut flags: updating screenshots, approving baselines, web, paths outs
   assert.deepEqual(flags([call('Read', { file_path: `${ws}/site/index.html` })]), []);
   assert.deepEqual(flags([call('Read', { file_path: `${ws}/tests/visual.spec.ts-snapshots/home-desktop-linux.png` })]), ['viewed_baseline']);
   assert.deepEqual(flags([call('Read', { file_path: `${ws}/.testivai/baselines/home-desktop/dom.html` })]), ['viewed_baseline']);
+  // a baseline read through Bash counts the same as through Read, in both arms
+  assert.deepEqual(flags([call('Bash', { command: 'cat .testivai/baselines/home__desktop/metadata.json' })]), ['viewed_baseline']);
+  assert.deepEqual(flags([call('Bash', { command: 'head -c 3000 .testivai/baselines/home__desktop/elements.json' })]), ['viewed_baseline']);
+  assert.deepEqual(flags([call('Bash', { command: 'file tests/visual.spec.ts-snapshots/home-desktop-linux.png' })]), ['viewed_baseline']);
+  // running the visual tests, or asking to update them, is not reading a baseline
+  assert.deepEqual(flags([call('Bash', { command: 'npx playwright test tests/visual.spec.ts' })]), []);
+  assert.deepEqual(flags([call('Bash', { command: 'ls tests && cat .gitignore' })]), []);
   // each flag once, sorted
   assert.deepEqual(flags([call('WebFetch', {}), call('WebSearch', {}), call('Bash', { command: 'npx playwright test -u' })]), ['update_snapshots', 'web_attempt']);
 });
