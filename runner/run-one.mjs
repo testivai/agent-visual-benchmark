@@ -86,7 +86,9 @@ async function scoreFields({ benchRoot, run, ws, before, parsed, resultsDir, att
   const scored = await scoreWorkspace({ benchRoot, taskId: run.task, ws });
   const diff = finalDiff(ws);
   fs.writeFileSync(path.join(resultsDir, 'diffs', `${run.runId}-a${attempt}.patch`), scrub(diff.text, secrets));
-  const outcome = runOutcome({ score: scored.score, collateral: scored.collateral, tampered: tamper.tampered, status: readStatus(parsed.finalText) });
+  const outcome = runOutcome({
+    score: scored.score, collateral: scored.collateral, tampered: tamper.tampered, status: readStatus(parsed.finalText), scoreFailedTests: scored.failedTests.score,
+  });
   return {
     ...outcome,
     functional: scored.functional,
@@ -97,6 +99,7 @@ async function scoreFields({ benchRoot, run, ws, before, parsed, resultsDir, att
     diff_stats: diff.stats,
     flags: shortcutFlags(parsed.toolCalls, { workspace: ws, benchRoot }),
     score_failures: scored.failures,
+    score_failed_tests: scored.failedTests.score,
     error: scored.score === 'error' || scored.collateral === 'error'
       ? { stage: 'score', message: [...scored.failures.score, ...scored.failures.collateral].join(' / ').slice(0, 1000) }
       : null,

@@ -33,6 +33,8 @@ async function scoreOnce(benchRoot, taskId, ws) {
       collateral: oracle[collateral].status,
       functional: functional.status,
       failures: { score: short(oracle[score].failures), collateral: short(oracle[collateral].failures), functional: short(functional.failures) },
+      // every failed score test, by title: the lenient rate needs the whole list
+      failedTests: { score: (oracle[score].failures ?? []).map((f) => f.title) },
     };
   } finally {
     removeWorkspace(app);

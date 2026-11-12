@@ -8,6 +8,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { executePlan, readRecords } from '../execute.mjs';
+import { RESTORE_TEST } from '../outcome.mjs';
 import { loadConfig, selectModel } from '../config.mjs';
 import { REPO_ROOT } from '../../harness/workspace.mjs';
 
@@ -78,6 +79,9 @@ test('the reference fix scores success', () => {
   assert.equal(r.collateral_clean, true);
   assert.equal(r.tampered, false);
   assert.equal(r.success, true);
+  assert.equal(r.symptom_fixed, true);
+  assert.equal(r.lenient_success, true);
+  assert.deepEqual(r.score_failed_tests, []);
   assert.equal(r.claimed_done, true);
   assert.equal(r.false_done, false);
   assert.equal(r.functional, 'passed');
@@ -92,11 +96,24 @@ test('the wrong fix scores failure, and its claim of done is a false done', () =
   assert.equal(r.false_done, true);
 });
 
+test('every failed score test is recorded by title, and decides the lenient verdict', () => {
+  const r = last('test-002');
+  // t01's wrong fix lifts the label clear of the card: it is still behind it, at both sizes
+  assert.deepEqual([...r.score_failed_tests].sort(), [
+    RESTORE_TEST,
+    'the "Most popular" label is in front of its card at 1280px',
+    'the "Most popular" label is in front of its card at 390px',
+  ].sort());
+  assert.equal(r.symptom_fixed, false);
+  assert.equal(r.lenient_success, false);
+});
+
 test('doing nothing fails a fix task', () => {
   const r = last('test-003');
   assert.equal(r.error, null);
   assert.equal(r.fixed, false);
   assert.equal(r.success, false);
+  assert.equal(r.symptom_fixed, false);
   assert.equal(r.site_files_changed, 0);
 });
 
@@ -147,7 +164,7 @@ test('a change task: the reference in arm C succeeds with the testivai server co
 test('every record has the fields the analysis needs', () => {
   for (const r of records.filter((x) => !x.error)) {
     for (const field of ['phase', 'run_id', 'order', 'attempt', 'task', 'task_type', 'task_category', 'arm', 'repeat', 'model', 'versions',
-      'fixed', 'collateral_clean', 'success', 'claimed_done', 'false_done', 'turns', 'tokens', 'cost_usd', 'seconds', 'stop_reason', 'flags', 'tampered']) {
+      'fixed', 'collateral_clean', 'success', 'symptom_fixed', 'lenient_success', 'score_failed_tests', 'claimed_done', 'false_done', 'turns', 'tokens', 'cost_usd', 'seconds', 'stop_reason', 'flags', 'tampered']) {
       assert.ok(field in r, `${r.run_id} ${field}`);
     }
     assert.equal(r.model, 'claude-fake-1');

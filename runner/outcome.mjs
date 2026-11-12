@@ -32,15 +32,33 @@ export function classifyAgentRun({ parsed, agentRes, config, arm }) {
 
 const verdict = (status) => (status === 'passed' ? true : status === 'failed' ? false : null);
 
-export function runOutcome({ score, collateral, tampered, status }) {
+// The title of the one test in each fix task's score.spec.ts that checks the
+// values the seed changed are back as they were. Every other test in it checks
+// the symptom (a test keeps this title and the specs in step).
+export const RESTORE_TEST = 'everything the seed changed is back as it was';
+
+// The symptom is gone: the score passed, or the restore test was its only failure.
+function symptomVerdict(score, failedTests) {
+  if (score !== 'failed') return verdict(score);
+  if (!Array.isArray(failedTests) || failedTests.length === 0) return null;
+  return failedTests.every((title) => title === RESTORE_TEST);
+}
+
+const allOf = (a, b, tampered) => (a === null || b === null ? null : a && b && !tampered);
+
+// scoreFailedTests: the titles of the score spec's failed tests.
+export function runOutcome({ score, collateral, tampered, status, scoreFailedTests }) {
   const fixed = verdict(score);
   const collateralClean = verdict(collateral);
-  const success = fixed === null || collateralClean === null ? null : fixed && collateralClean && !tampered;
+  const success = allOf(fixed, collateralClean, tampered);
+  const symptomFixed = symptomVerdict(score, scoreFailedTests);
   const claimed = status === 'done' ? true : status === 'not_done' ? false : null;
   return {
     fixed,
     collateral_clean: collateralClean,
     success,
+    symptom_fixed: symptomFixed,
+    lenient_success: allOf(symptomFixed, collateralClean, tampered),
     claimed_done: claimed,
     false_done: claimed === null || success === null ? null : claimed && !success,
   };
