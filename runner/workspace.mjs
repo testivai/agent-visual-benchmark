@@ -6,6 +6,7 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { copyApp, applyPatch } from '../harness/workspace.mjs';
 import { armFilesDir, BASELINE_DIRS, instructionsFor } from './arms.mjs';
+import { SANDBOX_PLACEHOLDERS } from './tamper.mjs';
 
 const GITIGNORE = ['node_modules/', 'test-results/', 'playwright-report/', 'visual-report/', '.testivai/temp/', ''].join('\n');
 
@@ -134,8 +135,9 @@ export function buildWorkspace({ benchRoot, taskId, arm, templateDir, runDir }) 
   fs.writeFileSync(path.join(ws, 'CLAUDE.md'), instructionsFor(arm));
   fs.writeFileSync(path.join(ws, '.gitignore'), GITIGNORE);
   git(ws, ['init', '-q']);
-  // the same list, kept where deleting .gitignore cannot remove it
-  fs.writeFileSync(path.join(ws, '.git', 'info', 'exclude'), GITIGNORE);
+  // the same list, kept where deleting .gitignore cannot remove it, and the
+  // sandbox's placeholders, listed where the agent does not look
+  fs.writeFileSync(path.join(ws, '.git', 'info', 'exclude'), `${GITIGNORE}${SANDBOX_PLACEHOLDERS.map((p) => `/${p}`).join('\n')}\n`);
   git(ws, ['add', '-A']);
   git(ws, ['commit', '-q', '-m', 'Initial commit', '--date', '2026-01-05T10:00:00Z']);
   copyInto(templateDir, ws, 'node_modules');

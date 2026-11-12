@@ -59,6 +59,8 @@ for (const arm of ['A', 'B', 'C']) {
     assert.equal(git(ws, ['rev-list', '--count', 'HEAD']), '1');
     assert.equal(git(ws, ['status', '--porcelain']), '', 'node_modules and outputs are ignored');
     assert.equal(git(ws, ['log', '-1', '--format=%s']), 'Initial commit');
+    assert.doesNotMatch(fs.readFileSync(path.join(ws, '.gitignore'), 'utf8'), /bashrc/, 'the sandbox placeholders are excluded where the agent does not look');
+    assert.match(fs.readFileSync(path.join(ws, '.git', 'info', 'exclude'), 'utf8'), /^\/\.bashrc$/m);
     assert.ok(fs.existsSync(path.join(ws, 'node_modules', '@playwright', 'test')));
   });
 }
@@ -89,11 +91,16 @@ test('the final diff is the agent\'s change only, even if it deleted .gitignore'
   fs.mkdirSync(path.join(ws, 'test-results'), { recursive: true });
   fs.writeFileSync(path.join(ws, 'test-results', 'out.txt'), 'output');
   fs.writeFileSync(path.join(ws, 'node_modules', 'new.js'), 'x');
+  // placeholders Claude Code's sandbox leaves in the working directory
+  for (const f of ['.bashrc', '.gitconfig', '.mcp.json']) fs.writeFileSync(path.join(ws, f), '');
+  fs.mkdirSync(path.join(ws, '.claude'));
+  fs.writeFileSync(path.join(ws, '.claude', 'x'), '');
   const diff = finalDiff(ws);
   assert.deepEqual(diff.stats, { files: 2, added: 2, removed: 5 }, 'the 5 lines of .gitignore, and the 2 added to pages.css');
   assert.match(diff.text, /diff --git a\/.gitignore/);
   assert.match(diff.text, /diff --git a\/site\/css\/pages.css/);
   assert.doesNotMatch(diff.text, /^diff --git a\/(node_modules|test-results)\//m, 'no file from node_modules or the test outputs');
+  assert.doesNotMatch(diff.text, /^diff --git a\/(\.bashrc|\.gitconfig|\.mcp\.json|\.claude)/m, 'no sandbox placeholder');
 });
 
 for (const arm of ['B', 'C']) {

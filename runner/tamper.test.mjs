@@ -115,3 +115,17 @@ test('adding a package to node_modules is tampering', (t) => {
   write(ws, 'node_modules/evil/index.js', 'x');
   assert.equal(tamperCheck(before, snapshotFiles(ws)).tampered, true);
 });
+
+test('the placeholder files Claude Code\'s sandbox puts in the working directory are not the agent\'s changes', (t) => {
+  const ws = tree(START);
+  t.after(() => removeWorkspace(ws));
+  const before = snapshotFiles(ws);
+  for (const rel of ['.bashrc', '.bash_profile', '.profile', '.zshrc', '.zprofile', '.gitconfig', '.gitmodules', '.ripgreprc', '.mcp.json', '.claude/x', '.idea/y', '.vscode/z']) {
+    write(ws, rel, '');
+  }
+  const r = tamperCheck(before, snapshotFiles(ws));
+  assert.deepEqual(r, { tampered: false, tamperPaths: [], siteChanges: [], otherChanges: [] });
+  // the same names inside site/ are the agent's
+  write(ws, 'site/.bashrc', 'x');
+  assert.deepEqual(tamperCheck(before, snapshotFiles(ws)).siteChanges, ['added: site/.bashrc']);
+});

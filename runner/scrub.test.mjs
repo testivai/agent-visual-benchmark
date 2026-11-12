@@ -17,6 +17,6 @@ test('short or empty "secrets" are ignored so ordinary text is not mangled', () 
 });
 
 test('secretValues collects the values of the credential variables that are set', () => {
-  const env = { ANTHROPIC_API_KEY: 'sk-ant-xxxxxxxxxxxxxxxx', ANTHROPIC_AUTH_TOKEN: 'tok-yyyyyyyyyy', PATH: '/usr/bin', CLAUDE_CODE_OAUTH_TOKEN: '' };
-  assert.deepEqual(secretValues(env).sort(), ['sk-ant-xxxxxxxxxxxxxxxx', 'tok-yyyyyyyyyy']);
+  const env = { ANTHROPIC_API_KEY: 'sk-ant-xxxxxxxxxxxxxxxx', ANTHROPIC_AUTH_TOKEN: 'tok-yyyyyyyyyy', PATH: '/usr/bin', CLAUDE_CODE_OAUTH_TOKEN: '', DEEPSEEK_API_KEY: 'sk-ds-zzzzzzzzzz' };
+  assert.deepEqual(secretValues(env).sort(), ['sk-ant-xxxxxxxxxxxxxxxx', 'sk-ds-zzzzzzzzzz', 'tok-yyyyyyyyyy']);
 });

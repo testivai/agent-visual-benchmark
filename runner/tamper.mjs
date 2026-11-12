@@ -8,12 +8,19 @@ import crypto from 'node:crypto';
 
 // Written by running the tests; never compared.
 const OUTPUTS = ['test-results/', 'playwright-report/', 'visual-report/', '.testivai/temp/', '.git/'];
+
+// Placeholders Claude Code's sandbox creates in the working directory (found
+// in a real run, docs/phase0-findings.md). Not the agent's work.
+export const SANDBOX_PLACEHOLDERS = ['.bashrc', '.bash_profile', '.profile', '.zshrc', '.zprofile', '.gitconfig', '.gitmodules',
+  '.ripgreprc', '.mcp.json', '.claude/', '.idea/', '.vscode/'];
+
+const isPlaceholder = (rel) => SANDBOX_PLACEHOLDERS.some((p) => (p.endsWith('/') ? rel.startsWith(p) : rel === p));
 const PROTECTED_FILES = ['playwright.config.ts', 'package.json', 'package-lock.json'];
 const PROTECTED_DIRS = ['tests/', 'node_modules/', '.testivai/'];
 // Inside these, even a new file is tampering.
 const SEALED = [/-snapshots\//, /^\.testivai\//, /^node_modules\//];
 
-const isOutput = (rel) => OUTPUTS.some((o) => rel.startsWith(o));
+const isOutput = (rel) => OUTPUTS.some((o) => rel.startsWith(o)) || isPlaceholder(rel);
 
 export function isProtected(rel) {
   if (isOutput(rel)) return false;

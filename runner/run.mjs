@@ -7,8 +7,9 @@
 //   node runner/run.mjs prepare                       build the arm templates (free)
 //   node runner/run.mjs check                         preflight checks (free)
 //   node runner/run.mjs probe                         one short real run that tests the isolation
+//   node runner/run.mjs image-check                   one short real run: can the model see a picture?
 //   node runner/run.mjs dry-run  --phase pilot        one real run, to estimate cost
-//   node runner/run.mjs start    --phase pilot [--confirm]
+//   node runner/run.mjs start    --phase pilot [--confirm] [--push-every n]
 //   node runner/run.mjs status   --phase pilot
 //
 // Options: --model <id>, --config <file> (default runner.config.json),
@@ -23,6 +24,7 @@ import { loadConfig, validateConfig, configHash, selectModel, primaryModel } fro
 import { selectPilotTasks, buildPlan } from './plan.mjs';
 import { preflight } from './preflight.mjs';
 import { readBudget, gate, latestDryRun } from './budget.mjs';
+import { saveProgress, shouldSave } from './progress.mjs';
 import { executePlan, readRecords, finishedRuns } from './execute.mjs';
 import { runOne, prepareRunDir } from './run-one.mjs';
 import { ensureTemplate, browsersPath } from './templates.mjs';
@@ -32,6 +34,8 @@ import { buildClaudeArgs, buildAgentEnv } from './claude.mjs';
 import { runAgent } from './agent.mjs';
 import { parseStream } from './transcript.mjs';
 import { startupProblems } from './startup.mjs';
+import { IMAGE_PROMPT, imageAnswer, drawPicture } from './image-check.mjs';
+import { runCost } from './limits.mjs';
 import { secretValues } from './scrub.mjs';
 import { freePort } from '../harness/run-specs.mjs';
 
@@ -85,6 +89,7 @@ function parseArgs(argv, loaded) {
     phase,
     model,
     confirm: argv.includes('--confirm'),
+    pushEvery: Number(value('--push-every', '0')),
     resultsDir: value('--results', path.join(REPO_ROOT, 'results', model, phase)),
     budgetFile: value('--budget-file', path.join(REPO_ROOT, 'BUDGET.md')),
   };
@@ -172,7 +177,18 @@ async function cmdStart(config, args) {
   if (!g.ok) process.exit(1);
   const version = requirePreflight(config);
   checkPlanFile(args.resultsDir, plan);
-  const records = await executePlan({ benchRoot: REPO_ROOT, config, plan, resultsDir: args.resultsDir, context: runContext(config, version), log: console.log });
+  // --push-every n: commit and push the results every n finished runs (CI skipped);
+  // AVB_COMMIT_TRAILER is added to each commit message.
+  const save = (last) => {
+    const finished = finishedRuns(readRecords(path.join(args.resultsDir, 'runs.jsonl'))).size;
+    if (!shouldSave({ finished, every: args.pushEvery, last })) return;
+    const r = saveProgress({ repoDir: REPO_ROOT, resultsDir: args.resultsDir, message: `Results: ${config.model} ${args.phase}, ${finished} of ${plan.runs.length} runs`, trailer: process.env.AVB_COMMIT_TRAILER ?? '' });
+    console.log(r.saved ? `saved and pushed results (${finished} runs)` : `results not pushed: ${r.reason}`);
+  };
+  const records = await executePlan({
+    benchRoot: REPO_ROOT, config, plan, resultsDir: args.resultsDir, context: runContext(config, version), log: console.log, onRunFinished: () => save(false),
+  });
+  save(true);
   print([`${finishedRuns(records).size} of ${plan.runs.length} runs finished.`, `next: npm run analyze -- --phase ${args.phase}`]);
 }
 
@@ -217,8 +233,9 @@ async function cmdProbe(config, args) {
   });
   fs.rmSync(runDir, { recursive: true, force: true });
   const p = parseStream(res.stdout);
+  const cost = config.agent.pricesPerMillionUsd ? runCost(p.tokens, config.agent.pricesPerMillionUsd) : p.costUsd;
   print([
-    `probe: ${p.hasResult ? p.subtype : 'no result'}, $${(p.costUsd ?? 0).toFixed(2)}`,
+    `probe: ${p.hasResult ? p.subtype : 'no result'}, $${(cost ?? 0).toFixed(4)}${config.agent.pricesPerMillionUsd ? ' at the model\'s prices' : ' (Claude Code estimate)'}`,
     'expected:', ...PROBE_EXPECTED.map((e) => `  ${e}`),
     'what happened (each command and the start of its output):',
     ...p.toolCalls.map((c) => `  $ ${c.input.command ?? c.name}\n    ${String(p.toolResults[c.id] ?? '').replace(/\s+/g, ' ').slice(0, 300)}`),
@@ -226,7 +243,36 @@ async function cmdProbe(config, args) {
   ]);
 }
 
-const COMMANDS = { plan: cmdPlan, prepare: cmdPrepare, check: cmdCheck, probe: cmdProbe, 'dry-run': cmdDryRun, start: cmdStart, status: cmdStatus };
+// One short real run: can this model see a picture through the study's Claude Code?
+async function cmdImageCheck(config) {
+  requirePreflight(config);
+  const runDir = fs.mkdtempSync(path.join(os.tmpdir(), 'avb-'));
+  const ws = path.join(runDir, 'project');
+  await drawPicture(path.join(ws, 'picture.png'));
+  fs.writeFileSync(path.join(ws, 'CLAUDE.md'), '# A check of the test machine\n');
+  const { settingsFile } = prepareRunDir(runDir, { arm: 'A', config, benchRoot: REPO_ROOT, ws });
+  const dir = path.join(REPO_ROOT, 'results', 'probe');
+  fs.mkdirSync(dir, { recursive: true });
+  const res = await runAgent({
+    command: config.agent.command,
+    args: buildClaudeArgs({ agent: { ...config.agent, maxTurns: 5 }, prompt: IMAGE_PROMPT, settingsFile, instructionsFile: path.join(ws, 'CLAUDE.md'), mcpConfigFile: null }),
+    cwd: ws,
+    env: buildAgentEnv({ baseEnv: process.env, runDir, port: await freePort(), browsersPath: browsersPath(), agent: config.agent }),
+    timeLimitMs: 5 * 60 * 1000,
+    transcriptFile: path.join(dir, `image-check-${config.model}-${Date.now()}.jsonl`),
+    secrets: secretValues(),
+    onStartup: (init) => startupProblems(init, { arm: 'A', model: config.agent.model }),
+  });
+  fs.rmSync(runDir, { recursive: true, force: true });
+  const p = parseStream(res.stdout);
+  const { answer, pass } = imageAnswer(p.finalText);
+  const record = { model_id: config.model, model: config.agent.model, at: new Date().toISOString(), pass, answer, tools_called: p.toolCalls.map((c) => c.name), tokens: p.tokens, stopped_at_startup: res.stoppedAtStartup };
+  fs.appendFileSync(path.join(dir, 'image-check.jsonl'), `${JSON.stringify(record)}\n`);
+  print([`image check, ${config.model}: ${pass ? 'PASS' : 'FAIL'} (answer: "${answer}", tools: ${record.tools_called.join(', ') || 'none'})`]);
+  process.exit(pass ? 0 : 1);
+}
+
+const COMMANDS = { 'image-check': cmdImageCheck, plan: cmdPlan, prepare: cmdPrepare, check: cmdCheck, probe: cmdProbe, 'dry-run': cmdDryRun, start: cmdStart, status: cmdStatus };
 
 async function main() {
   const argv = process.argv.slice(2);

@@ -203,6 +203,7 @@ test('a run that starts with a tool it must not have is stopped, recorded as a s
 test('a run cut off by a usage limit waits for the reset and runs again, without spending its retry', async () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'avb-results-'));
   const waits = [];
+  const finishedCalls = [];
   const plan = { phase: 'test', seed: 1, runs: [
     { runId: 'limit-a', order: 1, task: 't13', arm: 'A', repeat: 1 },
     { runId: 'limit-b', order: 2, task: 't13', arm: 'B', repeat: 1 },
@@ -213,7 +214,9 @@ test('a run cut off by a usage limit waits for the reset and runs again, without
     benchRoot: REPO_ROOT, config: { ...testConfig(), concurrency: 1 }, plan, resultsDir: dir, context,
     extraEnvFor: (run, attempt) => ({ FAKE_CLAUDE_MODE: modes[run.runId][attempt - 1], FAKE_CLAUDE_PATCH: EMPTY }),
     sleep: async (ms) => { waits.push(ms); },
+    onRunFinished: (run) => { finishedCalls.push(run.runId); },
   });
+  assert.deepEqual(finishedCalls, ['limit-a', 'limit-b'], 'called once per run, when it is finished');
   const a = records.filter((r) => r.run_id === 'limit-a');
   assert.deepEqual(a.map((r) => [r.attempt, r.error?.stage ?? null]), [[1, 'limit'], [2, null]]);
   assert.match(a[0].error.message, /usage limit/);

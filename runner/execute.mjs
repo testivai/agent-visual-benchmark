@@ -43,7 +43,10 @@ const realSleep = (ms) => new Promise((done) => setTimeout(done, ms));
 // After this many waits for a limit, the runner moves on; the run stays unfinished and resumes next time.
 const MAX_WAITS = 30;
 
-export async function executePlan({ benchRoot, config, plan, resultsDir, context, extraEnvFor = () => ({}), log = () => {}, sleep = realSleep }) {
+// onRunFinished(run) is called after each run's last attempt (to save progress).
+export async function executePlan({
+  benchRoot, config, plan, resultsDir, context, extraEnvFor = () => ({}), log = () => {}, sleep = realSleep, onRunFinished = () => {},
+}) {
   for (const dir of ['transcripts', 'diffs']) fs.mkdirSync(path.join(resultsDir, dir), { recursive: true });
   const file = path.join(resultsDir, 'runs.jsonl');
   const done = finishedRuns(readRecords(file));
@@ -72,6 +75,7 @@ export async function executePlan({ benchRoot, config, plan, resultsDir, context
       }
       attempt += 1;
     }
+    await onRunFinished(run);
   });
   return readRecords(file);
 }

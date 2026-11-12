@@ -1,6 +1,6 @@
 // Removes credentials from anything written to results/ (transcripts, diffs, errors).
 
-const CREDENTIAL_VARS = ['ANTHROPIC_API_KEY', 'ANTHROPIC_AUTH_TOKEN', 'CLAUDE_CODE_OAUTH_TOKEN'];
+const CREDENTIAL_VARS = ['ANTHROPIC_API_KEY', 'ANTHROPIC_AUTH_TOKEN', 'CLAUDE_CODE_OAUTH_TOKEN', 'DEEPSEEK_API_KEY'];
 const KEY_SHAPE = /sk-ant-[A-Za-z0-9_-]{8,}/g;
 const MIN_SECRET = 8;
 
