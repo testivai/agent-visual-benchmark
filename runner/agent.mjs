@@ -14,7 +14,18 @@ function killGroup(pid, signal) {
   }
 }
 
-export function runAgent({ command, args, cwd, env, timeLimitMs, transcriptFile, secrets = [], killGraceMs = 10000 }) {
+function initOf(line) {
+  try {
+    const m = JSON.parse(line);
+    return m.type === 'system' && m.subtype === 'init' ? m : null;
+  } catch {
+    return null;
+  }
+}
+
+// onStartup(init) returns the problems with Claude Code's startup report; if
+// there are any, the run is stopped at once (stoppedAtStartup lists them).
+export function runAgent({ command, args, cwd, env, timeLimitMs, transcriptFile, secrets = [], killGraceMs = 10000, onStartup = () => [] }) {
   return new Promise((resolve, reject) => {
     const started = Date.now();
     const out = fs.openSync(transcriptFile, 'w');
@@ -25,6 +36,19 @@ export function runAgent({ command, args, cwd, env, timeLimitMs, transcriptFile,
     let pending = '';
     let stderr = '';
     let timedOut = false;
+    let stoppedAtStartup = null;
+    let sawStartup = false;
+    const watch = (line) => {
+      if (sawStartup) return;
+      const init = initOf(line);
+      if (!init) return;
+      sawStartup = true;
+      const problems = onStartup(init);
+      if (problems.length > 0) {
+        stoppedAtStartup = problems;
+        killGroup(child.pid, 'SIGKILL');
+      }
+    };
 
     child.stdout.setEncoding('utf8');
     child.stdout.on('data', (chunk) => {
@@ -32,6 +56,7 @@ export function runAgent({ command, args, cwd, env, timeLimitMs, transcriptFile,
       const lines = pending.split('\n');
       pending = lines.pop();
       for (const line of lines) {
+        watch(line);
         const clean = `${scrub(line, secrets)}\n`;
         stdout += clean;
         fs.writeSync(out, clean);
@@ -60,7 +85,7 @@ export function runAgent({ command, args, cwd, env, timeLimitMs, transcriptFile,
         fs.writeSync(out, clean);
       }
       fs.closeSync(out);
-      resolve({ exitCode, signal, timedOut, seconds: (Date.now() - started) / 1000, stdout, stderrTail: scrub(stderr, secrets) });
+      resolve({ exitCode, signal, timedOut, stoppedAtStartup, seconds: (Date.now() - started) / 1000, stdout, stderrTail: scrub(stderr, secrets) });
     });
   });
 }

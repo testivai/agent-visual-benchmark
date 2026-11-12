@@ -1,21 +1,22 @@
 // What a run's outcome is. Pure.
 import { readStatus } from './transcript.mjs';
+import { startupProblems } from './startup.mjs';
 
 const LIMITS = { error_max_turns: 'max_turns', error_max_budget_usd: 'max_budget' };
 
-function mcpProblem(parsed, arm) {
-  const servers = parsed.mcpServers ?? [];
-  if (arm !== 'C') return servers.length > 0 ? `arm ${arm} must have no MCP server, found ${servers.map((s) => s.name).join(', ')}` : null;
-  const testivai = servers.find((s) => s.name === 'testivai');
-  return testivai?.status === 'connected' ? null : `the testivai MCP server did not connect (${testivai?.status ?? 'not listed'})`;
-}
+const agentError = (message, stage = 'agent') => ({ stopReason: 'error', error: { stage, message } });
 
-const agentError = (message) => ({ stopReason: 'error', error: { stage: 'agent', message } });
+// The startup report as saved in the transcript, checked again after the run.
+function savedStartupProblems(parsed, { arm, model }) {
+  if (!parsed.model) return ['the transcript has no startup report'];
+  return startupProblems({ model: parsed.model, tools: parsed.tools, plugins: parsed.plugins, skills: parsed.skills, mcp_servers: parsed.mcpServers }, { arm, model });
+}
 
 // A limit ends a run normally: it is scored as it stands. A crash, an API
 // error, the wrong model or a missing tool is the harness's or the service's
 // fault, not the agent's: an error, retried once, never counted as a failure.
 export function classifyAgentRun({ parsed, agentRes, config, arm }) {
+  if (agentRes.stoppedAtStartup) return agentError(`stopped at startup: ${agentRes.stoppedAtStartup.join('; ')}`, 'startup');
   if (agentRes.timedOut) return { stopReason: 'time_limit', error: null };
   if (!parsed.hasResult) {
     return agentError(`the agent ended without a result (exit ${agentRes.exitCode}${agentRes.signal ? `, ${agentRes.signal}` : ''}): ${agentRes.stderrTail.slice(-500)}`);
@@ -24,13 +25,8 @@ export function classifyAgentRun({ parsed, agentRes, config, arm }) {
   if (parsed.subtype !== 'success' || parsed.isError) {
     return agentError(`the agent ended with ${parsed.subtype}${parsed.isError ? ' (is_error)' : ''}: ${String(parsed.finalText).slice(0, 300)}`);
   }
-  const web = (parsed.tools ?? []).filter((t) => t === 'WebFetch' || t === 'WebSearch');
-  if (web.length > 0) return agentError(`the agent had ${web.join(' and ')}: the run was not isolated`);
-  if (parsed.model && parsed.model !== config.agent.model) {
-    return agentError(`the agent ran on model ${parsed.model}, not the pinned ${config.agent.model}`);
-  }
-  const mcp = mcpProblem(parsed, arm);
-  if (mcp) return agentError(mcp);
+  const startup = savedStartupProblems(parsed, { arm, model: config.agent.model });
+  if (startup.length > 0) return agentError(`the run was not isolated as planned: ${startup.join('; ')}`, 'startup');
   return { stopReason: 'completed', error: null };
 }
 

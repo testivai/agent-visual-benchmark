@@ -6,15 +6,22 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { planFor } from './run.mjs';
-import { loadConfig } from './config.mjs';
+import { loadConfig, selectModel } from './config.mjs';
 import { REPO_ROOT } from '../harness/workspace.mjs';
 
 const CLI = path.join(REPO_ROOT, 'runner', 'run.mjs');
-const config = loadConfig(path.join(REPO_ROOT, 'runner.config.json'));
+const loaded = loadConfig(path.join(REPO_ROOT, 'runner.config.json'));
+const config = selectModel(loaded, 'sonnet');
 
 function fakeSetup() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'avb-cli-'));
-  const cfg = { ...config, isolation: 'none', agent: { ...config.agent, command: [process.execPath, path.join(REPO_ROOT, 'runner', 'fake-claude.mjs')], claudeCodeVersion: null, model: 'claude-fake-1' } };
+  const config = loaded;
+  const cfg = {
+    ...config,
+    isolation: 'none',
+    agent: { ...config.agent, command: [process.execPath, path.join(REPO_ROOT, 'runner', 'fake-claude.mjs')], claudeCodeVersion: null },
+    models: { fake: { model: 'claude-fake-1', provider: 'anthropic-api-key', primary: true } },
+  };
   fs.writeFileSync(path.join(dir, 'config.json'), JSON.stringify(cfg));
   fs.writeFileSync(path.join(dir, 'BUDGET.md'), 'budget_usd: TODO\n');
   return dir;

@@ -11,7 +11,9 @@
 //   error-result  end with an error_during_execution result
 //   max-turns     end with an error_max_turns result
 //   touch-baseline  apply the patch, then overwrite one baseline file
-//   wrong-model   report a different model than the one asked for
+//   wrong-model   report a different model than the one asked for, then work 2 s later
+//   extra-tool    report WebFetch among the tools, then work 2 s later
+//   plugin        report a loaded plugin, then work 2 s later
 //   mcp-failed    report every MCP server as failed
 // FAKE_CLAUDE_RECORD: write the arguments, cwd and environment names there.
 import fs from 'node:fs';
@@ -37,6 +39,13 @@ function mcpServers(status) {
   const file = option('--mcp-config');
   if (!file) return [];
   return Object.keys(JSON.parse(fs.readFileSync(file, 'utf8')).mcpServers ?? {}).map((name) => ({ name, status }));
+}
+
+// As Claude Code reports them: the --tools list, then each MCP server's tools.
+function tools() {
+  const base = option('--tools') ? option('--tools').split(',') : ['Bash', 'Read', 'Edit', 'Write'];
+  const mcp = mcpServers('connected').flatMap((s) => [`mcp__${s.name}__get_visual_results`, `mcp__${s.name}__get_diff`]);
+  return [...base, ...mcp, ...(mode === 'extra-tool' ? ['WebFetch'] : [])];
 }
 
 function startChild() {
@@ -102,13 +111,17 @@ function crash() {
 
 emit({
   type: 'system', subtype: 'init', model: mode === 'wrong-model' ? 'claude-other' : model, claude_code_version: 'fake-1.0.0',
-  tools: ['Bash', 'Read', 'Edit', 'Write'], mcp_servers: mcpServers(mode === 'mcp-failed' ? 'failed' : 'connected'),
+  tools: tools(), mcp_servers: mcpServers(mode === 'mcp-failed' ? 'failed' : 'connected'),
+  plugins: mode === 'plugin' ? [{ name: 'cc-plugin-privacy', path: 'builtin' }] : [], skills: [],
 });
 
 const status = env.FAKE_CLAUDE_STATUS ?? 'DONE';
 const MODES = {
   apply() { applyPatch(); finish(`I made the change.\nSTATUS: ${status}`); },
-  'wrong-model'() { MODES.apply(); },
+  // a start the runner must refuse: the work comes 2 s after the report
+  'wrong-model'() { setTimeout(MODES.apply, 2000); },
+  'extra-tool'() { setTimeout(MODES.apply, 2000); },
+  plugin() { setTimeout(MODES.apply, 2000); },
   'mcp-failed'() { MODES.apply(); },
   crash,
   'crash-once'() {

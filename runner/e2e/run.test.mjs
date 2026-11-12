@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { executePlan, readRecords } from '../execute.mjs';
-import { loadConfig } from '../config.mjs';
+import { loadConfig, selectModel } from '../config.mjs';
 import { REPO_ROOT } from '../../harness/workspace.mjs';
 
 const FAKE = [process.execPath, path.join(REPO_ROOT, 'runner', 'fake-claude.mjs')];
@@ -18,7 +18,14 @@ const EMPTY = path.join(os.tmpdir(), 'avb-empty.patch');
 
 function testConfig(over = {}) {
   const base = loadConfig(path.join(REPO_ROOT, 'runner.config.json'));
-  return { ...base, isolation: 'none', concurrency: 2, agent: { ...base.agent, command: FAKE, model: 'claude-fake-1', timeLimitMinutes: 2, ...over } };
+  const fake = {
+    ...base,
+    isolation: 'none',
+    concurrency: 2,
+    agent: { ...base.agent, command: FAKE, timeLimitMinutes: 2, ...over },
+    models: { fake: { model: 'claude-fake-1', provider: 'anthropic-api-key', primary: true } },
+  };
+  return selectModel(fake, 'fake');
 }
 
 const context = { configHash: 'test', benchCommit: 'test', versions: { node: process.version } };
@@ -180,4 +187,15 @@ test('the time limit ends a run, which is then scored as it stands', async () =>
   assert.equal(r.stop_reason, 'time_limit');
   assert.equal(r.success, false);
   assert.equal(r.claimed_done, null);
+});
+
+test('a run that starts with a tool it must not have is stopped, recorded as a startup error and retried once', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'avb-results-'));
+  const plan = { phase: 'test', seed: 1, runs: [{ runId: 'startup-001', order: 1, task: 't13', arm: 'B', repeat: 1 }] };
+  const records = await executePlan({
+    benchRoot: REPO_ROOT, config: testConfig(), plan, resultsDir: dir, context, extraEnvFor: () => ({ FAKE_CLAUDE_MODE: 'extra-tool' }),
+  });
+  assert.deepEqual(records.map((r) => [r.attempt, r.error?.stage]), [[1, 'startup'], [2, 'startup']]);
+  assert.match(records[0].error.message, /WebFetch/);
+  assert.equal(records[0].success, undefined);
 });

@@ -6,6 +6,7 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { runAgent } from './agent.mjs';
 import { parseStream } from './transcript.mjs';
+import { startupProblems } from './startup.mjs';
 
 const FAKE = [process.execPath, path.resolve('runner/fake-claude.mjs')];
 const KEY = 'sk-ant-api03-TESTKEY-not-real-0123456789';
@@ -115,3 +116,30 @@ test('the fake records the arguments and environment it was given', async (t) =>
 test('git is there for the fake to apply patches', () => {
   assert.match(execFileSync('git', ['--version'], { encoding: 'utf8' }), /git/);
 });
+
+const lockedArgs = [...args, '--tools', 'Bash,Edit,Read'];
+const check = (init) => startupProblems(init, { arm: 'A', model: 'claude-test-1' });
+
+test('a start that matches the arm goes on to the end', async (t) => {
+  const { ws, transcript } = setup(t);
+  const r = await runAgent({ command: FAKE, args: lockedArgs, cwd: ws, env: env({ FAKE_CLAUDE_MODE: 'apply' }), timeLimitMs: 30000, transcriptFile: transcript, secrets: [KEY], onStartup: check });
+  assert.equal(r.stoppedAtStartup, null);
+  assert.equal(parseStream(r.stdout).hasResult, true);
+});
+
+for (const [mode, expected] of [['extra-tool', /WebFetch/], ['plugin', /plugin/], ['wrong-model', /model claude-other/]]) {
+  test(`a start with ${mode} is stopped at once, before the agent does anything`, async (t) => {
+    const { dir, ws, transcript } = setup(t);
+    const patch = path.join(dir, 'fix.patch');
+    fs.writeFileSync(patch, ['diff --git a/site/a.css b/site/a.css', '--- a/site/a.css', '+++ b/site/a.css', '@@ -1 +1 @@', '-a { color: red; }', '+a { color: blue; }', ''].join('\n'));
+    const started = Date.now();
+    const r = await runAgent({
+      command: FAKE, args: lockedArgs, cwd: ws, env: env({ FAKE_CLAUDE_MODE: mode, FAKE_CLAUDE_PATCH: patch }),
+      timeLimitMs: 30000, transcriptFile: transcript, secrets: [KEY], onStartup: check,
+    });
+    assert.match(r.stoppedAtStartup.join('\n'), expected);
+    assert.ok(Date.now() - started < 1500, 'stopped well before the fake starts working (2 s after its report)');
+    assert.equal(fs.readFileSync(path.join(ws, 'site/a.css'), 'utf8'), 'a { color: red; }\n', 'the workspace is untouched');
+    assert.equal(parseStream(r.stdout).hasResult, false);
+  });
+}

@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { classifyAgentRun, runOutcome } from './outcome.mjs';
 
 const parsed = (over = {}) => ({
-  hasResult: true, subtype: 'success', isError: false, model: 'claude-opus-5-5', mcpServers: [], finalText: 'STATUS: DONE', ...over,
+  hasResult: true, subtype: 'success', isError: false, model: 'claude-opus-5-5', tools: ['Bash', 'Edit', 'Read'], plugins: [], skills: [],
+  mcpServers: [], finalText: 'STATUS: DONE', ...over,
 });
 const agentRes = (over = {}) => ({ exitCode: 0, timedOut: false, stderrTail: '', ...over });
 const config = { agent: { model: 'claude-opus-5-5' } };
@@ -35,15 +36,26 @@ test('a web tool in the agent\'s tool list is an error: the run would not be iso
   assert.match(classify({ tools: ['Bash', 'WebSearch'] }, {}).error.message, /WebSearch/);
 });
 
+test('a run whose transcript has no startup report is an error', () => {
+  assert.match(classify({ model: null, tools: [] }, {}).error.message, /startup report/);
+});
+
 test('a different model than the one pinned is an error', () => {
   const r = classify({ model: 'claude-sonnet-5-5' }, {});
   assert.match(r.error.message, /model/);
 });
 
+test('a run stopped at startup is an error that says why', () => {
+  const r = classify({ hasResult: false }, { stoppedAtStartup: ['tools that must not be there: WebFetch'], exitCode: null });
+  assert.equal(r.error.stage, 'startup');
+  assert.match(r.error.message, /WebFetch/);
+});
+
 test('in arm C, the testivai server must have connected; other arms have no server', () => {
-  assert.equal(classify({ mcpServers: [{ name: 'testivai', status: 'connected' }] }, {}, 'C').error, null);
-  assert.match(classify({ mcpServers: [{ name: 'testivai', status: 'failed' }] }, {}, 'C').error.message, /testivai/);
-  assert.match(classify({ mcpServers: [] }, {}, 'C').error.message, /testivai/);
+  const cTools = ['Bash', 'Edit', 'Read', 'mcp__testivai__get_diff'];
+  assert.equal(classify({ tools: cTools, mcpServers: [{ name: 'testivai', status: 'connected' }] }, {}, 'C').error, null);
+  assert.match(classify({ tools: cTools, mcpServers: [{ name: 'testivai', status: 'failed' }] }, {}, 'C').error.message, /testivai/);
+  assert.match(classify({ tools: cTools, mcpServers: [] }, {}, 'C').error.message, /testivai/);
   assert.match(classify({ mcpServers: [{ name: 'testivai', status: 'connected' }] }, {}, 'B').error.message, /MCP/);
 });
 

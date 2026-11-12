@@ -87,6 +87,8 @@ export function parseStream(text) {
     model: init?.model ?? null,
     claudeCodeVersion: init?.claude_code_version ?? null,
     tools: init?.tools ?? [],
+    plugins: init?.plugins ?? [],
+    skills: init?.skills ?? [],
     mcpServers: init?.mcp_servers ?? [],
     mcpServerErrors: init?.mcp_server_errors ?? [],
     toolCalls,

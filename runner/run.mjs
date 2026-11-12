@@ -3,6 +3,7 @@
 // go through the preflight check; `start` also goes through the budget gate.
 //
 //   node runner/run.mjs plan     --phase pilot|full   the runs, in order (free)
+//   (every command takes --model <id>, default the config's primary model)
 //   node runner/run.mjs prepare                       build the arm templates (free)
 //   node runner/run.mjs check                         preflight checks (free)
 //   node runner/run.mjs probe                         one short real run that tests the isolation
@@ -10,26 +11,27 @@
 //   node runner/run.mjs start    --phase pilot [--confirm]
 //   node runner/run.mjs status   --phase pilot
 //
-// Options: --config <file> (default runner.config.json), --results <dir>
-// (default results/<phase>), --budget-file <file> (default BUDGET.md).
+// Options: --model <id>, --config <file> (default runner.config.json),
+// --results <dir> (default results/<model>/<phase>), --budget-file <file> (default BUDGET.md).
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { REPO_ROOT } from '../harness/workspace.mjs';
-import { loadConfig, validateConfig, configHash } from './config.mjs';
+import { loadConfig, validateConfig, configHash, selectModel, primaryModel } from './config.mjs';
 import { selectPilotTasks, buildPlan } from './plan.mjs';
 import { preflight } from './preflight.mjs';
 import { readBudget, gate, latestDryRun } from './budget.mjs';
 import { executePlan, readRecords, finishedRuns } from './execute.mjs';
-import { runOne } from './run-one.mjs';
+import { runOne, prepareRunDir } from './run-one.mjs';
 import { ensureTemplate, browsersPath } from './templates.mjs';
 import { armFilesDir } from './arms.mjs';
 import { buildWorkspace } from './workspace.mjs';
-import { buildSettings, buildClaudeArgs, buildAgentEnv } from './claude.mjs';
+import { buildClaudeArgs, buildAgentEnv } from './claude.mjs';
 import { runAgent } from './agent.mjs';
 import { parseStream } from './transcript.mjs';
+import { startupProblems } from './startup.mjs';
 import { secretValues } from './scrub.mjs';
 import { freePort } from '../harness/run-specs.mjs';
 
@@ -71,16 +73,19 @@ function runContext(config, claudeVersion) {
   };
 }
 
-function parseArgs(argv) {
+// --model picks one of the config's models (default: the primary one);
+// results go to results/<model>/<phase>/ unless --results says otherwise.
+function parseArgs(argv, loaded) {
   const value = (flag, fallback) => (argv.includes(flag) ? argv[argv.indexOf(flag) + 1] : fallback);
   const phase = value('--phase', 'pilot');
   if (!['pilot', 'full'].includes(phase)) throw new Error(`--phase must be pilot or full, not ${phase}`);
+  const model = value('--model', primaryModel(loaded));
   return {
     command: argv[0],
     phase,
+    model,
     confirm: argv.includes('--confirm'),
-    configFile: value('--config', path.join(REPO_ROOT, 'runner.config.json')),
-    resultsDir: value('--results', path.join(REPO_ROOT, 'results', phase)),
+    resultsDir: value('--results', path.join(REPO_ROOT, 'results', model, phase)),
     budgetFile: value('--budget-file', path.join(REPO_ROOT, 'BUDGET.md')),
   };
 }
@@ -185,32 +190,30 @@ const PROBE_PROMPT = (benchRoot) => [
   '1. npx playwright test tests/functional.spec.ts',
   '2. curl -sS -m 10 -o /dev/null -w "%{http_code}" https://example.com',
   '3. curl -sS -m 10 -o /dev/null -w "%{http_code}" https://registry.npmjs.org/',
-  `4. ls ${benchRoot}`,
+  `4. cat ${benchRoot}/oracle/t01/notes.md | head -3`,
   '5. node server.js & sleep 2; curl -sS -m 5 http://127.0.0.1:$PORT/ | head -c 60; kill %1',
   'End with STATUS: DONE.',
 ].join('\n');
 
-const PROBE_EXPECTED = ['1: the functional tests pass', '2: blocked (no network)', '3: allowed (the package registry)', '4: refused (the benchmark is not readable)', '5: the page is served'];
+const PROBE_EXPECTED = ['1: the functional tests pass', '2: blocked (no network)', '3: allowed (the package registry)', '4: no such file (the benchmark is not readable)', '5: the page is served'];
 
 async function cmdProbe(config, args) {
   requirePreflight(config);
   const template = await ensureTemplate({ benchRoot: REPO_ROOT, arm: 'A', cacheRoot: CACHE, log: console.log });
   const runDir = fs.mkdtempSync(path.join(os.tmpdir(), 'avb-'));
   const ws = buildWorkspace({ benchRoot: REPO_ROOT, taskId: 't13', arm: 'A', templateDir: template.dir, runDir });
-  fs.mkdirSync(path.join(runDir, 'home', '.claude'), { recursive: true });
-  fs.mkdirSync(path.join(runDir, 'tmp'), { recursive: true });
-  const settingsFile = path.join(runDir, 'settings.json');
-  fs.writeFileSync(settingsFile, JSON.stringify(buildSettings({ arm: 'A', benchRoot: REPO_ROOT, isolation: config.isolation, allowedNetwork: config.allowedNetwork })));
-  const dir = path.join(args.resultsDir, '..', 'probe');
+  const { settingsFile } = prepareRunDir(runDir, { arm: 'A', config, benchRoot: REPO_ROOT, ws });
+  const dir = path.join(REPO_ROOT, 'results', 'probe');
   fs.mkdirSync(dir, { recursive: true });
   const res = await runAgent({
     command: config.agent.command,
     args: buildClaudeArgs({ agent: { ...config.agent, maxTurns: 15 }, prompt: PROBE_PROMPT(REPO_ROOT), settingsFile, instructionsFile: path.join(ws, 'CLAUDE.md'), mcpConfigFile: null }),
     cwd: ws,
-    env: buildAgentEnv({ baseEnv: process.env, runDir, port: await freePort(), browsersPath: browsersPath() }),
+    env: buildAgentEnv({ baseEnv: process.env, runDir, port: await freePort(), browsersPath: browsersPath(), agent: config.agent }),
     timeLimitMs: 10 * 60 * 1000,
-    transcriptFile: path.join(dir, `probe-${Date.now()}.jsonl`),
+    transcriptFile: path.join(dir, `probe-${config.model}-${Date.now()}.jsonl`),
     secrets: secretValues(),
+    onStartup: (init) => startupProblems(init, { arm: 'A', model: config.agent.model }),
   });
   fs.rmSync(runDir, { recursive: true, force: true });
   const p = parseStream(res.stdout);
@@ -226,13 +229,16 @@ async function cmdProbe(config, args) {
 const COMMANDS = { plan: cmdPlan, prepare: cmdPrepare, check: cmdCheck, probe: cmdProbe, 'dry-run': cmdDryRun, start: cmdStart, status: cmdStatus };
 
 async function main() {
-  const args = parseArgs(process.argv.slice(2));
-  const config = loadConfig(args.configFile);
-  const problems = validateConfig(config);
+  const argv = process.argv.slice(2);
+  const configFile = argv.includes('--config') ? argv[argv.indexOf('--config') + 1] : path.join(REPO_ROOT, 'runner.config.json');
+  const loaded = loadConfig(configFile);
+  const problems = validateConfig(loaded);
   if (problems.length > 0) {
     print(['runner.config.json is not valid:', ...problems.map((p) => `  - ${p}`)]);
     process.exit(2);
   }
+  const args = parseArgs(argv, loaded);
+  const config = selectModel(loaded, args.model);
   const command = COMMANDS[args.command];
   if (!command) {
     print([`unknown command "${args.command ?? ''}". Commands: ${Object.keys(COMMANDS).join(', ')}`]);

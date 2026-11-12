@@ -7,6 +7,7 @@ import { buildSettings, buildMcpConfig, buildClaudeArgs, buildAgentEnv } from '.
 import { runAgent } from './agent.mjs';
 import { parseStream, readStatus, shortcutFlags } from './transcript.mjs';
 import { classifyAgentRun, runOutcome } from './outcome.mjs';
+import { startupProblems } from './startup.mjs';
 import { snapshotFiles, tamperCheck } from './tamper.mjs';
 import { scoreWorkspace, finalDiff } from './score.mjs';
 import { scrub, secretValues } from './scrub.mjs';
@@ -18,11 +19,17 @@ function writeJson(file, value) {
   return file;
 }
 
-function prepareRunDir(runDir, { arm, config, benchRoot, ws }) {
+// What a run must be able to read: the browsers and the Node that runs the tests.
+export function readNeeds() {
+  return [browsersPath(), path.resolve(process.execPath, '..', '..')];
+}
+
+export function prepareRunDir(runDir, { arm, config, benchRoot, ws }) {
   fs.mkdirSync(path.join(runDir, 'home', '.claude'), { recursive: true });
   fs.mkdirSync(path.join(runDir, 'tmp'), { recursive: true });
-  const settingsFile = writeJson(path.join(runDir, 'settings.json'),
-    buildSettings({ arm, benchRoot, isolation: config.isolation, allowedNetwork: config.allowedNetwork }));
+  const settingsFile = writeJson(path.join(runDir, 'settings.json'), buildSettings({
+    arm, benchRoot, homeDir: os.homedir(), isolation: config.isolation, allowedNetwork: config.allowedNetwork, readNeeds: readNeeds(),
+  }));
   const mcp = buildMcpConfig({ arm, workspace: ws, nodePath: process.execPath });
   const mcpConfigFile = mcp ? writeJson(path.join(runDir, 'mcp.json'), mcp) : null;
   return { settingsFile, mcpConfigFile };
@@ -40,7 +47,9 @@ function baseRecord({ run, phase, attempt, task, config, context }) {
     arm: run.arm,
     repeat: run.repeat,
     started_at: new Date().toISOString(),
+    model_id: config.agent.id,
     model: config.agent.model,
+    provider: config.agent.provider,
     config_hash: context.configHash,
     bench_commit: context.benchCommit,
     versions: context.versions,
@@ -99,10 +108,11 @@ export async function runOne({ benchRoot, config, run, phase, attempt, resultsDi
       command: config.agent.command,
       args: buildClaudeArgs({ agent: config.agent, prompt: task.prompt, settingsFile, instructionsFile: path.join(ws, 'CLAUDE.md'), mcpConfigFile }),
       cwd: ws,
-      env: buildAgentEnv({ baseEnv: process.env, runDir, port: await freePort(), browsersPath: browsersPath(), extraEnv: context.extraEnv ?? {} }),
+      env: buildAgentEnv({ baseEnv: process.env, runDir, port: await freePort(), browsersPath: browsersPath(), agent: config.agent, extraEnv: context.extraEnv ?? {} }),
       timeLimitMs: config.agent.timeLimitMinutes * 60 * 1000,
       transcriptFile: path.join(resultsDir, 'transcripts', `${run.runId}-a${attempt}.jsonl`),
       secrets,
+      onStartup: (init) => startupProblems(init, { arm: run.arm, model: config.agent.model }),
     });
     const parsed = parseStream(agentRes.stdout);
     const { stopReason, error } = classifyAgentRun({ parsed, agentRes, config, arm: run.arm });
