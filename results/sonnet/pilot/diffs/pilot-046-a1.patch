@@ -1,0 +1,33 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..4097198 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -90,6 +90,28 @@
+ 
+ /* Products */
+ 
++.card.product {
++  display: flex;
++  flex-direction: column;
++}
++
++.card.product .card-body {
++  display: flex;
++  flex: 1;
++  flex-direction: column;
++}
++
++.card.product .card-foot {
++  margin-top: auto;
++  padding-top: var(--space-4);
++}
++
++.card.product .badge {
++  top: var(--space-3);
++  right: var(--space-3);
++  z-index: 1;
++}
++
+ .chips {
+   display: flex;
+   flex-wrap: wrap;

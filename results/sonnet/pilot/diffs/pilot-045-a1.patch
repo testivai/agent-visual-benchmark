@@ -1,0 +1,37 @@
+diff --git a/site/css/components.css b/site/css/components.css
+index 0da5da2..70ebe68 100644
+--- a/site/css/components.css
++++ b/site/css/components.css
+@@ -501,3 +501,20 @@ textarea.form-input {
+     align-items: flex-start;
+   }
+ }
++
++/* Product cards: keep prices and buttons on one line across a row */
++.card.product {
++  display: flex;
++  flex-direction: column;
++}
++
++.card.product .card-body {
++  display: flex;
++  flex: 1;
++  flex-direction: column;
++}
++
++.card.product .card-foot {
++  margin-top: auto;
++  padding-top: var(--space-4);
++}
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..2e1cde3 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -6,7 +6,6 @@
+   position: relative;
+   overflow: hidden;
+   padding: var(--space-8) 0 calc(var(--space-8) + 56px);
+-  border-bottom: 1px solid var(--color-line);
+   background: linear-gradient(180deg, var(--color-brand-tint), var(--color-bg));
+ }
+ 
