@@ -56,3 +56,17 @@ test('nothing new: no commit; a failed push is reported, not thrown', (t) => {
   assert.equal(r.saved, false);
   assert.match(r.reason, /push failed/);
 });
+
+test('a git error while saving (the index locked by another git command) is reported, never thrown', (t) => {
+  const { root, repo } = repoWithRemote();
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  fs.mkdirSync(path.join(repo, 'results'), { recursive: true });
+  fs.writeFileSync(path.join(repo, 'results', 'a.txt'), 'a\n');
+  fs.writeFileSync(path.join(repo, '.git', 'index.lock'), '');
+  const r = saveProgress({ repoDir: repo, resultsDir: path.join(repo, 'results'), message: 'm' });
+  assert.equal(r.saved, false);
+  assert.match(r.reason, /not saved: .*index\.lock/);
+  // the next save, once the lock is gone, commits what the failed one missed
+  fs.rmSync(path.join(repo, '.git', 'index.lock'));
+  assert.equal(saveProgress({ repoDir: repo, resultsDir: path.join(repo, 'results'), message: 'm' }).saved, true);
+});

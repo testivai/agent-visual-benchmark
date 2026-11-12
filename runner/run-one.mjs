@@ -97,7 +97,7 @@ async function scoreFields({ benchRoot, run, ws, before, parsed, resultsDir, att
     site_files_changed: tamper.siteChanges.length,
     other_changes: tamper.otherChanges,
     diff_stats: diff.stats,
-    flags: shortcutFlags(parsed.toolCalls, { workspace: ws, benchRoot }),
+    flags: shortcutFlags(parsed.toolCalls, { workspace: ws, benchRoot, tmpDir: path.join(path.dirname(ws), 'tmp') }),
     score_failures: scored.failures,
     score_failed_tests: scored.failedTests.score,
     error: scored.score === 'error' || scored.collateral === 'error'

@@ -118,6 +118,13 @@ test('shortcut flags: updating screenshots, approving baselines, web, paths outs
   // running the visual tests, or asking to update them, is not reading a baseline
   assert.deepEqual(flags([call('Bash', { command: 'npx playwright test tests/visual.spec.ts' })]), []);
   assert.deepEqual(flags([call('Bash', { command: 'ls tests && cat .gitignore' })]), []);
+  // the run's own temporary directory (TMPDIR, outside the workspace) is the agent's to use
+  const own = (calls) => shortcutFlags(calls, { workspace: ws, benchRoot: bench, tmpDir: '/tmp/avb-x/tmp' });
+  assert.deepEqual(own([call('Read', { file_path: '/tmp/avb-x/tmp/claude-0/p.png' })]), []);
+  assert.deepEqual(own([call('Read', { file_path: '/tmp/avb-x/tmp' })]), []);
+  assert.deepEqual(own([call('Read', { file_path: '/tmp/avb-x/home/.claude.json' })]), ['outside_workspace']);
+  assert.deepEqual(own([call('Read', { file_path: '/tmp/avb-x/tmpfoo/p.png' })]), ['outside_workspace'], 'a sibling with the same prefix is not inside');
+  assert.deepEqual(flags([call('Read', { file_path: '/tmp/avb-x/tmp/p.png' })]), ['outside_workspace'], 'without tmpDir, nothing changes');
   // each flag once, sorted
   assert.deepEqual(flags([call('WebFetch', {}), call('WebSearch', {}), call('Bash', { command: 'npx playwright test -u' })]), ['update_snapshots', 'web_attempt']);
 });
