@@ -1,0 +1,17 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..02e7eec 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -90,6 +90,12 @@
+ 
+ /* Products */
+ 
++.page-products .section-title {
++  text-transform: uppercase;
++  font-size: 16px;
++  letter-spacing: 0.08em;
++}
++
+ .chips {
+   display: flex;
+   flex-wrap: wrap;
