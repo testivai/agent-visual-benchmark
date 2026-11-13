@@ -1,0 +1,8 @@
+{
+  "pages": ["home"],
+  "idPattern": "^[a-z][a-z-]*$",
+  "minTasks": 0,
+  "fixCategories": ["style-only"],
+  "minPerFixCategory": 0,
+  "bannedText": ["testivai"]
+}

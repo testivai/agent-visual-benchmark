@@ -1,0 +1,39 @@
+name: validate
+
+# Proves, on a machine other than the author's, that every task still behaves:
+# the seed fails the scorer, the reference passes, the wrong fix is rejected.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # No --with-deps: the runner image already has every library Chromium needs,
+      # and the extra system fonts it would fetch from the apt mirror are not used
+      # (the app serves its own font; fallbacks are measured on this machine).
+      - run: npx playwright install chromium
+      - name: Unit tests (harness, oracle library, authoring tools)
+        run: npm test
+      - name: Patches are what their edits produce
+        run: node tools/author.mjs --check
+      - name: Validate every task
+        run: npm run validate
+      - name: Runner end to end, with the fake agent (no model is called)
+        run: npm run test:runner

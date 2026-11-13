@@ -1,0 +1,13 @@
+diff --git a/site/css/components.css b/site/css/components.css
+index 0da5da2..df6414b 100644
+--- a/site/css/components.css
++++ b/site/css/components.css
+@@ -88,7 +88,7 @@
+ }
+ 
+ .btn-primary {
+-  background: var(--color-brand);
++  background: var(--color-success);
+   color: #ffffff;
+ }
+ 

@@ -1,0 +1,40 @@
+diff --git a/site/assets/hero.svg b/site/assets/hero.svg
+index 1f7efd8..54253e5 100644
+--- a/site/assets/hero.svg
++++ b/site/assets/hero.svg
+@@ -1,19 +1,19 @@
+ <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 280" width="420" height="280">
+   <rect x="0.5" y="0.5" width="419" height="279" rx="18.5" fill="#ffffff" stroke="#d8dee4"/>
+-  <rect x="24.4" y="196.3" width="371.2" height="12.6" rx="6.3" fill="#155e75"/>
+-  <rect x="52.7" y="208.9" width="10.4" height="46.3" fill="#155e75"/>
+-  <rect x="356.9" y="208.9" width="10.4" height="46.3" fill="#155e75"/>
+-  <path d="M96.4 196.3 118.7 92.6h58.3l22.4 103.7z" fill="#06b6d4"/>
+-  <path d="M118.7 92.6h58.3l6.6 30.4h-71.5z" fill="#0e7490"/>
+-  <circle cx="147.8" cy="68.4" r="26.3" fill="#fde68a" stroke="#f59e0b" stroke-width="3.4"/>
+-  <path d="M147.8 31.6v-9.7M184.6 68.4h9.7M111 68.4h-9.7M173.8 42.4l6.9-6.9M121.8 42.4l-6.9-6.9" stroke="#f59e0b" stroke-width="3.4" stroke-linecap="round"/>
+-  <rect x="232.3" y="118.7" width="132.6" height="77.6" rx="8.4" fill="#1f2328"/>
+-  <rect x="240.7" y="127.1" width="115.8" height="60.8" rx="3.6" fill="#ecfeff"/>
+-  <path d="M252.6 172.3 271.4 149.8l13.7 12.4 21.6-25.7 37.4 35.8z" fill="#06b6d4"/>
+-  <circle cx="262.8" cy="141.3" r="6.7" fill="#f59e0b"/>
+-  <path d="M206.3 196.3c0-14.6 5.9-24.7 15.8-24.7s15.8 10.1 15.8 24.7z" fill="#1a7f37"/>
+-  <path d="M222.1 171.6c-2.4-9.8-9.6-15.4-18.8-16.2 1.1 9.9 7.6 16.7 18.8 16.2zM222.1 171.6c1.7-11.4 9.2-18.6 19.9-20.1-0.4 11.5-7.7 19.6-19.9 20.1z" fill="#2da44e"/>
+-  <rect x="40.6" y="150.2" width="42.8" height="46.1" rx="5.2" fill="#e8f6ee" stroke="#1a7f37" stroke-width="2.6"/>
+-  <path d="M83.4 161.7h7.3c5.4 0 9.6 4.3 9.6 9.6s-4.2 9.6-9.6 9.6h-7.3" fill="none" stroke="#1a7f37" stroke-width="2.6"/>
+-  <path d="M52.8 140.6c0-5.2 5.8-5.2 5.8-10.4M66.3 140.6c0-5.2 5.8-5.2 5.8-10.4" fill="none" stroke="#8c959f" stroke-width="2.6" stroke-linecap="round"/>
++  <rect x="24" y="196" width="372" height="13" rx="6.5" fill="#155e75"/>
++  <rect x="53" y="209" width="10" height="46" fill="#155e75"/>
++  <rect x="357" y="209" width="10" height="46" fill="#155e75"/>
++  <path d="M96 196 119 93h58l22 103z" fill="#06b6d4"/>
++  <path d="M119 93h58l7 30h-72z" fill="#0e7490"/>
++  <circle cx="148" cy="68" r="26" fill="#fde68a" stroke="#f59e0b" stroke-width="3.4"/>
++  <path d="M148 32V22M185 68h10M111 68h-10M174 42l7-7M122 42l-7-7" stroke="#f59e0b" stroke-width="3.4" stroke-linecap="round"/>
++  <rect x="232" y="119" width="133" height="77" rx="8" fill="#1f2328"/>
++  <rect x="241" y="127" width="116" height="61" rx="4" fill="#ecfeff"/>
++  <path d="M253 172 271 150l14 12 22-25 37 35z" fill="#06b6d4"/>
++  <circle cx="263" cy="141" r="7" fill="#f59e0b"/>
++  <path d="M206 196c0-15 6-25 16-25s16 10 16 25z" fill="#1a7f37"/>
++  <path d="M222 171c-2-10-10-15-19-16 1 10 8 17 19 16zM222 171c2-11 9-18 20-20 0 11-8 19-20 20z" fill="#2da44e"/>
++  <rect x="41" y="150" width="42" height="46" rx="5" fill="#e8f6ee" stroke="#1a7f37" stroke-width="2.6"/>
++  <path d="M83 162h7c5 0 10 4 10 10s-4 10-10 10h-7" fill="none" stroke="#1a7f37" stroke-width="2.6"/>
++  <path d="M53 141c0-5 6-5 6-10M66 141c0-5 6-5 6-10" fill="none" stroke="#8c959f" stroke-width="2.6" stroke-linecap="round"/>
+ </svg>

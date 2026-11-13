@@ -1,0 +1,10 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index f6f1d93..2b551f0 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -385,4 +385,5 @@
+ 
+ .story {
+   grid-template-columns: 1fr 480px;
++  overflow: hidden;
+ }

@@ -1,0 +1,15 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..2533dda 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -2,6 +2,10 @@
+ 
+ /* Home */
+ 
++.page-home {
++  --color-muted: #3d4650;
++}
++
+ .hero {
+   position: relative;
+   overflow: hidden;

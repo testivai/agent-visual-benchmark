@@ -1,0 +1,1036 @@
+{
+  "measuredOn": "d53d7e9d7ad1f729",
+  "threshold": 0.2,
+  "tasks": {
+    "t01": {
+      "desktop": true,
+      "mobile": true,
+      "desktopPages": [
+        "pricing"
+      ],
+      "mobilePages": [
+        "pricing"
+      ],
+      "maxDiffPercent": 0.12,
+      "views": {
+        "pricing@desktop": {
+          "diffPixels": 1010,
+          "diffPercent": 0.06,
+          "sizeChanged": false,
+          "box": {
+            "x": 592,
+            "y": 257,
+            "width": 97,
+            "height": 13
+          }
+        },
+        "pricing@mobile": {
+          "diffPixels": 1010,
+          "diffPercent": 0.12,
+          "sizeChanged": false,
+          "box": {
+            "x": 147,
+            "y": 634,
+            "width": 97,
+            "height": 13
+          }
+        }
+      }
+    },
+    "t02": {
+      "desktop": false,
+      "mobile": false,
+      "desktopPages": [],
+      "mobilePages": [],
+      "maxDiffPercent": 0,
+      "views": {}
+    },
+    "t03": {
+      "desktop": true,
+      "mobile": true,
+      "desktopPages": [
+        "home",
+        "products",
+        "pricing",
+        "orders"
+      ],
+      "mobilePages": [
+        "home",
+        "products",
+        "pricing",
+        "orders"
+      ],
+      "maxDiffPercent": 0.19,
+      "views": {
+        "home@desktop": {
+          "diffPixels": 415,
+          "diffPercent": 0.02,
+          "sizeChanged": false,
+          "box": {
+            "x": 356,
+            "y": 360,
+            "width": 69,
+            "height": 16
+          }
+        },
+        "products@desktop": {
+          "diffPixels": 1886,
+          "diffPercent": 0.11,
+          "sizeChanged": false,
+          "box": {
+            "x": 353,
+            "y": 578,
+            "width": 745,
+            "height": 347
+          }
+        },
+        "pricing@desktop": {
+          "diffPixels": 1065,
+          "diffPercent": 0.07,
+          "sizeChanged": false,
+          "box": {
+            "x": 250,
+            "y": 577,
+            "width": 775,
+            "height": 12
+          }
+        },
+        "orders@desktop": {
+          "diffPixels": 1257,
+          "diffPercent": 0.1,
+          "sizeChanged": false,
+          "box": {
+            "x": 1009,
+            "y": 498,
+            "width": 114,
+            "height": 342
+          }
+        },
+        "home@mobile": {
+          "diffPixels": 415,
+          "diffPercent": 0.05,
+          "sizeChanged": false,
+          "box": {
+            "x": 228,
+            "y": 298,
+            "width": 69,
+            "height": 16
+          }
+        },
+        "products@mobile": {
+          "diffPixels": 1914,
+          "diffPercent": 0.19,
+          "sizeChanged": false,
+          "box": {
+            "x": 268,
+            "y": 533,
+            "width": 68,
+            "height": 1473
+          }
+        },
+        "pricing@mobile": {
+          "diffPixels": 1092,
+          "diffPercent": 0.13,
+          "sizeChanged": false,
+          "box": {
+            "x": 143,
+            "y": 559,
+            "width": 104,
+            "height": 795
+          }
+        },
+        "orders@mobile": {
+          "diffPixels": 351,
+          "diffPercent": 0.08,
+          "sizeChanged": false,
+          "box": {
+            "x": 247,
+            "y": 979,
+            "width": 114,
+            "height": 9
+          }
+        }
+      }
+    },
+    "t04": {
+      "desktop": true,
+      "mobile": true,
+      "desktopPages": [
+        "home"
+      ],
+      "mobilePages": [
+        "home"
+      ],
+      "maxDiffPercent": 0.06,
+      "views": {
+        "home@desktop": {
+          "diffPixels": 787,
+          "diffPercent": 0.04,
+          "sizeChanged": false,
+          "box": {
+            "x": 740,
+            "y": 162,
+            "width": 372,
+            "height": 222
+          }
+        },
+        "home@mobile": {
+          "diffPixels": 517,
+          "diffPercent": 0.06,
+          "sizeChanged": false,
+          "box": {
+            "x": 36,
+            "y": 404,
+            "width": 318,
+            "height": 189
+          }
+        }
+      }
+    },
+    "t05": {
+      "desktop": false,
+      "mobile": true,
+      "desktopPages": [],
+      "mobilePages": [
+        "pricing"
+      ],
+      "maxDiffPercent": 40.82,
+      "views": {
+        "pricing@mobile": {
+          "diffPixels": 430461,
+          "diffPercent": 40.82,
+          "sizeChanged": true,
+          "box": {
+            "x": 0,
+            "y": 0,
+            "width": 486,
+            "height": 2170
+          }
+        }
+      }
+    },
+    "t06": {
+      "desktop": true,
+      "mobile": true,
+      "desktopPages": [
+        "products"
+      ],
+      "mobilePages": [
+        "products"
+      ],
+      "maxDiffPercent": 30.72,
+      "views": {
+        "products@desktop": {
+          "diffPixels": 583867,
+          "diffPercent": 27.86,
+          "sizeChanged": true,
+          "box": {
+            "x": 0,
+            "y": 355,
+            "width": 1280,
+            "height": 1282
+          }
+        },
+        "products@mobile": {
+          "diffPixels": 351112,
+          "diffPercent": 30.72,
+          "sizeChanged": true,
+          "box": {
+            "x": 0,
+            "y": 896,
+            "width": 390,
+            "height": 2035
+          }
+        }
+      }
+    },
+    "t07": {
+      "desktop": false,
+      "mobile": false,
+      "desktopPages": [],
+      "mobilePages": [],
+      "maxDiffPercent": 0,
+      "views": {}
+    },
+    "t08": {
+      "desktop": true,
+      "mobile": true,
+      "desktopPages": [
+        "home",
+        "products",
+        "pricing",
+        "orders",
+        "contact",
+        "about"
+      ],
+      "mobilePages": [
+        "home",
+        "products",
+        "pricing",
+        "orders",
+        "contact",
+        "about"
+      ],
+      "maxDiffPercent": 12.92,
+      "views": {
+        "home@desktop": {
+          "diffPixels": 47629,
+          "diffPercent": 2.52,
+          "sizeChanged": false,
+          "box": {
+            "x": 144,
+            "y": 25,
+            "width": 992,
+            "height": 1426
+          }
+        },
+        "products@desktop": {
+          "diffPixels": 34162,
+          "diffPercent": 1.98,
+          "sizeChanged": false,
+          "box": {
+            "x": 144,
+            "y": 25,
+            "width": 992,
+            "height": 1294
+          }
+        },
+        "pricing@desktop": {
+          "diffPixels": 40115,
+          "diffPercent": 2.45,
+          "sizeChanged": false,
+          "box": {
+            "x": 144,
+            "y": 25,
+            "width": 992,
+            "height": 1227
+          }
+        },
+        "orders@desktop": {
+          "diffPixels": 25197,
+          "diffPercent": 2,
+          "sizeChanged": false,
+          "box": {
+            "x": 144,
+            "y": 25,
+            "width": 992,
+            "height": 934
+          }
+        },
+        "contact@desktop": {
+          "diffPixels": 20233,
+          "diffPercent": 1.79,
+          "sizeChanged": true,
+          "box": {
+            "x": 0,
+            "y": 25,
+            "width": 1280,
+            "height": 858
+          }
+        },
+        "about@desktop": {
+          "diffPixels": 35078,
+          "diffPercent": 1.94,
+          "sizeChanged": false,
+          "box": {
+            "x": 144,
+            "y": 25,
+            "width": 992,
+            "height": 1361
+          }
+        },
+        "home@mobile": {
+          "diffPixels": 37399,
+          "diffPercent": 4.12,
+          "sizeChanged": false,
+          "box": {
+            "x": 16,
+            "y": 25,
+            "width": 357,
+            "height": 2274
+          }
+        },
+        "products@mobile": {
+          "diffPixels": 125053,
+          "diffPercent": 12.05,
+          "sizeChanged": true,
+          "box": {
+            "x": 0,
+            "y": 25,
+            "width": 390,
+            "height": 2635
+          }
+        },
+        "pricing@mobile": {
+          "diffPixels": 50014,
+          "diffPercent": 5.85,
+          "sizeChanged": true,
+          "box": {
+            "x": 0,
+            "y": 25,
+            "width": 390,
+            "height": 2168
+          }
+        },
+        "orders@mobile": {
+          "diffPixels": 18163,
+          "diffPercent": 3.98,
+          "sizeChanged": false,
+          "box": {
+            "x": 16,
+            "y": 25,
+            "width": 357,
+            "height": 1118
+          }
+        },
+        "contact@mobile": {
+          "diffPixels": 17747,
+          "diffPercent": 3.78,
+          "sizeChanged": true,
+          "box": {
+            "x": 0,
+            "y": 25,
+            "width": 390,
+            "height": 1179
+          }
+        },
+        "about@mobile": {
+          "diffPixels": 112790,
+          "diffPercent": 12.92,
+          "sizeChanged": true,
+          "box": {
+            "x": 0,
+            "y": 25,
+            "width": 390,
+            "height": 2214
+          }
+        }
+      }
+    },
+    "t09": {
+      "desktop": true,
+      "mobile": true,
+      "desktopPages": [
+        "orders"
+      ],
+      "mobilePages": [
+        "orders"
+      ],
+      "maxDiffPercent": 7.62,
+      "views": {
+        "orders@desktop": {
+          "diffPixels": 85609,
+          "diffPercent": 6.47,
+          "sizeChanged": true,
+          "box": {
+            "x": 0,
+            "y": 384,
+            "width": 1280,
+            "height": 649
+          }
+        },
+        "orders@mobile": {
+          "diffPixels": 36182,
+          "diffPercent": 7.62,
+          "sizeChanged": true,
+          "box": {
+            "x": 0,
+            "y": 535,
+            "width": 390,
+            "height": 683
+          }
+        }
+      }
+    },
+    "t10": {
+      "desktop": true,
+      "mobile": true,
+      "desktopPages": [
+        "contact"
+      ],
+      "mobilePages": [
+        "contact"
+      ],
+      "maxDiffPercent": 11.15,
+      "views": {
+        "contact@desktop": {
+          "diffPixels": 4837,
+          "diffPercent": 0.43,
+          "sizeChanged": false,
+          "box": {
+            "x": 841,
+            "y": 322,
+            "width": 357,
+            "height": 156
+          }
+        },
+        "contact@mobile": {
+          "diffPixels": 56854,
+          "diffPercent": 11.15,
+          "sizeChanged": true,
+          "box": {
+            "x": 0,
+            "y": 0,
+            "width": 424,
+            "height": 1203
+          }
+        }
+      }
+    },
+    "t11": {
+      "desktop": false,
+      "mobile": false,
+      "desktopPages": [],
+      "mobilePages": [],
+      "maxDiffPercent": 0,
+      "views": {}
+    },
+    "t12": {
+      "desktop": true,
+      "mobile": true,
+      "desktopPages": [
+        "home"
+      ],
+      "mobilePages": [
+        "home"
+      ],
+      "maxDiffPercent": 0.14,
+      "views": {
+        "home@desktop": {
+          "diffPixels": 2696,
+          "diffPercent": 0.14,
+          "sizeChanged": false,
+          "box": {
+            "x": 170,
+            "y": 496,
+            "width": 769,
+            "height": 27
+          }
+        },
+        "home@mobile": {
+          "diffPixels": 938,
+          "diffPercent": 0.1,
+          "sizeChanged": false,
+          "box": {
+            "x": 42,
+            "y": 702,
+            "width": 86,
+            "height": 23
+          }
+        }
+      }
+    },
+    "t13": {
+      "desktop": false,
+      "mobile": false,
+      "desktopPages": [],
+      "mobilePages": [],
+      "maxDiffPercent": 0,
+      "views": {}
+    },
+    "t14": {
+      "desktop": true,
+      "mobile": true,
+      "desktopPages": [
+        "orders"
+      ],
+      "mobilePages": [
+        "orders"
+      ],
+      "maxDiffPercent": 0.81,
+      "views": {
+        "orders@desktop": {
+          "diffPixels": 5845,
+          "diffPercent": 0.46,
+          "sizeChanged": true,
+          "box": {
+            "x": 0,
+            "y": 450,
+            "width": 1280,
+            "height": 535
+          }
+        },
+        "orders@mobile": {
+          "diffPixels": 3697,
+          "diffPercent": 0.81,
+          "sizeChanged": true,
+          "box": {
+            "x": 0,
+            "y": 700,
+            "width": 390,
+            "height": 470
+          }
+        }
+      }
+    },
+    "t15": {
+      "desktop": true,
+      "mobile": true,
+      "desktopPages": [
+        "home",
+        "products",
+        "pricing",
+        "orders",
+        "contact",
+        "about"
+      ],
+      "mobilePages": [
+        "home",
+        "products",
+        "pricing",
+        "orders",
+        "contact",
+        "about"
+      ],
+      "maxDiffPercent": 1.99,
+      "views": {
+        "home@desktop": {
+          "diffPixels": 26320,
+          "diffPercent": 1.39,
+          "sizeChanged": false,
+          "box": {
+            "x": 144,
+            "y": 25,
+            "width": 980,
+            "height": 1245
+          }
+        },
+        "products@desktop": {
+          "diffPixels": 15741,
+          "diffPercent": 0.91,
+          "sizeChanged": false,
+          "box": {
+            "x": 144,
+            "y": 25,
+            "width": 980,
+            "height": 1161
+          }
+        },
+        "pricing@desktop": {
+          "diffPixels": 13428,
+          "diffPercent": 0.82,
+          "sizeChanged": false,
+          "box": {
+            "x": 145,
+            "y": 25,
+            "width": 979,
+            "height": 1065
+          }
+        },
+        "orders@desktop": {
+          "diffPixels": 14046,
+          "diffPercent": 1.11,
+          "sizeChanged": false,
+          "box": {
+            "x": 146,
+            "y": 25,
+            "width": 978,
+            "height": 816
+          }
+        },
+        "contact@desktop": {
+          "diffPixels": 5687,
+          "diffPercent": 0.5,
+          "sizeChanged": false,
+          "box": {
+            "x": 144,
+            "y": 25,
+            "width": 980,
+            "height": 712
+          }
+        },
+        "about@desktop": {
+          "diffPixels": 12270,
+          "diffPercent": 0.68,
+          "sizeChanged": false,
+          "box": {
+            "x": 144,
+            "y": 25,
+            "width": 980,
+            "height": 1215
+          }
+        },
+        "home@mobile": {
+          "diffPixels": 18094,
+          "diffPercent": 1.99,
+          "sizeChanged": false,
+          "box": {
+            "x": 16,
+            "y": 25,
+            "width": 349,
+            "height": 2059
+          }
+        },
+        "products@mobile": {
+          "diffPixels": 13384,
+          "diffPercent": 1.3,
+          "sizeChanged": false,
+          "box": {
+            "x": 16,
+            "y": 25,
+            "width": 357,
+            "height": 2417
+          }
+        },
+        "pricing@mobile": {
+          "diffPixels": 10422,
+          "diffPercent": 1.23,
+          "sizeChanged": false,
+          "box": {
+            "x": 16,
+            "y": 25,
+            "width": 357,
+            "height": 1943
+          }
+        },
+        "orders@mobile": {
+          "diffPixels": 8607,
+          "diffPercent": 1.89,
+          "sizeChanged": false,
+          "box": {
+            "x": 18,
+            "y": 25,
+            "width": 355,
+            "height": 964
+          }
+        },
+        "contact@mobile": {
+          "diffPixels": 3650,
+          "diffPercent": 0.78,
+          "sizeChanged": false,
+          "box": {
+            "x": 16,
+            "y": 25,
+            "width": 205,
+            "height": 954
+          }
+        },
+        "about@mobile": {
+          "diffPixels": 8701,
+          "diffPercent": 1.01,
+          "sizeChanged": false,
+          "box": {
+            "x": 16,
+            "y": 25,
+            "width": 326,
+            "height": 1983
+          }
+        }
+      }
+    },
+    "t16": {
+      "desktop": false,
+      "mobile": false,
+      "desktopPages": [],
+      "mobilePages": [],
+      "maxDiffPercent": 0,
+      "views": {}
+    },
+    "t17": {
+      "desktop": true,
+      "mobile": true,
+      "desktopPages": [
+        "products"
+      ],
+      "mobilePages": [
+        "products"
+      ],
+      "maxDiffPercent": 0.1,
+      "views": {
+        "products@desktop": {
+          "diffPixels": 1040,
+          "diffPercent": 0.06,
+          "sizeChanged": false,
+          "box": {
+            "x": 422,
+            "y": 345,
+            "width": 46,
+            "height": 339
+          }
+        },
+        "products@mobile": {
+          "diffPixels": 1027,
+          "diffPercent": 0.1,
+          "sizeChanged": false,
+          "box": {
+            "x": 337,
+            "y": 300,
+            "width": 46,
+            "height": 902
+          }
+        }
+      }
+    },
+    "t18": {
+      "desktop": true,
+      "mobile": true,
+      "desktopPages": [
+        "home"
+      ],
+      "mobilePages": [
+        "home"
+      ],
+      "maxDiffPercent": 16,
+      "views": {
+        "home@desktop": {
+          "diffPixels": 323064,
+          "diffPercent": 16,
+          "sizeChanged": true,
+          "box": {
+            "x": 0,
+            "y": 155,
+            "width": 1280,
+            "height": 1422
+          }
+        },
+        "home@mobile": {
+          "diffPixels": 148532,
+          "diffPercent": 15.79,
+          "sizeChanged": true,
+          "box": {
+            "x": 0,
+            "y": 454,
+            "width": 390,
+            "height": 1958
+          }
+        }
+      }
+    },
+    "t19": {
+      "desktop": true,
+      "mobile": true,
+      "desktopPages": [
+        "home",
+        "products",
+        "pricing",
+        "orders",
+        "contact",
+        "about"
+      ],
+      "mobilePages": [
+        "home",
+        "products",
+        "pricing",
+        "orders",
+        "contact",
+        "about"
+      ],
+      "maxDiffPercent": 0.03,
+      "views": {
+        "home@desktop": {
+          "diffPixels": 287,
+          "diffPercent": 0.02,
+          "sizeChanged": false,
+          "box": {
+            "x": 181,
+            "y": 28,
+            "width": 859,
+            "height": 1241
+          }
+        },
+        "products@desktop": {
+          "diffPixels": 198,
+          "diffPercent": 0.01,
+          "sizeChanged": false,
+          "box": {
+            "x": 213,
+            "y": 27,
+            "width": 827,
+            "height": 1072
+          }
+        },
+        "pricing@desktop": {
+          "diffPixels": 209,
+          "diffPercent": 0.01,
+          "sizeChanged": false,
+          "box": {
+            "x": 160,
+            "y": 27,
+            "width": 880,
+            "height": 1059
+          }
+        },
+        "orders@desktop": {
+          "diffPixels": 183,
+          "diffPercent": 0.01,
+          "sizeChanged": false,
+          "box": {
+            "x": 258,
+            "y": 27,
+            "width": 782,
+            "height": 755
+          }
+        },
+        "contact@desktop": {
+          "diffPixels": 215,
+          "diffPercent": 0.02,
+          "sizeChanged": false,
+          "box": {
+            "x": 180,
+            "y": 27,
+            "width": 924,
+            "height": 659
+          }
+        },
+        "about@desktop": {
+          "diffPixels": 376,
+          "diffPercent": 0.02,
+          "sizeChanged": false,
+          "box": {
+            "x": 176,
+            "y": 27,
+            "width": 789,
+            "height": 1184
+          }
+        },
+        "home@mobile": {
+          "diffPixels": 123,
+          "diffPercent": 0.01,
+          "sizeChanged": false,
+          "box": {
+            "x": 53,
+            "y": 37,
+            "width": 273,
+            "height": 1935
+          }
+        },
+        "products@mobile": {
+          "diffPixels": 50,
+          "diffPercent": 0,
+          "sizeChanged": false,
+          "box": {
+            "x": 60,
+            "y": 37,
+            "width": 194,
+            "height": 2123
+          }
+        },
+        "pricing@mobile": {
+          "diffPixels": 274,
+          "diffPercent": 0.03,
+          "sizeChanged": false,
+          "box": {
+            "x": 32,
+            "y": 37,
+            "width": 340,
+            "height": 1922
+          }
+        },
+        "orders@mobile": {
+          "diffPixels": 77,
+          "diffPercent": 0.02,
+          "sizeChanged": false,
+          "box": {
+            "x": 70,
+            "y": 37,
+            "width": 124,
+            "height": 892
+          }
+        },
+        "contact@mobile": {
+          "diffPixels": 158,
+          "diffPercent": 0.03,
+          "sizeChanged": false,
+          "box": {
+            "x": 52,
+            "y": 37,
+            "width": 280,
+            "height": 904
+          }
+        },
+        "about@mobile": {
+          "diffPixels": 268,
+          "diffPercent": 0.03,
+          "sizeChanged": false,
+          "box": {
+            "x": 66,
+            "y": 37,
+            "width": 306,
+            "height": 1839
+          }
+        }
+      }
+    },
+    "t20": {
+      "desktop": false,
+      "mobile": true,
+      "desktopPages": [],
+      "mobilePages": [
+        "about"
+      ],
+      "maxDiffPercent": 54.53,
+      "views": {
+        "about@mobile": {
+          "diffPixels": 818903,
+          "diffPercent": 54.53,
+          "sizeChanged": true,
+          "box": {
+            "x": 0,
+            "y": 0,
+            "width": 620,
+            "height": 2422
+          }
+        }
+      }
+    },
+    "t21": {
+      "desktop": false,
+      "mobile": false,
+      "desktopPages": [],
+      "mobilePages": [],
+      "maxDiffPercent": 0,
+      "views": {}
+    },
+    "t22": {
+      "desktop": true,
+      "mobile": true,
+      "desktopPages": [
+        "contact"
+      ],
+      "mobilePages": [
+        "contact"
+      ],
+      "maxDiffPercent": 11.67,
+      "views": {
+        "contact@desktop": {
+          "diffPixels": 117629,
+          "diffPercent": 10.42,
+          "sizeChanged": true,
+          "box": {
+            "x": 0,
+            "y": 316,
+            "width": 1280,
+            "height": 566
+          }
+        },
+        "contact@mobile": {
+          "diffPixels": 54741,
+          "diffPercent": 11.67,
+          "sizeChanged": true,
+          "box": {
+            "x": 0,
+            "y": 302,
+            "width": 390,
+            "height": 901
+          }
+        }
+      }
+    },
+    "t23": {
+      "desktop": false,
+      "mobile": false,
+      "desktopPages": [],
+      "mobilePages": [],
+      "maxDiffPercent": 0,
+      "views": {}
+    },
+    "t24": {
+      "desktop": false,
+      "mobile": false,
+      "desktopPages": [],
+      "mobilePages": [],
+      "maxDiffPercent": 0,
+      "views": {}
+    }
+  }
+}

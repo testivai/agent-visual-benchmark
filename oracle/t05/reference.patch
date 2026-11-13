@@ -1,0 +1,12 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index fc02ee3..420e383 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -354,6 +354,7 @@
+   .feature,
+   .newsletter,
+   .bundles,
++  .plans,
+   .faq,
+   .contact-grid,
+   .story {

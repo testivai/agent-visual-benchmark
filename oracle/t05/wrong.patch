@@ -1,0 +1,15 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index fc02ee3..5c3f265 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -372,6 +372,10 @@
+     height: 160px;
+   }
+ 
++  .plans {
++    grid-template-columns: repeat(2, 1fr);
++  }
++
+   .newsletter {
+     padding: var(--space-5);
+   }

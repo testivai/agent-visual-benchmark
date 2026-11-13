@@ -1,0 +1,9 @@
+{
+  "id": "t05",
+  "type": "fix",
+  "category": "breakpoint-only",
+  "pages": [
+    "pricing"
+  ],
+  "prompt": "The pricing page looks broken on my phone since the last change. Can you fix it?"
+}

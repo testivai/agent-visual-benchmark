@@ -1,0 +1,9 @@
+{
+  "id": "t11",
+  "type": "change",
+  "category": "shared-css",
+  "pages": [
+    "home"
+  ],
+  "prompt": "On the home page, the grey descriptive text under the headings is too faint. Make it #3d4650 on that page."
+}

@@ -1,0 +1,9 @@
+{
+  "id": "t14",
+  "type": "fix",
+  "category": "missing-or-duplicated",
+  "pages": [
+    "orders"
+  ],
+  "prompt": "The orders page does not look right any more. Please fix it."
+}

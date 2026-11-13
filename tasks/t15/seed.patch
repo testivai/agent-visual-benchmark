@@ -1,0 +1,13 @@
+diff --git a/site/css/tokens.css b/site/css/tokens.css
+index 3c06458..63a531a 100644
+--- a/site/css/tokens.css
++++ b/site/css/tokens.css
+@@ -3,7 +3,7 @@
+ @font-face {
+   font-family: 'Acme Sans';
+   src: url('../fonts/acme-sans.woff2') format('woff2');
+-  font-weight: 300 900;
++  font-weight: 400;
+   font-style: normal;
+   font-display: swap;
+ }

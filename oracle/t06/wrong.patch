@@ -1,0 +1,15 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..aedd14f 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -137,6 +137,10 @@
+   background: linear-gradient(135deg, #facc15, #84cc16);
+ }
+ 
++.cards .product:nth-child(3) {
++  display: none;
++}
++
+ .bundles {
+   display: grid;
+   grid-template-columns: repeat(2, 1fr);

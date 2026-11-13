@@ -1,0 +1,19 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..90f7bdd 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -143,6 +143,14 @@
+   gap: var(--space-5);
+ }
+ 
++/* Products: section headings */
++
++.page-products .section-title {
++  font-size: 16px;
++  text-transform: uppercase;
++  letter-spacing: 0.08em;
++}
++
+ /* Pricing */
+ 
+ .plans {

@@ -1,0 +1,14 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index f6f1d93..f8b07d1 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -386,3 +386,9 @@
+ .story {
+   grid-template-columns: 1fr 480px;
+ }
++
++@media (max-width: 720px) {
++  .story {
++    grid-template-columns: 1fr;
++  }
++}

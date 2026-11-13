@@ -1,0 +1,7 @@
+{
+  "id": "good",
+  "type": "fix",
+  "category": "style-only",
+  "pages": ["home"],
+  "prompt": "The home page looks off since the last change. Can you take a look and fix it?"
+}

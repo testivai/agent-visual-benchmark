@@ -1,0 +1,15 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..ac223aa 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -38,6 +38,10 @@
+   margin-top: var(--space-4);
+ }
+ 
++.hero-art {
++  margin-top: 1px;
++}
++
+ .hero-actions {
+   display: flex;
+   gap: var(--space-3);

@@ -1,0 +1,15 @@
+diff --git a/site/css/components.css b/site/css/components.css
+index e56acd7..811b33a 100644
+--- a/site/css/components.css
++++ b/site/css/components.css
+@@ -133,6 +133,10 @@
+   box-shadow: var(--shadow-sm);
+ }
+ 
++.product {
++  overflow: visible;
++}
++
+ .card-body {
+   padding: var(--space-5);
+ }

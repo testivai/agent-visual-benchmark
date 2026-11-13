@@ -1,0 +1,28 @@
+diff --git a/site/contact.html b/site/contact.html
+index 572bd7c..a9998c0 100644
+--- a/site/contact.html
++++ b/site/contact.html
+@@ -81,7 +81,7 @@
+             <h3>Other ways to reach us</h3>
+             <dl class="info-list">
+               <dt>Email</dt>
+-              <dd>customer.support.team@acmestorefront.example</dd>
++              <dd>customer.support.team<wbr>@acmestorefront.example</dd>
+               <dt>Phone</dt>
+               <dd>+1 555 0142, weekdays 9 to 5</dd>
+               <dt>Workshop</dt>
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 1406541..21a6843 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -250,6 +250,10 @@
+   align-items: start;
+ }
+ 
++.info-list dd {
++  overflow-wrap: break-word;
++}
++
+ .info-list dt {
+   margin-top: var(--space-4);
+   font-size: 13px;

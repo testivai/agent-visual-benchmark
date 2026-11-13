@@ -1,0 +1,16 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..8b0fc7b 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -382,3 +382,11 @@
+     align-items: flex-start;
+   }
+ }
++
++/* Products: section headings */
++
++.page-products .section-title {
++  font-size: 16px;
++  text-transform: uppercase;
++  letter-spacing: 0.08em;
++}

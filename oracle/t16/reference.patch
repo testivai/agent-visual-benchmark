@@ -1,0 +1,16 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..85d4e3e 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -227,6 +227,11 @@
+ 
+ /* Orders */
+ 
++.page-orders .table td {
++  padding-top: 6px;
++  padding-bottom: 6px;
++}
++
+ .table-tools {
+   display: flex;
+   align-items: center;

@@ -1,0 +1,32 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..0f22806 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -147,7 +147,7 @@
+ 
+ .plans {
+   display: grid;
+-  grid-template-columns: repeat(3, 1fr);
++  grid-template-columns: 1fr 1fr 1fr;
+   gap: var(--space-5);
+   align-items: start;
+   padding-top: var(--space-4);
+@@ -162,7 +162,8 @@
+ }
+ 
+ .plan-featured {
+-  border: 2px solid var(--color-brand);
++  border-width: 2px;
++  border-color: var(--color-brand);
+   box-shadow: var(--shadow-md);
+ }
+ 
+@@ -206,7 +207,7 @@
+   font-size: 15px;
+ }
+ 
+-.plan .btn {
++.plan > .btn {
+   width: 100%;
+ }
+ 

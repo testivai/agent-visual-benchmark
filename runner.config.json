@@ -1,0 +1,28 @@
+{
+  "agent": {
+    "command": ["claude"],
+    "claudeCodeVersion": "2.1.322",
+    "effort": null,
+    "maxTurns": 60,
+    "maxBudgetUsdPerRun": 10,
+    "timeLimitMinutes": 30
+  },
+  "models": {
+    "sonnet": { "model": "claude-sonnet-5-5", "provider": "anthropic-subscription", "primary": true },
+    "opus": { "model": "claude-opus-5-5", "provider": "anthropic-subscription" },
+    "deepseek": {
+      "model": "deepseek-flash",
+      "provider": "anthropic-compatible",
+      "baseUrl": "https://api.deepseek.com/anthropic",
+      "authTokenEnv": "DEEPSEEK_API_KEY",
+      "pricesPerMillionUsd": { "input": 0.3, "cacheRead": 0.006, "cacheWrite": 0.3, "output": 1.2 }
+    }
+  },
+  "isolation": "sandbox",
+  "allowedNetwork": ["registry.npmjs.org"],
+  "arms": ["A", "B", "C"],
+  "repeats": { "pilot": 3, "full": 5 },
+  "pilot": { "fixCategories": 2, "change": 1, "decoy": 1 },
+  "seeds": { "pilotTasks": 20261111, "order": 7919 },
+  "concurrency": 1
+}

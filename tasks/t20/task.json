@@ -1,0 +1,9 @@
+{
+  "id": "t20",
+  "type": "fix",
+  "category": "breakpoint-only",
+  "pages": [
+    "about"
+  ],
+  "prompt": "The about page looks broken on my phone since the last change. Can you fix it?"
+}

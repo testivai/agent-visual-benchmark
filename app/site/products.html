@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products · Acme Storefront</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body class="page-products">
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <img class="brand-mark" src="assets/logo.svg" width="28" height="28" alt="">
+        <span class="brand-name">Acme Storefront</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Main">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="products.html" aria-current="page">Products</a>
+        <a class="nav-link" href="pricing.html">Pricing</a>
+        <a class="nav-link" href="orders.html">Orders</a>
+        <a class="nav-link" href="about.html">About</a>
+        <a class="nav-link" href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container page-head">
+      <h1>Products</h1>
+      <p class="lede">Everything we make, in one place.</p>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">All products</h2>
+        <div class="chips">
+          <span class="chip is-active">All</span>
+          <span class="chip">Lighting</span>
+          <span class="chip">Desk</span>
+          <span class="chip">Audio</span>
+        </div>
+        <div class="cards">
+          <div class="card product">
+            <span class="badge">New</span>
+            <div class="card-thumb thumb-1"></div>
+            <div class="card-body">
+              <h3>Aurora Lamp</h3>
+              <p>Soft gradient light for long evenings.</p>
+              <div class="card-foot">
+                <span class="price">$49</span>
+                <a class="btn btn-secondary btn-sm" href="contact.html">Add to cart</a>
+              </div>
+            </div>
+          </div>
+          <div class="card product">
+            <div class="card-thumb thumb-2"></div>
+            <div class="card-body">
+              <h3>Sunset Mug</h3>
+              <p>Keeps coffee warm through a long meeting.</p>
+              <div class="card-foot">
+                <span class="price">$18</span>
+                <a class="btn btn-secondary btn-sm" href="contact.html">Add to cart</a>
+              </div>
+            </div>
+          </div>
+          <div class="card product">
+            <div class="card-thumb thumb-3"></div>
+            <div class="card-body">
+              <h3>Forest Desk Mat</h3>
+              <p>A calm surface for a busy day.</p>
+              <div class="card-foot">
+                <span class="price">$32</span>
+                <a class="btn btn-secondary btn-sm" href="contact.html">Add to cart</a>
+              </div>
+            </div>
+          </div>
+          <div class="card product">
+            <span class="badge badge-sale">Sale</span>
+            <div class="card-thumb thumb-4"></div>
+            <div class="card-body">
+              <h3>Orchid Notebook</h3>
+              <p>Dot-grid pages for sketches and lists.</p>
+              <div class="card-foot">
+                <span class="price">$14</span>
+                <a class="btn btn-secondary btn-sm" href="contact.html">Add to cart</a>
+              </div>
+            </div>
+          </div>
+          <div class="card product">
+            <div class="card-thumb thumb-5"></div>
+            <div class="card-body">
+              <h3>Slate Noise-Cancelling Headphones</h3>
+              <p>Quiet for the open-plan office.</p>
+              <div class="card-foot">
+                <span class="price">$129</span>
+                <a class="btn btn-secondary btn-sm" href="contact.html">Add to cart</a>
+              </div>
+            </div>
+          </div>
+          <div class="card product">
+            <div class="card-thumb thumb-6"></div>
+            <div class="card-body">
+              <h3>Citrus Plant Pot</h3>
+              <p>Something green next to the monitor.</p>
+              <div class="card-foot">
+                <span class="price">$22</span>
+                <a class="btn btn-secondary btn-sm" href="contact.html">Add to cart</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">Bundles</h2>
+        <div class="bundles">
+          <div class="card">
+            <div class="card-body">
+              <h3>Desk starter</h3>
+              <p>Lamp, mat and mug. Everything for a new desk.</p>
+              <div class="card-foot">
+                <span class="price">$89</span>
+                <a class="btn btn-primary btn-sm" href="contact.html">Add bundle</a>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <h3>Quiet corner</h3>
+              <p>Headphones, notebook and plant pot.</p>
+              <div class="card-foot">
+                <span class="price">$149</span>
+                <a class="btn btn-primary btn-sm" href="contact.html">Add bundle</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 Acme Storefront. Small things for busy desks.</p>
+      <div class="footer-links">
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

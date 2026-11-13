@@ -1,0 +1,7 @@
+{
+  "id": "bad-reference",
+  "type": "fix",
+  "category": "style-only",
+  "pages": ["home"],
+  "prompt": "The home page looks wrong since the last change."
+}

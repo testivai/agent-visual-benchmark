@@ -1,0 +1,14 @@
+{
+  "id": "t08",
+  "type": "fix",
+  "category": "failed-web-font",
+  "pages": [
+    "home",
+    "products",
+    "pricing",
+    "orders",
+    "contact",
+    "about"
+  ],
+  "prompt": "The whole site looks different since the last change, and not in a good way. Can you find out what happened and fix it?"
+}

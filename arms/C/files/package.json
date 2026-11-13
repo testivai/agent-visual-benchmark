@@ -1,0 +1,16 @@
+{
+  "name": "acme-storefront",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Acme Storefront: a small static shop site",
+  "scripts": {
+    "start": "node server.js",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@testivai/mcp": "0.9.4",
+    "@testivai/witness": "2.7.2",
+    "@testivai/witness-playwright": "2.1.3"
+  }
+}

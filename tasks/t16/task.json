@@ -1,0 +1,9 @@
+{
+  "id": "t16",
+  "type": "change",
+  "category": "shared-css",
+  "pages": [
+    "orders"
+  ],
+  "prompt": "On the orders page, make the table rows more compact: 6px of space above and below the text in each row, instead of 12px. Leave the heading row as it is."
+}

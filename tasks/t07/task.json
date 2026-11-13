@@ -1,0 +1,9 @@
+{
+  "id": "t07",
+  "type": "change",
+  "category": "shared-css",
+  "pages": [
+    "pricing"
+  ],
+  "prompt": "On the pricing page, make the button on the highlighted plan green, the same green as our success messages. It should keep its white text."
+}

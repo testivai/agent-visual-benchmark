@@ -1,0 +1,14 @@
+diff --git a/site/css/base.css b/site/css/base.css
+index c3a28bb..7bb71a2 100644
+--- a/site/css/base.css
++++ b/site/css/base.css
+@@ -84,6 +84,9 @@ h3 {
+ 
+ .section-title {
+   margin-bottom: var(--space-5);
++  font-size: 16px;
++  letter-spacing: 0.08em;
++  text-transform: uppercase;
+ }
+ 
+ .page-head {

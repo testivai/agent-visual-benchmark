@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact · Acme Storefront</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body class="page-contact">
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <img class="brand-mark" src="assets/logo.svg" width="28" height="28" alt="">
+        <span class="brand-name">Acme Storefront</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Main">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="products.html">Products</a>
+        <a class="nav-link" href="pricing.html">Pricing</a>
+        <a class="nav-link" href="orders.html">Orders</a>
+        <a class="nav-link" href="about.html">About</a>
+        <a class="nav-link" href="contact.html" aria-current="page">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container page-head">
+      <h1>Contact</h1>
+      <p class="lede">Questions about an order, or about anything we make.</p>
+    </div>
+
+    <section class="section">
+      <div class="container contact-grid">
+        <div>
+          <p class="alert alert-ok" id="contact-done" role="status" hidden></p>
+          <form class="form" id="contact-form" novalidate>
+            <div class="form-field">
+              <label class="form-label" for="contact-name">Name</label>
+              <input class="form-input" id="contact-name" name="name" type="text" autocomplete="name" data-validate="name">
+              <p class="form-error" data-error-for="name" hidden></p>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="contact-email">Email</label>
+              <input class="form-input" id="contact-email" name="email" type="email" autocomplete="email" data-validate="email">
+              <p class="form-error" data-error-for="email" hidden></p>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="contact-topic">Topic</label>
+              <select class="form-input" id="contact-topic" name="topic">
+                <option>An order</option>
+                <option>A product</option>
+                <option>Something else</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="contact-message">Message</label>
+              <textarea class="form-input" id="contact-message" name="message" rows="5" data-validate="message"></textarea>
+              <p class="form-error" data-error-for="message" hidden></p>
+            </div>
+            <div class="form-field">
+              <label class="form-check" for="contact-consent">
+                <input id="contact-consent" name="consent" type="checkbox" data-validate="consent">
+                <span>You may store this message to answer it.</span>
+              </label>
+              <p class="form-error" data-error-for="consent" hidden></p>
+            </div>
+            <button class="btn btn-primary" type="submit">Send message</button>
+          </form>
+        </div>
+        <aside class="card">
+          <div class="card-body">
+            <h3>Other ways to reach us</h3>
+            <dl class="info-list">
+              <dt>Email</dt>
+              <dd>customer.support.team@acmestorefront.example</dd>
+              <dt>Phone</dt>
+              <dd>+1 555 0142, weekdays 9 to 5</dd>
+              <dt>Workshop</dt>
+              <dd>14 Harbour Lane, Portland</dd>
+            </dl>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 Acme Storefront. Small things for busy desks.</p>
+      <div class="footer-links">
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

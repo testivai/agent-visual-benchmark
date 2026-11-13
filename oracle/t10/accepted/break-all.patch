@@ -1,0 +1,15 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 1406541..0cbf2c6 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -263,6 +263,10 @@
+   margin-top: 0;
+ }
+ 
++.info-list dd {
++  word-break: break-all;
++}
++
+ /* About */
+ 
+ .story {
