@@ -153,12 +153,15 @@ Read this before trusting a number.
 2. **Agent.** Claude Code in print mode, locked down the same way for every model
    (`runner/claude.mjs`): the pinned model; exactly the tools Bash, Read and Edit (plus the testivai
    tools in arm C); no plugins, skills, hooks, memory or user settings; an empty config directory;
-   `dontAsk` permissions; the instructions given once; Bash in the sandbox, with the web blocked and
-   the directory that holds the benchmark unreadable (without naming it); turn, time and spend
-   limits. Only the login the model needs reaches it: nothing for the subscription models (the
+   `dontAsk` permissions; the instructions given once; Read and Edit only inside the run's own
+   directory; Bash in the sandbox, with the web blocked and the home directory, the temporary
+   directory and the directory that holds the benchmark closed (without naming the benchmark); turn,
+   time and spend limits. Each run lives in its own directory under `/var/tmp/avb-runs/`, which the
+   sandbox closes but for that directory. Only the login the model needs reaches it: nothing for the subscription models (the
    machine's Claude login), the provider's endpoint and key for DeepSeek. When Claude Code's startup
    report shows anything else, the run is stopped at once (`runner/startup.mjs`). What was checked,
-   on the real models, is in `docs/phase0-findings.md`.
+   on the real models, is in `docs/phase0-findings.md`; what the first checks missed, and how a
+   pilot's agents got out, in `docs/pilot-isolation-breach.md`.
 3. **Score.** The workspace's `site/` is copied into a clean copy of the app and scored there by the
    oracle and the functional suite. Changes to tests, baselines, tool configuration or packages are
    tampering and make the run a failure (`runner/tamper.mjs`). The transcript and the diff are kept,

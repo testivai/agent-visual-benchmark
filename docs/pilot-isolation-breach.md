@@ -37,7 +37,8 @@ Every tool call of every run was scanned for paths outside the run's own folder
 the font's name (`find / -iname "*acme-sans*"`), which listed template and scratch-folder paths. Neither
 opened them. Both left the site unchanged and succeeded.
 
-**DeepSeek-V4.1-Flash: 9 of 54 runs used what they found, and 1 more saw it.**
+**DeepSeek-V4.1-Flash: 9 of 54 runs used what they found, and 1 more saw it.** This pilot is kept, as
+it ran, in `results/deepseek/pilot-leaked/`, and was run again after the fix (below).
 
 | run | task / arm | what it did | outcome |
 | --- | --- | --- | --- |
@@ -57,14 +58,26 @@ Runs pilot-001, -024 and -038 searched `/tmp` only for their own screenshots and
 So in the DeepSeek pilot, the decoy's results (A 0/3, B 1/3, C 1/3) come from the leak, and two of
 arm A's t15 successes do too. The other tasks' results are not affected.
 
-## What changes before any further run
+## What changed before any further run
 
-- The sandbox denies reading `/root`, `/home` and the system's temporary directory, except the run's
-  own folder and what a run must read (the browsers, Node), and a probe checks each of them.
-- The runner refuses to start a run while other `avb-` folders are in the temporary directory, and a
-  failed template build removes its folder.
-- The shortcut flags also catch shell commands that read outside the workspace and searches of the
-  whole disk.
-- The leftover folders are deleted.
+Made on 2026-11-13 and listed in `CHANGES_AFTER_PILOT.md`:
 
-`CHANGES_AFTER_PILOT.md` lists these when they are made.
+- **Closed directories.** The directory that holds the benchmark, the home directory and the system's
+  temporary directory are closed to Bash (the sandbox) and to the Read and Edit tools (permission
+  rules). `runner/claude.mjs`, `closedRoots`.
+- **Read and Edit only in the run's own directory.** They were allowed everywhere; now only inside it,
+  and in `dontAsk` mode anything else is denied.
+- **Run directories outside the temporary directory.** Runs live in `/var/tmp/avb-runs/` (or
+  `AVB_RUN_ROOT`), which the sandbox closes but for the run's own directory. Each names the process
+  that owns it, and one whose owner is gone is removed before the next run (`runner/rundir.mjs`).
+- **What a run must read stays readable:** the browsers, Node, and the proxy's CA bundle (in `/root`).
+- **A failed template build removes its folder** (`runner/tempdir.mjs`).
+- **Shortcut flags** also catch shell commands that read outside the workspace and its TMPDIR, and
+  searches of the disk; the analysis reads them again from each transcript.
+- **The leftover folders were deleted.**
+- **The probe tries every way out the pilots found.** It plants a random secret in the temporary
+  directory and one beside the run's directory, and asks the agent to read them with Bash and with
+  the Read tool and to list `/tmp` and `/root`. It fails if a secret comes back, or if the run no longer
+  works (tests, registry, CA bundle). On DeepSeek through the pinned Claude Code, 2026-11-13: both
+  secrets "No such file", `/tmp` empty, `/root` showing only the CA bundle's folder, the Read tool
+  denied, the tests passing, the registry reachable. PASS (`results/probe/probe.jsonl`).

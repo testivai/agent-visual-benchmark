@@ -96,3 +96,12 @@ eight, the testivai server connected).
 - That an agent cannot find some other way out. The runner also records the tools each run called
   and flags any access outside the workspace.
 - How long a full task takes or what it uses up. The dry runs measure that.
+
+## Added 2026-11-13: what these checks missed
+
+They checked that the benchmark could not be read and that the web was blocked, not the rest of the
+machine. The sandbox closed only the directory that holds the benchmark, and the Read tool was allowed
+everywhere. In the DeepSeek pilot, agents found leftover copies of the clean app in `/tmp`, the study
+session's scratch folder and `/root/.claude`. What happened, which runs it touched and what was
+changed are in `docs/pilot-isolation-breach.md`. The probe now plants secrets where a run must not
+reach and fails if any comes back.

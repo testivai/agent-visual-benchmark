@@ -2,7 +2,7 @@
 
 Runs: 54 (54 attempts). Scored: 54. Errors: 0 (excluded from the rates below, listed at the end).
 
-Turns, the done claim and the agent's time are read again from each transcript with the current parser (analysis/rederive.mjs); runs.jsonl is left as recorded. 4 of 54 runs differ from runs.jsonl: pilot-006 (turns), pilot-014 (turns), pilot-039 (turns), pilot-047 (turns).
+Turns, the done claim, the agent's time and the shortcut flags are read again from each transcript with the current parser (analysis/rederive.mjs); runs.jsonl is left as recorded. 6 of 54 runs differ from runs.jsonl: pilot-006 (turns), pilot-014 (turns), pilot-015 (flags), pilot-021 (flags), pilot-039 (turns), pilot-047 (turns).
 
 **This is the pilot. It is too small for conclusions: no significance claims are made from it.** It measures cost and finds broken or uninformative tasks.
 
@@ -94,7 +94,7 @@ Counted from the tool calls in each transcript (see runner/transcript.mjs). Tamp
 
 - A: none
 - B: viewed_baseline 9
-- C: viewed_baseline 7
+- C: viewed_baseline 7, searched_disk 2
 
 ## Errors
 
