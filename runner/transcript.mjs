@@ -144,7 +144,8 @@ const SYSTEM_PREFIXES = ['/usr/', '/bin/', '/lib/', '/opt/', '/dev/', '/proc/sel
 const ABSOLUTE = /(?:^|[\s"'=(>|;&,])(\/(?:[\w.@+~-]+\/?)+)/g;
 const TOP_LEVEL = /^\/(tmp|var|root|home|srv|etc|mnt|media|run|boot|nix|snap|sys|opt|usr|bin|lib|dev|proc\/\d)(\/|$)/;
 const DISK_SEARCH = /\bfind\s+\/(?=[\s"']|$)|\blocate\s/;
-const SEARCH_COMMAND = /\b(find|grep|rg|ag)\b/;
+// a search command and its arguments, up to the end of that command
+const SEARCH_COMMAND = /\b(?:find|grep|rg|ag)\b[^|;&\n]*/g;
 
 function pathsIn(input) {
   return ['file_path', 'path', 'notebook_path'].map((k) => input?.[k]).filter((v) => typeof v === 'string');
@@ -174,11 +175,13 @@ function pathFlag(p, workspace, tmpDir) {
 
 // What a shell command reads outside the run (docs/pilot-isolation-breach.md):
 // paths outside the workspace and TMPDIR, and searches of the disk.
-function commandPathFlags(command, { workspace, tmpDir }) {
-  const outside = [...command.matchAll(ABSOLUTE)].map((m) => m[1])
-    .filter((p) => TOP_LEVEL.test(p) && pathFlag(p, workspace, tmpDir) === 'outside_workspace');
-  const flags = outside.length > 0 ? ['outside_workspace'] : [];
-  if (DISK_SEARCH.test(command) || (outside.length > 0 && SEARCH_COMMAND.test(command))) flags.push('searched_disk');
+const outsidePaths = (text, { workspace, tmpDir }) => [...text.matchAll(ABSOLUTE)].map((m) => m[1])
+  .filter((p) => TOP_LEVEL.test(p) && pathFlag(p, workspace, tmpDir) === 'outside_workspace');
+
+function commandPathFlags(command, where) {
+  const flags = outsidePaths(command, where).length > 0 ? ['outside_workspace'] : [];
+  const searchesOutside = [...command.matchAll(SEARCH_COMMAND)].some((m) => outsidePaths(m[0], where).length > 0);
+  if (DISK_SEARCH.test(command) || searchesOutside) flags.push('searched_disk');
   return flags;
 }
 
