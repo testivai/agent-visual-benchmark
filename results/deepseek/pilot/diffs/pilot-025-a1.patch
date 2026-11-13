@@ -1,0 +1,15 @@
+diff --git a/site/css/components.css b/site/css/components.css
+index e56acd7..5cb3218 100644
+--- a/site/css/components.css
++++ b/site/css/components.css
+@@ -170,8 +170,8 @@
+ 
+ .badge {
+   position: absolute;
+-  top: -10px;
+-  right: -10px;
++  top: var(--space-3);
++  right: var(--space-3);
+   padding: 3px 10px;
+   border-radius: var(--radius-pill);
+   background: var(--color-brand);
