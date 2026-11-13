@@ -3,7 +3,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { buildWorkspace } from './workspace.mjs';
-import { buildSettings, buildMcpConfig, buildClaudeArgs, buildAgentEnv } from './claude.mjs';
+import { buildSettings, buildMcpConfig, buildClaudeArgs, buildAgentEnv, caFiles } from './claude.mjs';
+import { makeRunDir } from './rundir.mjs';
 import { runAgent } from './agent.mjs';
 import { parseStream, readStatus, shortcutFlags } from './transcript.mjs';
 import { classifyAgentRun, runOutcome } from './outcome.mjs';
@@ -20,16 +21,19 @@ function writeJson(file, value) {
   return file;
 }
 
-// What a run must be able to read: the browsers and the Node that runs the tests.
-export function readNeeds() {
-  return [browsersPath(), path.resolve(process.execPath, '..', '..')];
+// What a run must be able to read: the browsers, the Node that runs the tests,
+// and the CA bundles its HTTPS requests use.
+export function readNeeds(env = process.env) {
+  return [browsersPath(), path.resolve(process.execPath, '..', '..'), ...caFiles(env)];
 }
 
+// runDir comes from makeRunDir (rundir.mjs): its parent is the run root.
 export function prepareRunDir(runDir, { arm, config, benchRoot, ws }) {
   fs.mkdirSync(path.join(runDir, 'home', '.claude'), { recursive: true });
   fs.mkdirSync(path.join(runDir, 'tmp'), { recursive: true });
   const settingsFile = writeJson(path.join(runDir, 'settings.json'), buildSettings({
-    arm, benchRoot, homeDir: os.homedir(), isolation: config.isolation, allowedNetwork: config.allowedNetwork, readNeeds: readNeeds(),
+    arm, benchRoot, homeDir: os.homedir(), tmpDir: os.tmpdir(), runRoot: path.dirname(runDir), runDir,
+    isolation: config.isolation, allowedNetwork: config.allowedNetwork, readNeeds: readNeeds(),
   }));
   const mcp = buildMcpConfig({ arm, workspace: ws, nodePath: process.execPath });
   const mcpConfigFile = mcp ? writeJson(path.join(runDir, 'mcp.json'), mcp) : null;
@@ -114,7 +118,7 @@ export async function runOne({ benchRoot, config, run, phase, attempt, resultsDi
   const task = JSON.parse(fs.readFileSync(path.join(benchRoot, 'tasks', run.task, 'task.json'), 'utf8'));
   const record = baseRecord({ run, phase, attempt, task, config, context });
   const secrets = secretValues(process.env);
-  const runDir = fs.mkdtempSync(path.join(os.tmpdir(), 'avb-'));
+  const runDir = makeRunDir();
   try {
     const ws = buildWorkspace({ benchRoot, taskId: run.task, arm: run.arm, templateDir: context.templateDir, runDir });
     const before = snapshotFiles(ws);
