@@ -1,0 +1,17 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 1406541..3dc2168 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -259,6 +259,12 @@
+   color: var(--color-muted);
+ }
+ 
++.info-list dd {
++  /* Long unbroken values (e.g. email addresses) must wrap instead of
++     overflowing the card or widening the grid on narrow screens. */
++  overflow-wrap: anywhere;
++}
++
+ .info-list dt:first-child {
+   margin-top: 0;
+ }
