@@ -7,6 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { wilson, median, bootstrapMean, finalRecords } from './stats.mjs';
+import { applyTranscripts } from './rederive.mjs';
 
 const PAIRS = [['C', 'B'], ['C', 'A'], ['B', 'A']];
 
@@ -25,7 +26,8 @@ function armStats(runs) {
     tampered: count(runs, (r) => r.tampered === true),
     medianTurns: median(runs.map((r) => r.turns)),
     medianTokens: median(runs.map(totalTokens)),
-    medianSeconds: median(runs.map((r) => r.seconds)),
+    // the agent's own time when recorded: wall time also counts waits for background tasks it left running
+    medianSeconds: median(runs.map((r) => r.agent_seconds ?? r.seconds)),
     medianCost: median(runs.map((r) => r.cost_usd)),
     totalCost: runs.reduce((s, r) => s + (r.cost_usd ?? 0), 0),
   };
@@ -142,7 +144,7 @@ const signed = (x) => (x === null ? 'n/a' : `${x >= 0 ? '+' : ''}${(x * 100).toF
 
 function armTable(result, arms) {
   return [
-    '| arm | runs | success (95% Wilson) | false "done" | collateral broken | tampered | median turns | median tokens | median seconds | median cost |',
+    '| arm | runs | success (95% Wilson) | false "done" | collateral broken | tampered | median turns | median tokens | median seconds (agent) | median cost |',
     '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |',
     ...arms.map((a) => {
       const s = result.perArm[a];
@@ -224,6 +226,18 @@ function strictPrimary(result, arm) {
   return `${k}/${n} ${ci(wilson(k, n))}`;
 }
 
+// rederived: { checked, missing, changed: [{ run_id, attempt, fields }] } from rederive.mjs
+function rederivedNote(rederived) {
+  if (!rederived) return [];
+  const list = rederived.changed.map((c) => `${c.run_id} (${c.fields.join(', ')})`).join(', ');
+  return [
+    `Turns, the done claim and the agent's time are read again from each transcript with the current parser (analysis/rederive.mjs); runs.jsonl is left as recorded. `
+      + `${rederived.changed.length} of ${rederived.checked} runs differ from runs.jsonl${list ? `: ${list}` : ''}.`
+      + `${rederived.missing ? ` ${rederived.missing} without a transcript.` : ''}`,
+    '',
+  ];
+}
+
 function errorWarning(result) {
   if (result.runs.errorShare <= 0.05) return [];
   return [`**More than 5% of runs ended in an error twice (${pct(result.runs.errorShare)}).** They are left out of every rate below and listed at the end.`, ''];
@@ -235,20 +249,21 @@ function pilotSection(result) {
     '## Pilot: cost, time and tasks that cannot tell the arms apart',
     '',
     `- Measured cost per run: mean ${usd(c.meanPerRun)}, median ${usd(c.medianPerRun)}; total ${usd(c.total)}.`,
-    `- Measured time per run: mean ${num(c.meanSecondsPerRun)} s.`,
+    `- Measured wall time per run, waits included: mean ${num(c.meanSecondsPerRun)} s.`,
     `- Projected cost of the full ${c.fullRuns} runs at the pilot's mean: ${usd(c.projectedFull)}. Tasks outside the pilot may cost more or less.`,
     `- Tasks where every arm scored 0% or every arm 100%: ${result.extremes.length ? result.extremes.map((e) => `${e.task} (${pct(e.all)})`).join(', ') : 'none'}.`,
     '',
   ];
 }
 
-export function renderSummary(result, { phase, model, primary = false }) {
+export function renderSummary(result, { phase, model, primary = false, rederived = null }) {
   const arms = Object.keys(result.perArm);
   const lines = [
     `# Results: ${model ? `${model}, ` : ''}${phase}`,
     '',
     `Runs: ${result.runs.total} (${result.runs.attempts} attempts). Scored: ${result.runs.scored}. Errors: ${result.runs.errors} (excluded from the rates below, listed at the end).`,
     '',
+    ...rederivedNote(rederived),
     ...errorWarning(result),
   ];
   if (phase === 'pilot') {
@@ -286,7 +301,8 @@ export function toCsv(rows, columns) {
 }
 
 const RUN_COLUMNS = ['phase', 'run_id', 'order', 'attempt', 'task', 'task_type', 'task_category', 'arm', 'repeat', 'model_id', 'model', 'success', 'fixed',
-  'symptom_fixed', 'lenient_success', 'collateral_clean', 'tampered', 'claimed_done', 'false_done', 'stop_reason', 'turns', 'tokens', 'cost_usd', 'cost_source', 'seconds', 'flags', 'error'];
+  'symptom_fixed', 'lenient_success', 'collateral_clean', 'tampered', 'claimed_done', 'false_done', 'stop_reason', 'turns', 'tokens', 'cost_usd', 'cost_source', 'seconds',
+  'agent_seconds', 'result_count', 'flags', 'error'];
 
 function primaryModelId(root) {
   const config = JSON.parse(fs.readFileSync(path.join(root, 'runner.config.json'), 'utf8'));
@@ -305,10 +321,13 @@ function main() {
     console.error(`no ${path.relative(root, file)} yet`);
     process.exit(1);
   }
-  const records = fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
+  const recorded = fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
+  const transcript = (r) => path.join(dir, 'transcripts', `${r.run_id}-a${r.attempt}.jsonl`);
+  const rederived = applyTranscripts(recorded, (r) => (fs.existsSync(transcript(r)) ? fs.readFileSync(transcript(r), 'utf8') : null));
+  const records = rederived.records;
   const result = analyze(records, {});
   fs.mkdirSync(path.join(dir, 'csv'), { recursive: true });
-  fs.writeFileSync(path.join(dir, 'summary.md'), renderSummary(result, { phase, model, primary: model === primaryModelId(root) }));
+  fs.writeFileSync(path.join(dir, 'summary.md'), renderSummary(result, { phase, model, primary: model === primaryModelId(root), rederived }));
   fs.writeFileSync(path.join(dir, 'csv', 'runs.csv'), toCsv(records, RUN_COLUMNS));
   fs.writeFileSync(path.join(dir, 'csv', 'per_task.csv'), toCsv(result.perTask, ['task', 'type', 'category', 'A', 'nA', 'B', 'nB', 'C', 'nC']));
   const armRows = Object.entries(result.perArm).map(([arm, s]) => ({ arm, n: s.n, successes: s.successes, rate: s.wilson.rate, low: s.wilson.low, high: s.wilson.high,

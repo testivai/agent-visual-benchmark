@@ -75,6 +75,9 @@ function agentFields(parsed, agentRes, stopReason) {
     claude_code_version: parsed.claudeCodeVersion,
     tools: parsed.tools,
     turns: parsed.turns,
+    // the agent's own time, without waits for background tasks it left running
+    agent_seconds: parsed.agentSeconds,
+    result_count: parsed.results,
     tokens: parsed.tokens,
     status_line: readStatus(parsed.finalText),
     permission_denials: parsed.permissionDenials,

@@ -238,3 +238,20 @@ test('the kill line is reached by an interval that reaches 0, even at 10 points 
   assert.ok(r.primary['C-B'].lowerOneSided <= 0, `lower bound ${r.primary['C-B'].lowerOneSided}`);
   assert.match(renderSummary(r, { phase: 'full', model: 'sonnet', primary: true }), new RegExp(KILL));
 });
+
+test('time per run is the agent\'s own when recorded, without waits for background tasks', () => {
+  const recs = records().map((r) => (r.arm === 'A' && !r.error ? { ...r, seconds: 700, agent_seconds: 60 } : r));
+  const r = analyze(recs, { arms: ['A', 'B', 'C'], resamples: 100, seed: 1 });
+  assert.equal(r.perArm.A.medianSeconds, 60);
+  assert.equal(r.perArm.B.medianSeconds, 100, 'the wall time when no agent time was recorded');
+});
+
+test('the summary says which records the transcripts corrected', () => {
+  const rederived = { checked: 18, missing: 1, changed: [{ run_id: 'p-3', attempt: 1, fields: ['turns', 'claimed_done'] }] };
+  const md = renderSummary(result, { phase: 'pilot', model: 'opus', rederived });
+  assert.match(md, /read again from each transcript/i);
+  assert.match(md, /1 of 18 runs differ from runs\.jsonl/);
+  assert.match(md, /p-3 \(turns, claimed_done\)/);
+  assert.match(md, /1 without a transcript/);
+  assert.doesNotMatch(renderSummary(result, { phase: 'pilot', model: 'opus' }), /read again from each transcript/i);
+});

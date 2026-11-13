@@ -54,6 +54,44 @@ test('limit subtypes are kept, and turns still read', () => {
   assert.equal(p.finalText, '');
 });
 
+// A background task the agent started can outlive its answer: Claude Code waits for it, then wakes
+// the agent with a notification, and the stream gets a second result (seen in the pilots).
+// cost and modelUsage in each result are running totals; num_turns and duration_ms are per part.
+const woken = (over = {}) => result({
+  num_turns: 1, duration_ms: 1800, total_cost_usd: 0.47, result: 'The background server was stopped; the fix stands.',
+  modelUsage: { 'claude-opus-5-5': { inputTokens: 120, outputTokens: 230, cacheReadInputTokens: 450, cacheCreationInputTokens: 310, costUSD: 0.47 } }, ...over,
+});
+
+test('a stream with several results: turns and agent time are summed, cost and tokens are the last running total', () => {
+  const p = parseStream([line(init), line(result({ num_turns: 23, duration_ms: 89845 })), line(init), line(woken())].join('\n'));
+  assert.equal(p.turns, 24);
+  assert.equal(p.results, 2);
+  assert.equal(p.agentSeconds, (89845 + 1800) / 1000);
+  assert.equal(p.costUsd, 0.47);
+  assert.deepEqual(p.tokens, { input: 120, output: 230, cacheRead: 450, cacheWrite: 310 });
+  assert.equal(parseStream([line(init), line(result({ duration_ms: 5000 }))].join('\n')).agentSeconds, 5);
+});
+
+test('the done claim is the last STATUS line in any result, so a wake-up reply without one keeps the answer\'s', () => {
+  const p = parseStream([line(result()), line(woken())].join('\n'));
+  assert.equal(readStatus(p.finalText), 'done');
+  const q = parseStream([line(result()), line(woken({ result: 'On second look it is not fixed.\nSTATUS: NOT DONE' }))].join('\n'));
+  assert.equal(readStatus(q.finalText), 'not_done', 'a later claim wins');
+});
+
+test('a limit hit in an earlier part of the stream is kept', () => {
+  const p = parseStream([line(result({ subtype: 'error_max_turns', is_error: true, result: undefined, num_turns: 60 })), line(woken())].join('\n'));
+  assert.equal(p.subtype, 'error_max_turns');
+  assert.equal(p.isError, true);
+  assert.equal(p.turns, 61);
+});
+
+test('permission denials are counted once each across the results', () => {
+  const denied = (...ids) => ids.map((id) => ({ tool_name: 'mcp__testivai__approve_all', tool_use_id: id, tool_input: {} }));
+  const p = parseStream([line(result({ permission_denials: denied('a') })), line(woken({ permission_denials: denied('a', 'b') }))].join('\n'));
+  assert.equal(p.permissionDenials, 2);
+});
+
 test('lines that are not JSON are counted, not fatal', () => {
   const p = parseStream(['garbage', line(init), '{"half":', line(result())].join('\n'));
   assert.equal(p.badLines, 2);

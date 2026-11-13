@@ -93,7 +93,7 @@ function touchBaseline() {
 function result(over = {}) {
   const cost = Number(env.FAKE_CLAUDE_COST ?? 0.123);
   emit({
-    type: 'result', subtype: 'success', is_error: false, num_turns: id + 1, total_cost_usd: cost, session_id: 'fake',
+    type: 'result', subtype: 'success', is_error: false, num_turns: id + 1, duration_ms: 1500, total_cost_usd: cost, session_id: 'fake',
     usage: { input_tokens: 1000, output_tokens: 200, cache_creation_input_tokens: 0, cache_read_input_tokens: 0 },
     modelUsage: { [model]: { inputTokens: 1000, outputTokens: 200, cacheReadInputTokens: 0, cacheCreationInputTokens: 0, costUSD: cost } },
     ...over,
@@ -138,6 +138,12 @@ const MODES = {
   'error-result'() { result({ subtype: 'error_during_execution', is_error: true }); },
   'usage-limit'() { result({ is_error: true, result: `Claude AI usage limit reached|${Math.floor(Date.now() / 1000) + 5}` }); },
   'max-turns'() { applyPatch(); result({ subtype: 'error_max_turns', num_turns: 61 }); },
+  // the answer, then a wake-up for a background task the agent left running: a second init and result
+  'background-wake'() {
+    MODES.apply();
+    emit({ type: 'system', subtype: 'init', model, claude_code_version: 'fake-1.0.0', tools: tools(), mcp_servers: mcpServers('connected'), plugins: [], skills: [] });
+    result({ num_turns: 1, result: 'The background server I started has stopped; the change stands.' });
+  },
   'touch-baseline'() { applyPatch(); touchBaseline(); finish('Updated the screenshots.\nSTATUS: DONE'); },
 };
 MODES[mode]();

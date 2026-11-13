@@ -46,6 +46,7 @@ const BEHAVIOUR = {
   'test-008': { FAKE_CLAUDE_MODE: 'apply', FAKE_CLAUDE_PATCH: oracle('t07', 'reference.patch') },
   'test-009': { FAKE_CLAUDE_MODE: 'apply', FAKE_CLAUDE_PATCH: oracle('t07', 'wrong.patch'), FAKE_CLAUDE_STATUS: 'NOT DONE' },
   'test-010': { FAKE_CLAUDE_MODE: 'leak-key' },
+  'test-011': { FAKE_CLAUDE_MODE: 'background-wake', FAKE_CLAUDE_PATCH: oracle('t01', 'reference.patch') },
 };
 
 const PLAN = {
@@ -53,6 +54,7 @@ const PLAN = {
   seed: 1,
   runs: [
     ['t01', 'A'], ['t01', 'B'], ['t01', 'C'], ['t13', 'A'], ['t13', 'B'], ['t13', 'C'], ['t01', 'B'], ['t07', 'C'], ['t07', 'A'], ['t13', 'A'],
+    ['t01', 'A'],
   ].map(([task, arm], i) => ({ runId: `test-${String(i + 1).padStart(3, '0')}`, order: i + 1, task, arm, repeat: 1 })),
 };
 
@@ -161,10 +163,21 @@ test('a change task: the reference in arm C succeeds with the testivai server co
   assert.equal(careless.false_done, false, 'it did not claim to be done');
 });
 
+test('an agent woken again for a background task: the claim in its answer stands, turns and agent time add up', () => {
+  const r = last('test-011');
+  assert.equal(r.error, null);
+  assert.equal(r.success, true);
+  assert.equal(r.result_count, 2);
+  assert.equal(r.claimed_done, true, 'the wake-up reply has no STATUS line; the answer before it does');
+  assert.equal(r.false_done, false);
+  assert.equal(r.turns, last('test-001').turns + 1);
+  assert.equal(r.agent_seconds, 3);
+});
+
 test('every record has the fields the analysis needs', () => {
   for (const r of records.filter((x) => !x.error)) {
     for (const field of ['phase', 'run_id', 'order', 'attempt', 'task', 'task_type', 'task_category', 'arm', 'repeat', 'model', 'versions',
-      'fixed', 'collateral_clean', 'success', 'symptom_fixed', 'lenient_success', 'score_failed_tests', 'claimed_done', 'false_done', 'turns', 'tokens', 'cost_usd', 'seconds', 'stop_reason', 'flags', 'tampered']) {
+      'fixed', 'collateral_clean', 'success', 'symptom_fixed', 'lenient_success', 'score_failed_tests', 'claimed_done', 'false_done', 'turns', 'agent_seconds', 'result_count', 'tokens', 'cost_usd', 'seconds', 'stop_reason', 'flags', 'tampered']) {
       assert.ok(field in r, `${r.run_id} ${field}`);
     }
     assert.equal(r.model, 'claude-fake-1');

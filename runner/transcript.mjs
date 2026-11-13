@@ -65,25 +65,53 @@ function toolResultsOf(messages) {
   return out;
 }
 
+const sum = (xs) => xs.reduce((s, x) => s + (Number.isFinite(x) ? x : 0), 0);
+const textOf = (r) => (typeof r.result === 'string' ? r.result : '');
+
+// Denials listed in any result, each once (a result may repeat an earlier one's).
+function deniedCount(results) {
+  const ids = new Set();
+  results.forEach((r, i) => (Array.isArray(r.permission_denials) ? r.permission_denials : []).forEach((d, j) => ids.add(d?.tool_use_id ?? `${i}:${j}`)));
+  return ids.size;
+}
+
+// A stream can hold several results: a background task the agent started can
+// outlive its answer, and Claude Code then wakes the agent with a notification.
+// num_turns and duration_ms are per part; total_cost_usd and modelUsage are
+// running totals, so they come from the last result.
+function resultFields(results, messages) {
+  if (results.length === 0) {
+    return { hasResult: false, subtype: null, isError: null, turns: null, agentSeconds: null, costUsd: null, tokens: null, models: [], finalText: lastAssistantText(messages), permissionDenials: 0 };
+  }
+  const last = results[results.length - 1];
+  const limit = results.find((r) => r.subtype !== 'success');
+  return {
+    hasResult: true,
+    subtype: (limit ?? last).subtype ?? null,
+    isError: results.some((r) => Boolean(r.is_error)),
+    turns: sum(results.map((r) => r.num_turns)),
+    agentSeconds: sum(results.map((r) => r.duration_ms)) / 1000,
+    costUsd: last.total_cost_usd ?? null,
+    tokens: tokensOf(last),
+    models: last.modelUsage ? Object.keys(last.modelUsage).sort() : [],
+    // every result's text, in order: the done claim is the last STATUS line in any of them
+    finalText: results.map(textOf).filter(Boolean).join('\n\n'),
+    permissionDenials: deniedCount(results),
+  };
+}
+
 export function parseStream(text) {
   const { messages, badLines } = parseLines(text);
   const init = messages.find((m) => m.type === 'system' && m.subtype === 'init');
-  const result = [...messages].reverse().find((m) => m.type === 'result');
+  const results = messages.filter((m) => m.type === 'result');
   const toolCalls = messages
     .filter((m) => m.type === 'assistant')
     .flatMap(blocksOf)
     .filter((b) => b.type === 'tool_use')
     .map((b) => ({ id: b.id, name: b.name, input: b.input ?? {} }));
   return {
-    hasResult: Boolean(result),
-    subtype: result?.subtype ?? null,
-    isError: result ? Boolean(result.is_error) : null,
-    turns: result?.num_turns ?? null,
-    costUsd: result?.total_cost_usd ?? null,
-    tokens: tokensOf(result),
-    models: result?.modelUsage ? Object.keys(result.modelUsage).sort() : [],
-    finalText: result ? (typeof result.result === 'string' ? result.result : '') : lastAssistantText(messages),
-    permissionDenials: Array.isArray(result?.permission_denials) ? result.permission_denials.length : 0,
+    ...resultFields(results, messages),
+    results: results.length,
     model: init?.model ?? null,
     claudeCodeVersion: init?.claude_code_version ?? null,
     tools: init?.tools ?? [],
