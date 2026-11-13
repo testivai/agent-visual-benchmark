@@ -2,15 +2,17 @@
 
 Runs: 54 (54 attempts). Scored: 54. Errors: 0 (excluded from the rates below, listed at the end).
 
+Turns, the done claim and the agent's time are read again from each transcript with the current parser (analysis/rederive.mjs); runs.jsonl is left as recorded. 4 of 54 runs differ from runs.jsonl: pilot-006 (turns), pilot-014 (turns), pilot-039 (turns), pilot-047 (turns).
+
 **This is the pilot. It is too small for conclusions: no significance claims are made from it.** It measures cost and finds broken or uninformative tasks.
 
 ## Per arm
 
-| arm | runs | success (95% Wilson) | false "done" | collateral broken | tampered | median turns | median tokens | median seconds | median cost |
+| arm | runs | success (95% Wilson) | false "done" | collateral broken | tampered | median turns | median tokens | median seconds (agent) | median cost |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| A | 18 | 89% (67% to 97%) | 2/18 | 2/18 | 0 | 10 | 242001 | 47 | $0.29 |
+| A | 18 | 89% (67% to 97%) | 2/18 | 2/18 | 0 | 18 | 242001 | 47 | $0.29 |
 | B | 18 | 100% (82% to 100%) | 0/18 | 0/18 | 0 | 10 | 98149 | 43 | $0.17 |
-| C | 18 | 100% (82% to 100%) | 0/18 | 0/18 | 0 | 10 | 128782 | 47 | $0.19 |
+| C | 18 | 100% (82% to 100%) | 0/18 | 0/18 | 0 | 10 | 128782 | 46 | $0.19 |
 
 ## Paired by task: fix and change tasks (the primary metric)
 
@@ -82,7 +84,7 @@ None.
 ## Pilot: cost, time and tasks that cannot tell the arms apart
 
 - Measured cost per run: mean $0.27, median $0.19; total $14.74.
-- Measured time per run: mean 105 s.
+- Measured wall time per run, waits included: mean 105 s.
 - Projected cost of the full 360 runs at the pilot's mean: $98.28. Tasks outside the pilot may cost more or less.
 - Tasks where every arm scored 0% or every arm 100%: t08 (100%), t15 (100%), t17 (100%), t19 (100%), t21 (100%).
 
