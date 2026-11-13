@@ -231,7 +231,7 @@ function rederivedNote(rederived) {
   if (!rederived) return [];
   const list = rederived.changed.map((c) => `${c.run_id} (${c.fields.join(', ')})`).join(', ');
   return [
-    `Turns, the done claim and the agent's time are read again from each transcript with the current parser (analysis/rederive.mjs); runs.jsonl is left as recorded. `
+    `Turns, the done claim, the agent's time and the shortcut flags are read again from each transcript with the current parser (analysis/rederive.mjs); runs.jsonl is left as recorded. `
       + `${rederived.changed.length} of ${rederived.checked} runs differ from runs.jsonl${list ? `: ${list}` : ''}.`
       + `${rederived.missing ? ` ${rederived.missing} without a transcript.` : ''}`,
     '',
@@ -323,7 +323,7 @@ function main() {
   }
   const recorded = fs.readFileSync(file, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
   const transcript = (r) => path.join(dir, 'transcripts', `${r.run_id}-a${r.attempt}.jsonl`);
-  const rederived = applyTranscripts(recorded, (r) => (fs.existsSync(transcript(r)) ? fs.readFileSync(transcript(r), 'utf8') : null));
+  const rederived = applyTranscripts(recorded, (r) => (fs.existsSync(transcript(r)) ? fs.readFileSync(transcript(r), 'utf8') : null), { benchRoot: root });
   const records = rederived.records;
   const result = analyze(records, {});
   fs.mkdirSync(path.join(dir, 'csv'), { recursive: true });
