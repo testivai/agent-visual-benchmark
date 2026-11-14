@@ -17,6 +17,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { REPO_ROOT } from '../harness/workspace.mjs';
@@ -30,13 +31,18 @@ import { runOne, prepareRunDir } from './run-one.mjs';
 import { ensureTemplate, browsersPath } from './templates.mjs';
 import { armFilesDir } from './arms.mjs';
 import { buildWorkspace } from './workspace.mjs';
-import { buildClaudeArgs, buildAgentEnv } from './claude.mjs';
+import { buildClaudeArgs, buildAgentEnv, caFiles, closedRoots } from './claude.mjs';
+
+// What a run started here may not read (claude.mjs); its PATH loses these too.
+const CLOSED = () => closedRoots({ benchRoot: REPO_ROOT, homeDir: os.homedir(), tmpDir: os.tmpdir() });
 import { runAgent } from './agent.mjs';
 import { parseStream } from './transcript.mjs';
 import { startupProblems } from './startup.mjs';
 import { IMAGE_PROMPT, imageAnswer, drawPicture } from './image-check.mjs';
 import { runCost } from './limits.mjs';
 import { secretValues } from './scrub.mjs';
+import { makeRunDir } from './rundir.mjs';
+import { probePrompt, probeProblems } from './probe.mjs';
 import { freePort } from '../harness/run-specs.mjs';
 
 const CACHE = path.join(REPO_ROOT, '.cache', 'runner');
@@ -200,53 +206,74 @@ function cmdStatus(config, args) {
   print([`${args.phase}: ${finished.size} of ${plan.runs.length} runs finished, ${records.length} attempts, $${cost.toFixed(2)} spent`]);
 }
 
-const PROBE_PROMPT = (benchRoot) => [
-  'This is a check of the test machine, not a task. Do not change any file.',
-  'Run each command below as its own shell command, in order. For each one, report its exit code and the last line of its output.',
-  '1. npx playwright test tests/functional.spec.ts',
-  '2. curl -sS -m 10 -o /dev/null -w "%{http_code}" https://example.com',
-  '3. curl -sS -m 10 -o /dev/null -w "%{http_code}" https://registry.npmjs.org/',
-  `4. cat ${benchRoot}/oracle/t01/notes.md | head -3`,
-  '5. node server.js & sleep 2; curl -sS -m 5 http://127.0.0.1:$PORT/ | head -c 60; kill %1',
-  'End with STATUS: DONE.',
-].join('\n');
+// Random secrets where a run must not reach: the temporary directory, and a
+// directory beside the run's own in the run root (owned by this process, so it
+// is not removed as stale). removeAll takes them away again.
+function plantCanaries(runDir) {
+  const tag = crypto.randomBytes(6).toString('hex');
+  const secret = `canary-${crypto.randomBytes(12).toString('hex')}`;
+  const tmpCanary = path.join(os.tmpdir(), `avb-canary-${tag}.txt`);
+  const otherRun = path.join(path.dirname(runDir), `avb-canary-${tag}`);
+  fs.writeFileSync(tmpCanary, `${secret}\n`);
+  fs.mkdirSync(otherRun);
+  fs.writeFileSync(path.join(otherRun, '.owner'), `${process.pid}\n`);
+  fs.writeFileSync(path.join(otherRun, 'secret.txt'), `${secret}\n`);
+  const removeAll = () => {
+    fs.rmSync(tmpCanary, { force: true });
+    fs.rmSync(otherRun, { recursive: true, force: true });
+  };
+  return { secret, tmpCanary, runRootCanary: path.join(otherRun, 'secret.txt'), removeAll };
+}
 
-const PROBE_EXPECTED = ['1: the functional tests pass', '2: blocked (no network)', '3: allowed (the package registry)', '4: no such file (the benchmark is not readable)', '5: the page is served'];
+function probeReport({ p, cost, config, problems }) {
+  return [
+    `probe: ${p.hasResult ? p.subtype : 'no result'}, $${(cost ?? 0).toFixed(4)}${config.agent.pricesPerMillionUsd ? ' at the model\'s prices' : ' (Claude Code estimate)'}`,
+    'what happened (each command and the start of its output):',
+    ...p.toolCalls.map((c) => `  $ ${c.input.command ?? `${c.name} ${c.input.file_path ?? ''}`}\n    ${String(p.toolResults[c.id] ?? '').replace(/\s+/g, ' ').slice(0, 300)}`),
+    '',
+    problems.length === 0 ? 'PASS: isolated, and the run works' : `FAIL:\n${problems.map((x) => `  - ${x}`).join('\n')}`,
+  ];
+}
 
-async function cmdProbe(config, args) {
+async function cmdProbe(config) {
   requirePreflight(config);
   const template = await ensureTemplate({ benchRoot: REPO_ROOT, arm: 'A', cacheRoot: CACHE, log: console.log });
-  const runDir = fs.mkdtempSync(path.join(os.tmpdir(), 'avb-'));
+  const runDir = makeRunDir();
+  const canaries = plantCanaries(runDir);
+  const where = { benchRoot: REPO_ROOT, tmpCanary: canaries.tmpCanary, runRootCanary: canaries.runRootCanary, caFile: caFiles(process.env)[0] ?? null };
   const ws = buildWorkspace({ benchRoot: REPO_ROOT, taskId: 't13', arm: 'A', templateDir: template.dir, runDir });
   const { settingsFile } = prepareRunDir(runDir, { arm: 'A', config, benchRoot: REPO_ROOT, ws });
   const dir = path.join(REPO_ROOT, 'results', 'probe');
   fs.mkdirSync(dir, { recursive: true });
-  const res = await runAgent({
-    command: config.agent.command,
-    args: buildClaudeArgs({ agent: { ...config.agent, maxTurns: 15 }, prompt: PROBE_PROMPT(REPO_ROOT), settingsFile, instructionsFile: path.join(ws, 'CLAUDE.md'), mcpConfigFile: null }),
-    cwd: ws,
-    env: buildAgentEnv({ baseEnv: process.env, runDir, port: await freePort(), browsersPath: browsersPath(), agent: config.agent }),
-    timeLimitMs: 10 * 60 * 1000,
-    transcriptFile: path.join(dir, `probe-${config.model}-${Date.now()}.jsonl`),
-    secrets: secretValues(),
-    onStartup: (init) => startupProblems(init, { arm: 'A', model: config.agent.model }),
-  });
-  fs.rmSync(runDir, { recursive: true, force: true });
+  let res;
+  try {
+    res = await runAgent({
+      command: config.agent.command,
+      args: buildClaudeArgs({ agent: { ...config.agent, maxTurns: 25 }, prompt: probePrompt(where), settingsFile, instructionsFile: path.join(ws, 'CLAUDE.md'), mcpConfigFile: null }),
+      cwd: ws,
+      env: buildAgentEnv({ baseEnv: process.env, runDir, port: await freePort(), browsersPath: browsersPath(), agent: config.agent, closed: CLOSED() }),
+      timeLimitMs: 10 * 60 * 1000,
+      transcriptFile: path.join(dir, `probe-${config.model}-${Date.now()}.jsonl`),
+      secrets: secretValues(),
+      onStartup: (init) => startupProblems(init, { arm: 'A', model: config.agent.model }),
+    });
+  } finally {
+    canaries.removeAll();
+    fs.rmSync(runDir, { recursive: true, force: true });
+  }
   const p = parseStream(res.stdout);
+  const problems = probeProblems(p, { secret: canaries.secret, where });
   const cost = config.agent.pricesPerMillionUsd ? runCost(p.tokens, config.agent.pricesPerMillionUsd) : p.costUsd;
-  print([
-    `probe: ${p.hasResult ? p.subtype : 'no result'}, $${(cost ?? 0).toFixed(4)}${config.agent.pricesPerMillionUsd ? ' at the model\'s prices' : ' (Claude Code estimate)'}`,
-    'expected:', ...PROBE_EXPECTED.map((e) => `  ${e}`),
-    'what happened (each command and the start of its output):',
-    ...p.toolCalls.map((c) => `  $ ${c.input.command ?? c.name}\n    ${String(p.toolResults[c.id] ?? '').replace(/\s+/g, ' ').slice(0, 300)}`),
-    '', p.finalText,
-  ]);
+  const record = { model_id: config.model, model: config.agent.model, at: new Date().toISOString(), pass: problems.length === 0, problems, permission_denials: p.permissionDenials, claude_code_version: p.claudeCodeVersion };
+  fs.appendFileSync(path.join(dir, 'probe.jsonl'), `${JSON.stringify(record)}\n`);
+  print(probeReport({ p, cost, config, problems }));
+  process.exit(problems.length === 0 ? 0 : 1);
 }
 
 // One short real run: can this model see a picture through the study's Claude Code?
 async function cmdImageCheck(config) {
   requirePreflight(config);
-  const runDir = fs.mkdtempSync(path.join(os.tmpdir(), 'avb-'));
+  const runDir = makeRunDir();
   const ws = path.join(runDir, 'project');
   await drawPicture(path.join(ws, 'picture.png'));
   fs.writeFileSync(path.join(ws, 'CLAUDE.md'), '# A check of the test machine\n');
@@ -257,7 +284,7 @@ async function cmdImageCheck(config) {
     command: config.agent.command,
     args: buildClaudeArgs({ agent: { ...config.agent, maxTurns: 5 }, prompt: IMAGE_PROMPT, settingsFile, instructionsFile: path.join(ws, 'CLAUDE.md'), mcpConfigFile: null }),
     cwd: ws,
-    env: buildAgentEnv({ baseEnv: process.env, runDir, port: await freePort(), browsersPath: browsersPath(), agent: config.agent }),
+    env: buildAgentEnv({ baseEnv: process.env, runDir, port: await freePort(), browsersPath: browsersPath(), agent: config.agent, closed: CLOSED() }),
     timeLimitMs: 5 * 60 * 1000,
     transcriptFile: path.join(dir, `image-check-${config.model}-${Date.now()}.jsonl`),
     secrets: secretValues(),

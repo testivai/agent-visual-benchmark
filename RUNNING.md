@@ -20,7 +20,12 @@ analysed on its own. Models are never pooled.
 
 - Node 22.12 or later, and git.
 - Claude Code at the version pinned in `runner.config.json` (`agent.claudeCodeVersion`):
-  `npm install -g @anthropic-ai/claude-code@2.1.322`. The runner refuses another version.
+  `npm install -g @anthropic-ai/claude-code@2.1.322`. The runner refuses another version. If the
+  machine's own `claude` is newer (a container image can update it), install the pinned one in its own
+  prefix and put it first on `PATH`: `npm install --prefix /opt/claude-code-2.1.322
+  @anthropic-ai/claude-code@2.1.322`, then `PATH=/opt/claude-code-2.1.322/node_modules/.bin:$PATH`.
+- `/var/tmp` writable: each run gets a directory under `/var/tmp/avb-runs/` (or `AVB_RUN_ROOT`, which
+  must be outside the home directory and the temporary directory).
 - Chromium for Playwright 1.63: `npx playwright install chromium`.
 - For the sandbox (`"isolation": "sandbox"`, the default): on Linux, `bubblewrap` and `socat`
   (`sudo apt-get install bubblewrap socat`); on macOS nothing extra.
@@ -54,10 +59,14 @@ npm run runner -- probe --model sonnet          # one short run in a throw-away 
 npm run runner -- image-check --model deepseek  # can the model see a picture through Claude Code?
 ```
 
-The probe asks the agent to run five commands and prints what each returned next to what it should:
-the functional tests pass, `https://example.com` is blocked, the npm registry is reachable, the
-benchmark's answer files cannot be read, and a server started and queried in one command answers.
-The image check asks the agent to read a colour and a number that are only in a picture. A model that
+The probe checks that a run is isolated and still works, and says PASS or FAIL with the reasons
+(`runner/probe.mjs`, recorded in `results/probe/probe.jsonl`). It plants a random secret in the
+temporary directory and one beside the run's own directory, and asks the agent to read them with Bash
+and with the Read tool and to list `/tmp` and `/root`: it fails if a secret comes back. It also
+checks that the functional tests pass, `https://example.com` is blocked, the npm registry and the
+proxy's CA bundle are reachable, the benchmark's answer files cannot be read, and a server started
+and queried in one command answers. Run it on each model after any change to the machine or the
+runner. The image check asks the agent to read a colour and a number that are only in a picture. A model that
 fails it is not compared (arm B gives the agent pictures). Results go to `results/probe/`.
 
 On Linux, the sandbox gives each command its own `localhost`: a server started in one Bash call

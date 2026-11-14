@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { buildSettings, buildMcpConfig, buildClaudeArgs, buildAgentEnv, hiddenRoot, BUILTIN_PLUGINS, BASE_TOOLS } from './claude.mjs';
+import { buildSettings, buildMcpConfig, buildClaudeArgs, buildAgentEnv, hiddenRoot, caFiles, BUILTIN_PLUGINS, BASE_TOOLS } from './claude.mjs';
 
 const subscription = { command: ['claude'], id: 'sonnet', model: 'claude-sonnet-5-5', provider: 'anthropic-subscription', effort: null, maxTurns: 60, maxBudgetUsdPerRun: 10, timeLimitMinutes: 30 };
 const apiKey = { ...subscription, id: 'opus-key', model: 'claude-opus-5-5', provider: 'anthropic-api-key' };
@@ -8,13 +8,34 @@ const deepseek = {
   ...subscription, id: 'deepseek', model: 'deepseek-flash', provider: 'anthropic-compatible', baseUrl: 'https://api.deepseek.com/anthropic',
   authTokenEnv: 'DEEPSEEK_API_KEY', pricesPerMillionUsd: { input: 0.3, cacheRead: 0.006, cacheWrite: 0.3, output: 1.2 },
 };
-const settingsFor = (arm, over = {}) => buildSettings({ arm, benchRoot: '/home/me/work/bench', homeDir: '/home/me', isolation: 'sandbox', allowedNetwork: ['registry.npmjs.org'], readNeeds: [], ...over });
+const RUN = '/var/tmp/avb-runs/avb-x1';
+const settingsFor = (arm, over = {}) => buildSettings({
+  arm, benchRoot: '/home/me/work/bench', homeDir: '/home/me', tmpDir: '/tmp', runRoot: '/var/tmp/avb-runs', runDir: RUN,
+  isolation: 'sandbox', allowedNetwork: ['registry.npmjs.org'], readNeeds: [], ...over,
+});
 
-test('every arm may use Bash, Edit and Read; only C may use the testivai tools', () => {
+test('every arm may use Bash, and Read and Edit inside its own run directory only; only C may use the testivai tools', () => {
   assert.deepEqual(BASE_TOOLS, ['Bash', 'Edit', 'Read']);
   for (const arm of ['A', 'B', 'C']) {
-    assert.deepEqual(settingsFor(arm).permissions.allow, ['Bash', 'Edit', 'Read', ...(arm === 'C' ? ['mcp__testivai'] : [])]);
+    assert.deepEqual(settingsFor(arm).permissions.allow, ['Bash', `Read(/${RUN}/**)`, `Edit(/${RUN}/**)`, ...(arm === 'C' ? ['mcp__testivai'] : [])]);
   }
+});
+
+// docs/pilot-isolation-breach.md: the home directory and the temporary directory held other
+// programs' files (the study session's transcript, leftover copies of the clean app).
+test('the home directory, the directory that holds the benchmark and the temporary directory are closed to Read, Edit and Bash', () => {
+  const s = settingsFor('A', { benchRoot: '/home/user/bench', homeDir: '/root' });
+  for (const root of ['/home/user', '/root', '/tmp']) {
+    assert.ok(s.permissions.deny.includes(`Read(/${root}/**)`), root);
+    assert.ok(s.permissions.deny.includes(`Edit(/${root}/**)`), root);
+  }
+  assert.deepEqual(s.sandbox.filesystem.denyRead, ['/home/user', '/root', '/tmp', '/var/tmp/avb-runs']);
+  assert.deepEqual(s.sandbox.filesystem.allowRead, [RUN], 'the run root is closed but for the run\'s own directory');
+});
+
+test('a run directory inside a closed directory is refused', () => {
+  assert.throws(() => settingsFor('A', { runRoot: '/tmp/runs', runDir: '/tmp/runs/avb-1' }), /run directory .* inside/);
+  assert.throws(() => settingsFor('A', { runRoot: '/home/me/runs', runDir: '/home/me/runs/avb-1' }), /run directory .* inside/);
 });
 
 test('the directory hidden from the agent never names the benchmark', () => {
@@ -32,8 +53,10 @@ test('the sandbox: on, fails rather than run unsandboxed, registry only, home un
   assert.equal(s.sandbox.failIfUnavailable, true);
   assert.deepEqual(s.sandbox.network.allowedDomains, ['registry.npmjs.org']);
   assert.equal(s.sandbox.network.allowLocalBinding, true);
-  assert.deepEqual(s.sandbox.filesystem.denyRead, ['/home/me']);
-  assert.deepEqual(s.sandbox.filesystem.allowRead, ['/home/me/.cache/ms-playwright', '/home/me/.nvm/versions/node/v22'], 'only needs inside the hidden directory');
+  assert.deepEqual(s.sandbox.filesystem.denyRead, ['/home/me', '/tmp', '/var/tmp/avb-runs']);
+  assert.deepEqual(s.sandbox.filesystem.allowRead, [RUN, '/home/me/.cache/ms-playwright', '/home/me/.nvm/versions/node/v22'], 'the run, and needs inside a closed directory');
+  const ca = settingsFor('A', { homeDir: '/root', readNeeds: ['/root/.ccr/ca-bundle.crt'] });
+  assert.ok(ca.sandbox.filesystem.allowRead.includes('/root/.ccr/ca-bundle.crt'), 'a CA bundle in the home directory stays readable');
   assert.equal(settingsFor('A', { isolation: 'none' }).sandbox, undefined);
 });
 
@@ -139,4 +162,23 @@ test('another provider: its base URL, its key (or a placeholder for a proxy to r
 
 test('extra variables (the fake agent\'s, in tests) are added last', () => {
   assert.equal(envFor(subscription, { FAKE_CLAUDE_MODE: 'crash' }).FAKE_CLAUDE_MODE, 'crash');
+});
+
+test('the CA bundles a run is given are files it must read', () => {
+  assert.deepEqual(caFiles({ NODE_EXTRA_CA_CERTS: '/root/.ccr/ca.crt', SSL_CERT_FILE: '/root/.ccr/ca.crt', HOME: '/root' }), ['/root/.ccr/ca.crt']);
+  assert.deepEqual(caFiles({ SSL_CERT_FILE: '/etc/ssl/a.pem', NODE_EXTRA_CA_CERTS: '/opt/b.pem' }), ['/opt/b.pem', '/etc/ssl/a.pem']);
+  assert.deepEqual(caFiles({}), []);
+});
+
+// docs/pilot-isolation-breach.md: `npm run` puts <benchmark>/node_modules/.bin first on PATH, and
+// an agent that printed its environment learned the benchmark's directory name.
+test('PATH loses every entry inside a closed directory, keeping the order of the rest', () => {
+  const env = buildAgentEnv({
+    baseEnv: { PATH: '/home/user/bench/node_modules/.bin:/home/user/node_modules/.bin:/opt/node22/bin:/root/.local/bin:/usr/local/bin:/tmp/x/bin:/usr/bin' },
+    runDir: '/var/tmp/avb-runs/avb-1', port: 1, browsersPath: '/pw', agent: subscription, closed: ['/home/user', '/root', '/tmp'],
+  });
+  assert.equal(env.PATH, '/opt/node22/bin:/usr/local/bin:/usr/bin');
+  assert.ok(!JSON.stringify(env).includes('bench'), 'the benchmark is not named anywhere in the environment');
+  const open = buildAgentEnv({ baseEnv: { PATH: '/a/bin:/usr/bin' }, runDir: '/r', port: 1, browsersPath: '/pw', agent: subscription });
+  assert.equal(open.PATH, '/a/bin:/usr/bin', 'nothing closed, nothing dropped');
 });

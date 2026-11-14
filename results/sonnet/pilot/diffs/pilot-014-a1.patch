@@ -6,7 +6,7 @@ index 572bd7c..a9998c0 100644
              <h3>Other ways to reach us</h3>
              <dl class="info-list">
                <dt>Email</dt>
--              <dd>customer.support.team@acmestorefront.example</dd>
+-              <dd>[EMAIL]</dd>
 +              <dd>customer.support.team<wbr>@acmestorefront.example</dd>
                <dt>Phone</dt>
                <dd>+1 555 0142, weekdays 9 to 5</dd>

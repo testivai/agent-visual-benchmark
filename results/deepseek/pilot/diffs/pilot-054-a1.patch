@@ -1,0 +1,33 @@
+diff --git a/site/css/components.css b/site/css/components.css
+index 0da5da2..a6fbb0e 100644
+--- a/site/css/components.css
++++ b/site/css/components.css
+@@ -126,6 +126,8 @@
+ 
+ .card {
+   position: relative;
++  display: flex;
++  flex-direction: column;
+   background: var(--color-surface);
+   border: 1px solid var(--color-line);
+   border-radius: var(--radius-lg);
+@@ -133,6 +135,9 @@
+ }
+ 
+ .card-body {
++  display: flex;
++  flex-direction: column;
++  flex: 1;
+   padding: var(--space-5);
+ }
+ 
+@@ -154,7 +159,8 @@
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+-  margin-top: var(--space-4);
++  margin-top: auto;
++  padding-top: var(--space-4);
+ }
+ 
+ .cards {

@@ -1,12 +1,16 @@
-diff --git a/site/css/components.css b/site/css/components.css
-index e56acd7..0da5da2 100644
---- a/site/css/components.css
-+++ b/site/css/components.css
-@@ -126,7 +126,6 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..7ec8aa7 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -113,6 +113,11 @@
+   color: #ffffff;
+ }
  
- .card {
-   position: relative;
--  overflow: hidden;
-   background: var(--color-surface);
-   border: 1px solid var(--color-line);
-   border-radius: var(--radius-lg);
++/* The badge sits on the card's top-right corner and must not be clipped. */
++.card.product {
++  overflow: visible;
++}
++
+ .thumb-1 {
+   background: linear-gradient(135deg, #0ea5e9, #6366f1);
+ }
