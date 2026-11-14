@@ -58,6 +58,26 @@ Runs pilot-001, -024 and -038 searched `/tmp` only for their own screenshots and
 So in the DeepSeek pilot, the decoy's results (A 0/3, B 1/3, C 1/3) come from the leak, and two of
 arm A's t15 successes do too. The other tasks' results are not affected.
 
+## Found in the re-run: PATH named the benchmark
+
+The runner is started with `npm run`, which puts `<benchmark>/node_modules/.bin` first on `PATH`, and
+`PATH` was passed to the agent. An agent that printed its environment saw the benchmark's directory
+name, and could tell it was in a benchmark. The sandbox kept that directory unreadable, so no answer
+could come from it.
+
+Every pilot ran this way. Runs that saw the name in a tool's output: Sonnet none, Opus none, the
+first DeepSeek pilot 3 (pilot-047, -052, -054; pilot-052 then tried to list the directory, blocked),
+the DeepSeek re-run 4 (pilot-009, -045, -047, -052). In the re-run, pilot-009 (t19, arm A) searched the
+npm registry for the name and for "testivai" and found nothing relevant. It left the site unchanged.
+The re-run's other results are not affected.
+
+Fixed on 2026-11-14: the agent's `PATH` loses every entry inside a closed directory
+(`runner/claude.mjs`, `buildAgentEnv`), and the probe fails if `PATH` names the benchmark.
+
+**A known limit, not changed:** the npm registry stays reachable (the frozen configuration allows it).
+An agent can look up TestivAI's public packages there; installing one into the workspace counts as
+tampering, but one installed elsewhere would not be caught. No run of any pilot installed a package.
+
 ## What changed before any further run
 
 Made on 2026-11-13 and listed in `CHANGES_AFTER_PILOT.md`:
