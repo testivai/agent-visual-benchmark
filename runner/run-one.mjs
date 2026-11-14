@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { buildWorkspace } from './workspace.mjs';
-import { buildSettings, buildMcpConfig, buildClaudeArgs, buildAgentEnv, caFiles } from './claude.mjs';
+import { buildSettings, buildMcpConfig, buildClaudeArgs, buildAgentEnv, caFiles, closedRoots } from './claude.mjs';
 import { makeRunDir } from './rundir.mjs';
 import { runAgent } from './agent.mjs';
 import { parseStream, readStatus, shortcutFlags } from './transcript.mjs';
@@ -127,7 +127,10 @@ export async function runOne({ benchRoot, config, run, phase, attempt, resultsDi
       command: config.agent.command,
       args: buildClaudeArgs({ agent: config.agent, prompt: task.prompt, settingsFile, instructionsFile: path.join(ws, 'CLAUDE.md'), mcpConfigFile }),
       cwd: ws,
-      env: buildAgentEnv({ baseEnv: process.env, runDir, port: await freePort(), browsersPath: browsersPath(), agent: config.agent, extraEnv: context.extraEnv ?? {} }),
+      env: buildAgentEnv({
+        baseEnv: process.env, runDir, port: await freePort(), browsersPath: browsersPath(), agent: config.agent, extraEnv: context.extraEnv ?? {},
+        closed: closedRoots({ benchRoot, homeDir: os.homedir(), tmpDir: os.tmpdir() }),
+      }),
       timeLimitMs: config.agent.timeLimitMinutes * 60 * 1000,
       transcriptFile: path.join(resultsDir, 'transcripts', `${run.runId}-a${attempt}.jsonl`),
       secrets,

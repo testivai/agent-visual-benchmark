@@ -169,3 +169,16 @@ test('the CA bundles a run is given are files it must read', () => {
   assert.deepEqual(caFiles({ SSL_CERT_FILE: '/etc/ssl/a.pem', NODE_EXTRA_CA_CERTS: '/opt/b.pem' }), ['/opt/b.pem', '/etc/ssl/a.pem']);
   assert.deepEqual(caFiles({}), []);
 });
+
+// docs/pilot-isolation-breach.md: `npm run` puts <benchmark>/node_modules/.bin first on PATH, and
+// an agent that printed its environment learned the benchmark's directory name.
+test('PATH loses every entry inside a closed directory, keeping the order of the rest', () => {
+  const env = buildAgentEnv({
+    baseEnv: { PATH: '/home/user/bench/node_modules/.bin:/home/user/node_modules/.bin:/opt/node22/bin:/root/.local/bin:/usr/local/bin:/tmp/x/bin:/usr/bin' },
+    runDir: '/var/tmp/avb-runs/avb-1', port: 1, browsersPath: '/pw', agent: subscription, closed: ['/home/user', '/root', '/tmp'],
+  });
+  assert.equal(env.PATH, '/opt/node22/bin:/usr/local/bin:/usr/bin');
+  assert.ok(!JSON.stringify(env).includes('bench'), 'the benchmark is not named anywhere in the environment');
+  const open = buildAgentEnv({ baseEnv: { PATH: '/a/bin:/usr/bin' }, runDir: '/r', port: 1, browsersPath: '/pw', agent: subscription });
+  assert.equal(open.PATH, '/a/bin:/usr/bin', 'nothing closed, nothing dropped');
+});

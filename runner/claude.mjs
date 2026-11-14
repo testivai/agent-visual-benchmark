@@ -137,11 +137,17 @@ function providerEnv(agent, baseEnv) {
   };
 }
 
-export function buildAgentEnv({ baseEnv, runDir, port, browsersPath, agent, extraEnv = {} }) {
+// PATH without the entries inside a closed directory: `npm run` puts the
+// benchmark's node_modules/.bin first, which names the benchmark's directory.
+const openPath = (value, closed) => value.split(path.delimiter).filter((p) => !closed.some((r) => inside(p, r))).join(path.delimiter);
+
+// closed: the directories the agent may not read (closedRoots).
+export function buildAgentEnv({ baseEnv, runDir, port, browsersPath, agent, extraEnv = {}, closed = [] }) {
   const env = {};
   for (const name of PASS_THROUGH) {
     if (baseEnv[name] !== undefined && baseEnv[name] !== '') env[name] = baseEnv[name];
   }
+  if (env.PATH) env.PATH = openPath(env.PATH, closed);
   Object.assign(env, providerEnv(agent, baseEnv), {
     HOME: path.join(runDir, 'home'),
     CLAUDE_CONFIG_DIR: path.join(runDir, 'home', '.claude'),

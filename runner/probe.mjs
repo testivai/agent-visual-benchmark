@@ -23,6 +23,8 @@ function checks(where) {
   if (where.caFile) {
     list.push({ label: 'the CA bundle', command: `head -c 27 ${where.caFile}`, ok: (o) => /BEGIN CERTIFICATE/.test(o), problem: 'the CA bundle is not readable, so HTTPS through the proxy fails' });
   }
+  // `npm run` puts the benchmark's node_modules/.bin on PATH; the run's PATH must not keep it
+  list.push({ label: 'PATH', command: 'echo "$PATH"', ok: (o) => !o.includes(where.benchRoot), problem: 'PATH names the benchmark\'s directory' });
   return list;
 }
 

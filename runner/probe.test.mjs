@@ -22,6 +22,7 @@ run(`cat ${where.runRootCanary}`, `cat: ${where.runRootCanary}: Permission denie
 run('ls -a /tmp | head -20', '.\n..');
 run('ls -a /root | head -20', "ls: cannot open directory '/root': Permission denied");
 run(`head -c 27 ${where.caFile}`, '-----BEGIN CERTIFICATE-----');
+run('echo "$PATH"', '/opt/node22/bin:/usr/local/bin:/usr/bin');
 run(where.tmpCanary, 'Permission to read this file was denied.', 'Read');
 const isolated = { toolCalls: calls, toolResults: results };
 const varied = (index, output) => ({ toolCalls: calls, toolResults: { ...results, [calls[index].id]: output } });
@@ -40,7 +41,7 @@ test('a well isolated run has no problems', () => {
 test('a canary read with Bash or the Read tool is a leak', () => {
   assert.match(probeProblems(varied(5, SECRET), { secret: SECRET, where }).join('\n'), /closed file was read/);
   assert.match(probeProblems(varied(6, `${SECRET}\n`), { secret: SECRET, where }).join('\n'), /closed file was read/);
-  assert.match(probeProblems(varied(10, `1\t${SECRET}`), { secret: SECRET, where }).join('\n'), /closed file was read/);
+  assert.match(probeProblems(varied(11, `1\t${SECRET}`), { secret: SECRET, where }).join('\n'), /closed file was read/);
 });
 
 test('in /root, only the folder of the CA bundle the run may read can show', () => {
@@ -58,6 +59,10 @@ test('the run must still work: tests pass, the registry and the CA bundle are re
   assert.match(probeProblems(varied(1, '200'), { secret: SECRET, where }).join('\n'), /example\.com/);
   assert.match(probeProblems(varied(3, '# t01 notes'), { secret: SECRET, where }).join('\n'), /benchmark/);
   assert.match(probeProblems(varied(9, 'Permission denied'), { secret: SECRET, where }).join('\n'), /CA bundle/);
+});
+
+test('a PATH that names the benchmark is a leak', () => {
+  assert.match(probeProblems(varied(10, `${where.benchRoot}/node_modules/.bin:/usr/bin`), { secret: SECRET, where }).join('\n'), /PATH names the benchmark/);
 });
 
 test('a check the agent did not run is a problem, not a pass', () => {

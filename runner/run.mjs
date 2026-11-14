@@ -31,7 +31,10 @@ import { runOne, prepareRunDir } from './run-one.mjs';
 import { ensureTemplate, browsersPath } from './templates.mjs';
 import { armFilesDir } from './arms.mjs';
 import { buildWorkspace } from './workspace.mjs';
-import { buildClaudeArgs, buildAgentEnv, caFiles } from './claude.mjs';
+import { buildClaudeArgs, buildAgentEnv, caFiles, closedRoots } from './claude.mjs';
+
+// What a run started here may not read (claude.mjs); its PATH loses these too.
+const CLOSED = () => closedRoots({ benchRoot: REPO_ROOT, homeDir: os.homedir(), tmpDir: os.tmpdir() });
 import { runAgent } from './agent.mjs';
 import { parseStream } from './transcript.mjs';
 import { startupProblems } from './startup.mjs';
@@ -248,7 +251,7 @@ async function cmdProbe(config) {
       command: config.agent.command,
       args: buildClaudeArgs({ agent: { ...config.agent, maxTurns: 25 }, prompt: probePrompt(where), settingsFile, instructionsFile: path.join(ws, 'CLAUDE.md'), mcpConfigFile: null }),
       cwd: ws,
-      env: buildAgentEnv({ baseEnv: process.env, runDir, port: await freePort(), browsersPath: browsersPath(), agent: config.agent }),
+      env: buildAgentEnv({ baseEnv: process.env, runDir, port: await freePort(), browsersPath: browsersPath(), agent: config.agent, closed: CLOSED() }),
       timeLimitMs: 10 * 60 * 1000,
       transcriptFile: path.join(dir, `probe-${config.model}-${Date.now()}.jsonl`),
       secrets: secretValues(),
@@ -281,7 +284,7 @@ async function cmdImageCheck(config) {
     command: config.agent.command,
     args: buildClaudeArgs({ agent: { ...config.agent, maxTurns: 5 }, prompt: IMAGE_PROMPT, settingsFile, instructionsFile: path.join(ws, 'CLAUDE.md'), mcpConfigFile: null }),
     cwd: ws,
-    env: buildAgentEnv({ baseEnv: process.env, runDir, port: await freePort(), browsersPath: browsersPath(), agent: config.agent }),
+    env: buildAgentEnv({ baseEnv: process.env, runDir, port: await freePort(), browsersPath: browsersPath(), agent: config.agent, closed: CLOSED() }),
     timeLimitMs: 5 * 60 * 1000,
     transcriptFile: path.join(dir, `image-check-${config.model}-${Date.now()}.jsonl`),
     secrets: secretValues(),
