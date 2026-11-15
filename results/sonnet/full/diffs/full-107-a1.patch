@@ -1,0 +1,16 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 1406541..043bfef 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -259,6 +259,11 @@
+   color: var(--color-muted);
+ }
+ 
++.info-list dd {
++  margin-left: 0;
++  overflow-wrap: anywhere;
++}
++
+ .info-list dt:first-child {
+   margin-top: 0;
+ }
