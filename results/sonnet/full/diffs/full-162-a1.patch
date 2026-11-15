@@ -1,0 +1,12 @@
+diff --git a/site/orders.html b/site/orders.html
+index 5e6d302..3a67475 100644
+--- a/site/orders.html
++++ b/site/orders.html
+@@ -68,6 +68,7 @@
+                 <th>Date</th>
+                 <th>Customer</th>
+                 <th>Status</th>
++                <th class="num">Total</th>
+                 <th class="num" aria-label="Actions"></th>
+               </tr>
+             </thead>
