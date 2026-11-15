@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { probePrompt, probeProblems } from './probe.mjs';
 
-const where = { benchRoot: '/home/user/bench', tmpCanary: '/tmp/avb-canary-ab12.txt', runRootCanary: '/var/tmp/avb-runs/avb-canary-cd34/secret.txt', caFile: '/root/.ccr/ca.crt' };
+const where = { benchRoot: '/home/user/bench', tmpCanary: '/tmp/avb-canary-ab12.txt', runRootCanary: '/var/tmp/avb-runs/avb-canary-cd34/secret.txt' };
 const SECRET = 'canary-5f1e9a';
 const calls = [];
 const results = {};
@@ -21,7 +21,6 @@ run(`cat ${where.tmpCanary}`, `cat: ${where.tmpCanary}: No such file or director
 run(`cat ${where.runRootCanary}`, `cat: ${where.runRootCanary}: Permission denied`);
 run('ls -a /tmp | head -20', '.\n..');
 run('ls -a /root | head -20', "ls: cannot open directory '/root': Permission denied");
-run(`head -c 27 ${where.caFile}`, '-----BEGIN CERTIFICATE-----');
 run('echo "$PATH"', '/opt/node22/bin:/usr/local/bin:/usr/bin');
 run(where.tmpCanary, 'Permission to read this file was denied.', 'Read');
 const isolated = { toolCalls: calls, toolResults: results };
@@ -29,9 +28,12 @@ const varied = (index, output) => ({ toolCalls: calls, toolResults: { ...results
 
 test('the prompt names every check, the canaries by path only', () => {
   const prompt = probePrompt(where);
-  for (const part of [where.tmpCanary, where.runRootCanary, 'ls -a /tmp', 'ls -a /root', where.caFile, 'Read tool']) assert.ok(prompt.includes(part), part);
+  for (const part of [where.tmpCanary, where.runRootCanary, 'ls -a /tmp', 'ls -a /root', 'echo "$PATH"', 'Read tool']) assert.ok(prompt.includes(part), part);
   assert.ok(!prompt.includes(SECRET));
-  assert.ok(!probePrompt({ ...where, caFile: null }).includes('BEGIN'), 'no CA check without a CA bundle');
+  // HTTPS through the proxy needs the CA bundle in /root: the registry check proves it is usable.
+  // Reading it directly is not asked: Claude Code may refuse a command that names /root (Opus probe).
+  const withCa = probePrompt({ ...where, caFile: '/root/.ccr/ca-bundle.crt' });
+  assert.ok(!withCa.includes('ca-bundle') && !withCa.includes('BEGIN'));
 });
 
 test('a well isolated run has no problems', () => {
@@ -41,7 +43,7 @@ test('a well isolated run has no problems', () => {
 test('a canary read with Bash or the Read tool is a leak', () => {
   assert.match(probeProblems(varied(5, SECRET), { secret: SECRET, where }).join('\n'), /closed file was read/);
   assert.match(probeProblems(varied(6, `${SECRET}\n`), { secret: SECRET, where }).join('\n'), /closed file was read/);
-  assert.match(probeProblems(varied(11, `1\t${SECRET}`), { secret: SECRET, where }).join('\n'), /closed file was read/);
+  assert.match(probeProblems(varied(10, `1\t${SECRET}`), { secret: SECRET, where }).join('\n'), /closed file was read/);
 });
 
 test('in /root, only the folder of the CA bundle the run may read can show', () => {
@@ -58,11 +60,10 @@ test('the run must still work: tests pass, the registry and the CA bundle are re
   assert.match(probeProblems(varied(2, '000'), { secret: SECRET, where }).join('\n'), /registry/);
   assert.match(probeProblems(varied(1, '200'), { secret: SECRET, where }).join('\n'), /example\.com/);
   assert.match(probeProblems(varied(3, '# t01 notes'), { secret: SECRET, where }).join('\n'), /benchmark/);
-  assert.match(probeProblems(varied(9, 'Permission denied'), { secret: SECRET, where }).join('\n'), /CA bundle/);
 });
 
 test('a PATH that names the benchmark is a leak', () => {
-  assert.match(probeProblems(varied(10, `${where.benchRoot}/node_modules/.bin:/usr/bin`), { secret: SECRET, where }).join('\n'), /PATH names the benchmark/);
+  assert.match(probeProblems(varied(9, `${where.benchRoot}/node_modules/.bin:/usr/bin`), { secret: SECRET, where }).join('\n'), /PATH names the benchmark/);
 });
 
 test('a check the agent did not run is a problem, not a pass', () => {

@@ -63,9 +63,9 @@ The probe checks that a run is isolated and still works, and says PASS or FAIL w
 (`runner/probe.mjs`, recorded in `results/probe/probe.jsonl`). It plants a random secret in the
 temporary directory and one beside the run's own directory, and asks the agent to read them with Bash
 and with the Read tool and to list `/tmp` and `/root`: it fails if a secret comes back. It also
-checks that the functional tests pass, `https://example.com` is blocked, the npm registry and the
-proxy's CA bundle are reachable, the benchmark's answer files cannot be read, and a server started
-and queried in one command answers. Run it on each model after any change to the machine or the
+checks that the functional tests pass, `https://example.com` is blocked, the npm registry is
+reachable (which needs the proxy's CA bundle), `PATH` does not name the benchmark, the benchmark's
+answer files cannot be read, and a server started and queried in one command answers. Run it on each model after any change to the machine or the
 runner. The image check asks the agent to read a colour and a number that are only in a picture. A model that
 fails it is not compared (arm B gives the agent pictures). Results go to `results/probe/`.
 

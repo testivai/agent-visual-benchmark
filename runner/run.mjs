@@ -31,7 +31,7 @@ import { runOne, prepareRunDir } from './run-one.mjs';
 import { ensureTemplate, browsersPath } from './templates.mjs';
 import { armFilesDir } from './arms.mjs';
 import { buildWorkspace } from './workspace.mjs';
-import { buildClaudeArgs, buildAgentEnv, caFiles, closedRoots } from './claude.mjs';
+import { buildClaudeArgs, buildAgentEnv, closedRoots } from './claude.mjs';
 
 // What a run started here may not read (claude.mjs); its PATH loses these too.
 const CLOSED = () => closedRoots({ benchRoot: REPO_ROOT, homeDir: os.homedir(), tmpDir: os.tmpdir() });
@@ -240,7 +240,7 @@ async function cmdProbe(config) {
   const template = await ensureTemplate({ benchRoot: REPO_ROOT, arm: 'A', cacheRoot: CACHE, log: console.log });
   const runDir = makeRunDir();
   const canaries = plantCanaries(runDir);
-  const where = { benchRoot: REPO_ROOT, tmpCanary: canaries.tmpCanary, runRootCanary: canaries.runRootCanary, caFile: caFiles(process.env)[0] ?? null };
+  const where = { benchRoot: REPO_ROOT, tmpCanary: canaries.tmpCanary, runRootCanary: canaries.runRootCanary };
   const ws = buildWorkspace({ benchRoot: REPO_ROOT, taskId: 't13', arm: 'A', templateDir: template.dir, runDir });
   const { settingsFile } = prepareRunDir(runDir, { arm: 'A', config, benchRoot: REPO_ROOT, ws });
   const dir = path.join(REPO_ROOT, 'results', 'probe');
