@@ -1,0 +1,24 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..78a819f 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -269,6 +269,10 @@
+ 
+ /* About */
+ 
++.member {
++  text-align: center;
++}
++
+ .story {
+   display: grid;
+   grid-template-columns: 1fr 480px;
+@@ -290,7 +294,7 @@
+   justify-content: center;
+   width: 56px;
+   height: 56px;
+-  margin-bottom: var(--space-3);
++  margin: 0 auto var(--space-3);
+   border-radius: 50%;
+   background: var(--color-brand-tint);
+   font-size: 18px;
