@@ -1,0 +1,34 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..15abf67 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -271,7 +271,7 @@
+ 
+ .story {
+   display: grid;
+-  grid-template-columns: 1fr 480px;
++  grid-template-columns: repeat(2, minmax(0, 1fr));
+   gap: var(--space-7);
+   align-items: center;
+ }
+@@ -281,6 +281,9 @@
+ }
+ 
+ .story-art {
++  width: 100%;
++  max-width: 480px;
++  justify-self: end;
+   border-radius: var(--radius-lg);
+ }
+ 
+@@ -361,6 +364,10 @@
+     grid-template-columns: 1fr;
+   }
+ 
++  .story-art {
++    justify-self: start;
++  }
++
+   .hero-copy h1 {
+     font-size: 32px;
+   }
