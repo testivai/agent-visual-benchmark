@@ -1,0 +1,14 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..9615008 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -382,3 +382,9 @@
+     align-items: flex-start;
+   }
+ }
++
++/* Contact: full-width submit button */
++.page-contact .form .btn[type="submit"] {
++  display: flex;
++  width: 100%;
++}
