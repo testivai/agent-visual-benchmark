@@ -1,0 +1,16 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 0f22806..a44bb74 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -383,3 +383,11 @@
+     align-items: flex-start;
+   }
+ }
++
++@media (max-width: 720px) {
++  .page-pricing .table th,
++  .page-pricing .table td {
++    padding: var(--space-3) var(--space-2);
++    white-space: normal;
++  }
++}
