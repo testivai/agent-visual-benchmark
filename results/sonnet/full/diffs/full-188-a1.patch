@@ -1,0 +1,22 @@
+diff --git a/site/products.html b/site/products.html
+index 6c49f1e..53c4f06 100644
+--- a/site/products.html
++++ b/site/products.html
+@@ -71,17 +71,6 @@
+               </div>
+             </div>
+           </div>
+-          <div class="card product">
+-            <div class="card-thumb thumb-2"></div>
+-            <div class="card-body">
+-              <h3>Sunset Mug</h3>
+-              <p>Keeps coffee warm through a long meeting.</p>
+-              <div class="card-foot">
+-                <span class="price">$18</span>
+-                <a class="btn btn-secondary btn-sm" href="contact.html">Add to cart</a>
+-              </div>
+-            </div>
+-          </div>
+           <div class="card product">
+             <div class="card-thumb thumb-3"></div>
+             <div class="card-body">
