@@ -1,0 +1,12 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..45f6aaf 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -382,3 +382,7 @@
+     align-items: flex-start;
+   }
+ }
++
++#contact-form > .btn {
++  width: 100%;
++}
