@@ -1,0 +1,23 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..351f54f 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -284,13 +284,17 @@
+   border-radius: var(--radius-lg);
+ }
+ 
++.member {
++  text-align: center;
++}
++
+ .avatar {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 56px;
+   height: 56px;
+-  margin-bottom: var(--space-3);
++  margin: 0 auto var(--space-3);
+   border-radius: 50%;
+   background: var(--color-brand-tint);
+   font-size: 18px;
