@@ -175,7 +175,19 @@ function pathFlag(p, workspace, tmpDir) {
 
 // What a shell command reads outside the run (docs/pilot-isolation-breach.md):
 // paths outside the workspace and TMPDIR, and searches of the disk.
-const outsidePaths = (text, { workspace, tmpDir }) => [...text.matchAll(ABSOLUTE)].map((m) => m[1])
+// A one-segment fragment in quotes joined with + is part of a name being built
+// (TMPDIR + '/home' + w + '.png'), not a path.
+const ONE_SEGMENT = /^\/[\w.@+~-]+\/?$/;
+function joinedFragment(text, match) {
+  const quoted = /["'`]/.test(match[0][0]);
+  if (!quoted || !ONE_SEGMENT.test(match[1])) return false;
+  const before = text.slice(0, match.index);
+  const after = text.slice(match.index + match[0].length);
+  return /\+\s*$/.test(before) || /^["'`]\s*\+/.test(after);
+}
+
+const outsidePaths = (text, { workspace, tmpDir }) => [...text.matchAll(ABSOLUTE)]
+  .filter((m) => !joinedFragment(text, m)).map((m) => m[1])
   .filter((p) => TOP_LEVEL.test(p) && pathFlag(p, workspace, tmpDir) === 'outside_workspace');
 
 function commandPathFlags(command, where) {
