@@ -1,0 +1,32 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..4f1cd25 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -166,6 +166,15 @@
+   box-shadow: var(--shadow-md);
+ }
+ 
++.plan-featured .btn-primary {
++  background: var(--color-success);
++  color: #ffffff;
++}
++
++.plan-featured .btn-primary:hover {
++  background: var(--color-success-dark);
++}
++
+ .plan-ribbon {
+   position: absolute;
+   top: -13px;
+diff --git a/site/css/tokens.css b/site/css/tokens.css
+index 3c06458..3bb3f4f 100644
+--- a/site/css/tokens.css
++++ b/site/css/tokens.css
+@@ -19,6 +19,7 @@
+   --color-brand-tint: #ecfeff;
+   --color-success: #1a7f37;
+   --color-success-tint: #e8f6ee;
++  --color-success-dark: #146c2e;
+   --color-danger: #cf222e;
+   --color-danger-tint: #fdecea;
+   --color-warning: #9a6700;
