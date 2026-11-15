@@ -1,0 +1,21 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..4de95f8 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -166,6 +166,16 @@
+   box-shadow: var(--shadow-md);
+ }
+ 
++.plan-featured .btn-primary {
++  background: var(--color-success);
++  color: #ffffff;
++}
++
++.plan-featured .btn-primary:hover {
++  background: var(--color-success);
++  filter: brightness(0.9);
++}
++
+ .plan-ribbon {
+   position: absolute;
+   top: -13px;
