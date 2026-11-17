@@ -124,8 +124,10 @@ analysis (preregistered), but they show the same pattern on every model:
 | Claude Opus 5.5 | 16/18 | 18/18 | 18/18 |
 | DeepSeek-V4.1-Flash (run again after the isolation fix) | 17/18 | 17/18 | 18/18 |
 
-The Opus and DeepSeek full studies have not been run. They were postponed before the Sonnet result was
-known, for time (about 12 and 38 hours) and DeepSeek's cost (see the preregistration's Deviations).
+The Opus and DeepSeek full studies were not run. They were postponed before the Sonnet result was known,
+for time (about 12 and 38 hours) and DeepSeek's cost. After the Sonnet result, they were closed out:
+both pilots showed the same ceiling, so a full run would most likely repeat the null (see the
+preregistration's Deviations). The study's result rests on Sonnet 5.5 alone.
 
 ## What went wrong, and what was done about it
 
