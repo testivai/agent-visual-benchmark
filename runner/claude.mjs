@@ -27,23 +27,44 @@ export function hiddenRoot(benchRoot, homeDir) {
   return inside(benchRoot, homeDir) && benchRoot !== homeDir ? homeDir : path.dirname(benchRoot);
 }
 
-// readNeeds: directories a run must read (the browsers, Node); those inside
-// the hidden directory are let through.
-export function buildSettings({ arm, benchRoot, homeDir, isolation, allowedNetwork, readNeeds = [] }) {
-  const hidden = hiddenRoot(benchRoot, homeDir);
+// The directories closed to the agent: the one that holds the benchmark, the
+// home directory and the system's temporary directory. The last two held other
+// programs' files in the pilots (the study session's transcript, leftover copies
+// of the clean app; docs/pilot-isolation-breach.md).
+export function closedRoots({ benchRoot, homeDir, tmpDir }) {
+  return [...new Set([hiddenRoot(benchRoot, homeDir), homeDir, tmpDir])];
+}
+
+// The CA bundles passed to a run (PASS_THROUGH): its commands read them for
+// every HTTPS request through the network proxy.
+const CA_VARS = ['NODE_EXTRA_CA_CERTS', 'SSL_CERT_FILE'];
+export const caFiles = (env) => [...new Set(CA_VARS.map((name) => env[name]).filter(Boolean))];
+
+const pathRules = (tool, roots) => roots.map((r) => `${tool}(/${r}/**)`);
+
+// runDir: this run's own directory, under runRoot (rundir.mjs). Read and Edit
+// are allowed there only: in dontAsk mode anything else is denied. The sandbox
+// closes the run root too, all but this run's directory.
+// readNeeds: what a run must read (the browsers, Node, the proxy's CA bundle);
+// those inside a closed directory are let through.
+export function buildSettings({ arm, benchRoot, homeDir, tmpDir, runRoot, runDir, isolation, allowedNetwork, readNeeds = [] }) {
+  const closed = closedRoots({ benchRoot, homeDir, tmpDir });
+  const holder = closed.find((r) => inside(runDir, r));
+  if (holder) throw new Error(`the run directory ${runDir} is inside ${holder}, which the agent may not read`);
   const settings = {
     permissions: {
-      allow: [...BASE_TOOLS, ...(arm === 'C' ? ['mcp__testivai'] : [])],
-      deny: ['WebFetch', 'WebSearch', `Read(/${hidden}/**)`, `Edit(/${hidden}/**)`],
+      allow: ['Bash', `Read(/${runDir}/**)`, `Edit(/${runDir}/**)`, ...(arm === 'C' ? ['mcp__testivai'] : [])],
+      deny: ['WebFetch', 'WebSearch', ...closed.flatMap((r) => pathRules('Read', [r]).concat(pathRules('Edit', [r])))],
     },
     enabledPlugins: { ...BUILTIN_PLUGINS },
   };
   if (isolation === 'sandbox') {
+    const denyRead = [...closed, runRoot];
     settings.sandbox = {
       enabled: true,
       failIfUnavailable: true,
       network: { allowedDomains: [...allowedNetwork], allowLocalBinding: true },
-      filesystem: { denyRead: [hidden], allowRead: readNeeds.filter((p) => inside(p, hidden)) },
+      filesystem: { denyRead, allowRead: [runDir, ...readNeeds.filter((p) => denyRead.some((r) => inside(p, r)))] },
     };
   }
   return settings;
@@ -116,11 +137,17 @@ function providerEnv(agent, baseEnv) {
   };
 }
 
-export function buildAgentEnv({ baseEnv, runDir, port, browsersPath, agent, extraEnv = {} }) {
+// PATH without the entries inside a closed directory: `npm run` puts the
+// benchmark's node_modules/.bin first, which names the benchmark's directory.
+const openPath = (value, closed) => value.split(path.delimiter).filter((p) => !closed.some((r) => inside(p, r))).join(path.delimiter);
+
+// closed: the directories the agent may not read (closedRoots).
+export function buildAgentEnv({ baseEnv, runDir, port, browsersPath, agent, extraEnv = {}, closed = [] }) {
   const env = {};
   for (const name of PASS_THROUGH) {
     if (baseEnv[name] !== undefined && baseEnv[name] !== '') env[name] = baseEnv[name];
   }
+  if (env.PATH) env.PATH = openPath(env.PATH, closed);
   Object.assign(env, providerEnv(agent, baseEnv), {
     HOME: path.join(runDir, 'home'),
     CLAUDE_CONFIG_DIR: path.join(runDir, 'home', '.claude'),

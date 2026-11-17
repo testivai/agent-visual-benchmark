@@ -1,0 +1,29 @@
+diff --git a/site/css/components.css b/site/css/components.css
+index 0da5da2..261867b 100644
+--- a/site/css/components.css
++++ b/site/css/components.css
+@@ -310,6 +310,11 @@ textarea.form-input {
+   white-space: nowrap;
+ }
+ 
++.table--compact tbody td {
++  padding-top: 6px;
++  padding-bottom: 6px;
++}
++
+ .table th {
+   background: var(--color-bg);
+   font-size: 13px;
+diff --git a/site/orders.html b/site/orders.html
+index 3a67475..7d807ec 100644
+--- a/site/orders.html
++++ b/site/orders.html
+@@ -61,7 +61,7 @@
+       <div class="container">
+         <h2 class="section-title">Recent orders</h2>
+         <div class="table-wrap">
+-          <table class="table">
++          <table class="table table--compact">
+             <thead>
+               <tr>
+                 <th>Order</th>

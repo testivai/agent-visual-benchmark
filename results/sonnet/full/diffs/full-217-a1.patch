@@ -1,0 +1,17 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..9031222 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -382,3 +382,12 @@
+     align-items: flex-start;
+   }
+ }
++
++.plan-featured .btn-primary {
++  background: var(--color-success);
++  color: #ffffff;
++}
++
++.plan-featured .btn-primary:hover {
++  background: color-mix(in srgb, var(--color-success) 85%, #000000);
++}

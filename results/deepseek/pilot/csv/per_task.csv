@@ -1,0 +1,7 @@
+task,type,category,A,nA,B,nB,C,nC
+t08,fix,failed-web-font,1,3,1,3,1,3
+t10,fix,overflow-or-clipping,1,3,1,3,1,3
+t15,fix,failed-web-font,1,3,1,3,1,3
+t17,fix,overflow-or-clipping,1,3,1,3,1,3
+t19,decoy,no-defect,0.6666666666666666,3,1,3,1,3
+t21,change,shared-css,1,3,0.6666666666666666,3,1,3

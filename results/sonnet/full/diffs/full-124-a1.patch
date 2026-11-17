@@ -1,0 +1,14 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..8f045de 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -382,3 +382,9 @@
+     align-items: flex-start;
+   }
+ }
++
++/* Orders: compact body rows */
++.page-orders .table tbody td {
++  padding-top: 6px;
++  padding-bottom: 6px;
++}

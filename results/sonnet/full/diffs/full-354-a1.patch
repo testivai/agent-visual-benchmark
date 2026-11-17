@@ -1,0 +1,16 @@
+diff --git a/site/css/components.css b/site/css/components.css
+index 0da5da2..200e23b 100644
+--- a/site/css/components.css
++++ b/site/css/components.css
+@@ -223,6 +223,11 @@
+   min-width: 140px;
+ }
+ 
++#contact-form > .btn {
++  display: flex;
++  width: 100%;
++}
++
+ .form-field {
+   margin-bottom: var(--space-4);
+ }

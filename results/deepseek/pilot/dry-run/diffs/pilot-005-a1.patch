@@ -1,12 +1,14 @@
 diff --git a/site/css/tokens.css b/site/css/tokens.css
-index 63a531a..3c06458 100644
+index 63a531a..3fbeb90 100644
 --- a/site/css/tokens.css
 +++ b/site/css/tokens.css
-@@ -3,7 +3,7 @@
+@@ -3,7 +3,9 @@
  @font-face {
    font-family: 'Acme Sans';
    src: url('../fonts/acme-sans.woff2') format('woff2');
 -  font-weight: 400;
++  /* Variable font: expose the whole wght axis (Light 300 to Black 900),
++     otherwise every weight renders as the font's default Light instance. */
 +  font-weight: 300 900;
    font-style: normal;
    font-display: swap;

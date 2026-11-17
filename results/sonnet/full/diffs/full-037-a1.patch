@@ -1,0 +1,19 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..43a83aa 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -284,8 +284,14 @@
+   border-radius: var(--radius-lg);
+ }
+ 
++.member .card-body {
++  text-align: center;
++}
++
+ .avatar {
+   display: flex;
++  margin-left: auto;
++  margin-right: auto;
+   align-items: center;
+   justify-content: center;
+   width: 56px;

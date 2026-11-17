@@ -177,3 +177,37 @@ relaxes one test, not "the symptom is gone" in every sense, and it is expected t
 strict rate. Section 8's reason overstates what it can show: it does not measure how much of a
 difference between the arms comes from knowing the exact original values. It is reported as
 defined, with this limit.
+
+**2026-11-15, after the pilots, before any full-study run: what the full study can detect
+(section 10 said this would be added from the pilots).** In the pilots, C − B on the fix and change
+tasks had no spread on Sonnet or Opus: both arms solved every task. On DeepSeek's isolated re-run,
+the per-task C − B differences had a standard deviation of 0.15. With no C − B spread to go on, the
+B − A spread is used as a stand-in, from the primary model: on Sonnet, the per-task B − A differences had
+a standard deviation of 0.51. Over the full study's 20 fix and change tasks, that gives a 95% interval
+of about ±22 points, and a one-sided 95% margin of about 19 points. So if tasks vary as much as in the
+Sonnet pilot, C must beat B by about 19 points or more for its one-sided interval to clear 0; the
+other models' spreads (Opus 0.30, DeepSeek 0.15) would give ±13 and ±6.5 points. These come from 5 tasks
+each and are a rough guide. The pilots also suggest that both visual arms may be at the ceiling on
+many tasks, in which case the difference will be close to 0 with a narrow interval, and the kill line
+(section 10) will be reached.
+
+**2026-11-15: the full study runs on the primary model first; the replications are postponed.** The
+maintainer decided, before any full-study run, to run the full study on Sonnet 5.5 and to postpone
+the Opus 5.5 and DeepSeek-V4.1-Flash full studies (section 3). Reasons: time (about 12 hours for Opus
+and about 38 hours for DeepSeek, from the pilots' run times) and DeepSeek's cost (about $17 projected
+against its $20 budget). Whether and when they run is decided after the Sonnet result. The write-up
+says which models' full studies ran, and that this decision was made with the Sonnet result known.
+
+**2026-11-15: changes to how runs are isolated and read, after the pilots.** Every change made after
+a pilot score was seen is listed in `CHANGES_AFTER_PILOT.md`. None touches a prompt, an arm's
+instructions, a task, the oracle or the scoring. The main one: the pilots' sandbox closed only the
+directory that holds the benchmark, and in the DeepSeek pilot agents read leftover copies of the
+clean app and the study session's files (`docs/pilot-isolation-breach.md`). The home directory, the
+temporary directory and the benchmark's directory are now closed to Bash, Read and Edit; Read and Edit
+work only in the run's own directory; the agent's PATH no longer names the benchmark; and a probe that
+plants secrets checks every way out on each model before its full study. The DeepSeek pilot was run
+again under the fix; the first is kept in `results/deepseek/pilot-leaked/`.
+
+**2026-11-15: how the pinned Claude Code is installed.** The container came back with newer Claude
+Code builds (2.1.323, then 2.1.325). The study still runs 2.1.322 (section 3), installed in its own
+prefix and put first on PATH (`RUNNING.md`). Every run records the version it ran.

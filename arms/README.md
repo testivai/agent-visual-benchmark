@@ -14,8 +14,9 @@ in `arms/<arm>/files/` and one line of the instructions. This page puts them sid
 - Claude Code's tools Bash, Read and Edit (`--tools Bash,Edit,Read`), allowed without asking, and
   nothing else: no Write, Glob, Grep, TodoWrite or Task tool (Bash does what they would), no web
   tools, no plugins or skills. Read shows images, so the agent can look at screenshots and diffs.
-  A run whose startup report shows any other tool is stopped before it starts work. Reading or
-  editing the directory that holds the benchmark is denied. Each run records the tool list Claude
+  A run whose startup report shows any other tool is stopped before it starts work. Read and Edit
+  work only inside the run's own directory; Bash cannot read the home directory, the temporary
+  directory or the directory that holds the benchmark. Each run records the tool list Claude
   Code reported.
 - The same limits: `runner.config.json` (turns, time, spend per run), and the same model within a
   study (Sonnet 5.5, Opus 5.5 or DeepSeek-V4.1-Flash; each model is a study of its own).

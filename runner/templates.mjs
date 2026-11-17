@@ -10,6 +10,7 @@ import { spawnSync } from 'node:child_process';
 import { copyApp, hashTree } from '../harness/workspace.mjs';
 import { freePort } from '../harness/run-specs.mjs';
 import { withLock } from '../harness/lock.mjs';
+import { withTempDir } from './tempdir.mjs';
 import { armFilesDir, BASELINE_DIRS } from './arms.mjs';
 
 // Bump to rebuild every cached template (2: links in node_modules kept relative).
@@ -80,16 +81,15 @@ function countBaselines(dir, arm) {
 }
 
 // Built in a neutral temporary path, so nothing recorded in a baseline names
-// the benchmark's directory.
-async function buildTemplate({ benchRoot, arm }) {
-  const holder = fs.mkdtempSync(path.join(os.tmpdir(), 'avb-template-'));
+// the benchmark's directory. holder: a directory withTempDir removes afterwards.
+async function buildTemplate({ benchRoot, arm, holder }) {
   const dir = path.join(holder, 'project');
   copyApp(path.join(benchRoot, 'app'), dir);
   fs.cpSync(armFilesDir(arm), dir, { recursive: true });
   run(dir, 'npm', ['ci', '--ignore-scripts', '--no-audit', '--no-fund', '--prefer-offline'], process.env, `npm ci for arm ${arm}`);
   if (arm === 'B') await recordPixelBaselines(dir);
   if (arm === 'C') await recordTestivaiBaselines(dir);
-  return { holder, dir };
+  return dir;
 }
 
 export async function ensureTemplate({ benchRoot, arm, cacheRoot, log = console.log }) {
@@ -103,14 +103,17 @@ export async function ensureTemplate({ benchRoot, arm, cacheRoot, log = console.
   });
 }
 
+// The build's directory is removed whether it succeeds or not: a failed build
+// once left a copy of the clean app where the pilots' agents found it.
 async function createTemplate({ benchRoot, arm, key, final, log }) {
   log(`building the arm ${arm} template (packages and baselines)…`);
-  const { holder, dir } = await buildTemplate({ benchRoot, arm });
-  const info = { arm, key, dir: final, baselineCount: countBaselines(dir, arm), node: process.version, createdAt: new Date().toISOString() };
-  fs.mkdirSync(path.dirname(final), { recursive: true });
-  fs.rmSync(final, { recursive: true, force: true });
-  fs.cpSync(dir, final, { recursive: true, verbatimSymlinks: true });
-  fs.writeFileSync(path.join(final, '.template.json'), `${JSON.stringify(info, null, 2)}\n`);
-  fs.rmSync(holder, { recursive: true, force: true });
-  return info;
+  return withTempDir('avb-template-', async (holder) => {
+    const dir = await buildTemplate({ benchRoot, arm, holder });
+    const info = { arm, key, dir: final, baselineCount: countBaselines(dir, arm), node: process.version, createdAt: new Date().toISOString() };
+    fs.mkdirSync(path.dirname(final), { recursive: true });
+    fs.rmSync(final, { recursive: true, force: true });
+    fs.cpSync(dir, final, { recursive: true, verbatimSymlinks: true });
+    fs.writeFileSync(path.join(final, '.template.json'), `${JSON.stringify(info, null, 2)}\n`);
+    return info;
+  });
 }

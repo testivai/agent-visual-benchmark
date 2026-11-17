@@ -1,0 +1,20 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 1406541..1ef2bbb 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -250,6 +250,15 @@
+   align-items: start;
+ }
+ 
++.contact-grid > * {
++  min-width: 0;
++}
++
++.info-list dd {
++  margin-left: 0;
++  overflow-wrap: anywhere;
++}
++
+ .info-list dt {
+   margin-top: var(--space-4);
+   font-size: 13px;

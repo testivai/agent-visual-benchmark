@@ -1,0 +1,384 @@
+{
+  "phase": "pilot",
+  "seed": 7919,
+  "runs": [
+    {
+      "runId": "pilot-001",
+      "order": 1,
+      "task": "t19",
+      "arm": "B",
+      "repeat": 2
+    },
+    {
+      "runId": "pilot-002",
+      "order": 2,
+      "task": "t17",
+      "arm": "B",
+      "repeat": 2
+    },
+    {
+      "runId": "pilot-003",
+      "order": 3,
+      "task": "t21",
+      "arm": "B",
+      "repeat": 3
+    },
+    {
+      "runId": "pilot-004",
+      "order": 4,
+      "task": "t21",
+      "arm": "A",
+      "repeat": 3
+    },
+    {
+      "runId": "pilot-005",
+      "order": 5,
+      "task": "t15",
+      "arm": "C",
+      "repeat": 3
+    },
+    {
+      "runId": "pilot-006",
+      "order": 6,
+      "task": "t17",
+      "arm": "A",
+      "repeat": 1
+    },
+    {
+      "runId": "pilot-007",
+      "order": 7,
+      "task": "t15",
+      "arm": "C",
+      "repeat": 1
+    },
+    {
+      "runId": "pilot-008",
+      "order": 8,
+      "task": "t08",
+      "arm": "B",
+      "repeat": 3
+    },
+    {
+      "runId": "pilot-009",
+      "order": 9,
+      "task": "t19",
+      "arm": "A",
+      "repeat": 3
+    },
+    {
+      "runId": "pilot-010",
+      "order": 10,
+      "task": "t17",
+      "arm": "C",
+      "repeat": 2
+    },
+    {
+      "runId": "pilot-011",
+      "order": 11,
+      "task": "t21",
+      "arm": "B",
+      "repeat": 1
+    },
+    {
+      "runId": "pilot-012",
+      "order": 12,
+      "task": "t08",
+      "arm": "C",
+      "repeat": 3
+    },
+    {
+      "runId": "pilot-013",
+      "order": 13,
+      "task": "t10",
+      "arm": "A",
+      "repeat": 3
+    },
+    {
+      "runId": "pilot-014",
+      "order": 14,
+      "task": "t10",
+      "arm": "A",
+      "repeat": 1
+    },
+    {
+      "runId": "pilot-015",
+      "order": 15,
+      "task": "t19",
+      "arm": "C",
+      "repeat": 1
+    },
+    {
+      "runId": "pilot-016",
+      "order": 16,
+      "task": "t21",
+      "arm": "A",
+      "repeat": 1
+    },
+    {
+      "runId": "pilot-017",
+      "order": 17,
+      "task": "t17",
+      "arm": "C",
+      "repeat": 3
+    },
+    {
+      "runId": "pilot-018",
+      "order": 18,
+      "task": "t08",
+      "arm": "C",
+      "repeat": 1
+    },
+    {
+      "runId": "pilot-019",
+      "order": 19,
+      "task": "t08",
+      "arm": "C",
+      "repeat": 2
+    },
+    {
+      "runId": "pilot-020",
+      "order": 20,
+      "task": "t21",
+      "arm": "A",
+      "repeat": 2
+    },
+    {
+      "runId": "pilot-021",
+      "order": 21,
+      "task": "t19",
+      "arm": "C",
+      "repeat": 3
+    },
+    {
+      "runId": "pilot-022",
+      "order": 22,
+      "task": "t10",
+      "arm": "C",
+      "repeat": 2
+    },
+    {
+      "runId": "pilot-023",
+      "order": 23,
+      "task": "t17",
+      "arm": "B",
+      "repeat": 1
+    },
+    {
+      "runId": "pilot-024",
+      "order": 24,
+      "task": "t08",
+      "arm": "A",
+      "repeat": 2
+    },
+    {
+      "runId": "pilot-025",
+      "order": 25,
+      "task": "t17",
+      "arm": "A",
+      "repeat": 3
+    },
+    {
+      "runId": "pilot-026",
+      "order": 26,
+      "task": "t15",
+      "arm": "B",
+      "repeat": 2
+    },
+    {
+      "runId": "pilot-027",
+      "order": 27,
+      "task": "t21",
+      "arm": "C",
+      "repeat": 3
+    },
+    {
+      "runId": "pilot-028",
+      "order": 28,
+      "task": "t17",
+      "arm": "B",
+      "repeat": 3
+    },
+    {
+      "runId": "pilot-029",
+      "order": 29,
+      "task": "t10",
+      "arm": "C",
+      "repeat": 1
+    },
+    {
+      "runId": "pilot-030",
+      "order": 30,
+      "task": "t15",
+      "arm": "B",
+      "repeat": 3
+    },
+    {
+      "runId": "pilot-031",
+      "order": 31,
+      "task": "t08",
+      "arm": "B",
+      "repeat": 2
+    },
+    {
+      "runId": "pilot-032",
+      "order": 32,
+      "task": "t19",
+      "arm": "C",
+      "repeat": 2
+    },
+    {
+      "runId": "pilot-033",
+      "order": 33,
+      "task": "t15",
+      "arm": "B",
+      "repeat": 1
+    },
+    {
+      "runId": "pilot-034",
+      "order": 34,
+      "task": "t15",
+      "arm": "C",
+      "repeat": 2
+    },
+    {
+      "runId": "pilot-035",
+      "order": 35,
+      "task": "t08",
+      "arm": "A",
+      "repeat": 1
+    },
+    {
+      "runId": "pilot-036",
+      "order": 36,
+      "task": "t21",
+      "arm": "C",
+      "repeat": 2
+    },
+    {
+      "runId": "pilot-037",
+      "order": 37,
+      "task": "t10",
+      "arm": "C",
+      "repeat": 3
+    },
+    {
+      "runId": "pilot-038",
+      "order": 38,
+      "task": "t10",
+      "arm": "A",
+      "repeat": 2
+    },
+    {
+      "runId": "pilot-039",
+      "order": 39,
+      "task": "t15",
+      "arm": "A",
+      "repeat": 3
+    },
+    {
+      "runId": "pilot-040",
+      "order": 40,
+      "task": "t10",
+      "arm": "B",
+      "repeat": 2
+    },
+    {
+      "runId": "pilot-041",
+      "order": 41,
+      "task": "t21",
+      "arm": "C",
+      "repeat": 1
+    },
+    {
+      "runId": "pilot-042",
+      "order": 42,
+      "task": "t21",
+      "arm": "B",
+      "repeat": 2
+    },
+    {
+      "runId": "pilot-043",
+      "order": 43,
+      "task": "t08",
+      "arm": "B",
+      "repeat": 1
+    },
+    {
+      "runId": "pilot-044",
+      "order": 44,
+      "task": "t10",
+      "arm": "B",
+      "repeat": 3
+    },
+    {
+      "runId": "pilot-045",
+      "order": 45,
+      "task": "t19",
+      "arm": "A",
+      "repeat": 1
+    },
+    {
+      "runId": "pilot-046",
+      "order": 46,
+      "task": "t17",
+      "arm": "A",
+      "repeat": 2
+    },
+    {
+      "runId": "pilot-047",
+      "order": 47,
+      "task": "t15",
+      "arm": "A",
+      "repeat": 1
+    },
+    {
+      "runId": "pilot-048",
+      "order": 48,
+      "task": "t08",
+      "arm": "A",
+      "repeat": 3
+    },
+    {
+      "runId": "pilot-049",
+      "order": 49,
+      "task": "t17",
+      "arm": "C",
+      "repeat": 1
+    },
+    {
+      "runId": "pilot-050",
+      "order": 50,
+      "task": "t10",
+      "arm": "B",
+      "repeat": 1
+    },
+    {
+      "runId": "pilot-051",
+      "order": 51,
+      "task": "t19",
+      "arm": "B",
+      "repeat": 3
+    },
+    {
+      "runId": "pilot-052",
+      "order": 52,
+      "task": "t15",
+      "arm": "A",
+      "repeat": 2
+    },
+    {
+      "runId": "pilot-053",
+      "order": 53,
+      "task": "t19",
+      "arm": "B",
+      "repeat": 1
+    },
+    {
+      "runId": "pilot-054",
+      "order": 54,
+      "task": "t19",
+      "arm": "A",
+      "repeat": 2
+    }
+  ]
+}

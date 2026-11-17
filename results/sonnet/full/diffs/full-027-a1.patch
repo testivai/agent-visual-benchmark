@@ -1,0 +1,13 @@
+diff --git a/site/css/components.css b/site/css/components.css
+index a2e6673..0da5da2 100644
+--- a/site/css/components.css
++++ b/site/css/components.css
+@@ -98,7 +98,7 @@
+ 
+ .btn-secondary {
+   background: var(--color-surface);
+-  color: var(--color-surface);
++  color: var(--color-ink);
+   border-color: var(--color-line);
+ }
+ 

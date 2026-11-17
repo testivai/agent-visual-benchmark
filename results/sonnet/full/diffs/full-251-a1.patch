@@ -1,0 +1,12 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..2e1cde3 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -6,7 +6,6 @@
+   position: relative;
+   overflow: hidden;
+   padding: var(--space-8) 0 calc(var(--space-8) + 56px);
+-  border-bottom: 1px solid var(--color-line);
+   background: linear-gradient(180deg, var(--color-brand-tint), var(--color-bg));
+ }
+ 

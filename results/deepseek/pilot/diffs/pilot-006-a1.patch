@@ -1,15 +1,12 @@
 diff --git a/site/css/components.css b/site/css/components.css
-index e56acd7..7b8f0cb 100644
+index e56acd7..0da5da2 100644
 --- a/site/css/components.css
 +++ b/site/css/components.css
-@@ -170,8 +170,8 @@
+@@ -126,7 +126,6 @@
  
- .badge {
-   position: absolute;
--  top: -10px;
--  right: -10px;
-+  top: var(--space-2);
-+  right: var(--space-2);
-   padding: 3px 10px;
-   border-radius: var(--radius-pill);
-   background: var(--color-brand);
+ .card {
+   position: relative;
+-  overflow: hidden;
+   background: var(--color-surface);
+   border: 1px solid var(--color-line);
+   border-radius: var(--radius-lg);

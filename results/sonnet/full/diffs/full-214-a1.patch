@@ -1,0 +1,14 @@
+diff --git a/site/css/pages.css b/site/css/pages.css
+index 420e383..045f7c7 100644
+--- a/site/css/pages.css
++++ b/site/css/pages.css
+@@ -382,3 +382,9 @@
+     align-items: flex-start;
+   }
+ }
++
++/* Orders: compact body rows (heading row keeps the default padding) */
++.page-orders .table td {
++  padding-top: 6px;
++  padding-bottom: 6px;
++}
