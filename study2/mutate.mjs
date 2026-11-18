@@ -146,11 +146,14 @@ export function perturb(property, value, random) {
 // Whether perturb can change this value, without using the random.
 const mutable = (property, value) => perturb(property, value, () => 0) !== null;
 
+const drawable = (d, cls, skip) => CLASSES[cls].includes(d.property) && !skip.has(d.valueStart) && mutable(d.property, d.value);
+
 const MAX_DRAWS = 500;
 
 // count mutations on different rules, each a declaration of a class drawn at
-// random, among the rules whose ids are in used.
-export function drawMutations(rules, used, random, count) {
+// random, among the rules whose ids are in used. skip: the valueStart of
+// declarations not to draw (already mutated by another task on the site).
+export function drawMutations(rules, used, random, count, { skip = new Set() } = {}) {
   const out = [];
   const classes = Object.keys(CLASSES);
   for (let tries = 0; out.length < count && tries < MAX_DRAWS; tries++) {
@@ -158,7 +161,7 @@ export function drawMutations(rules, used, random, count) {
     const taken = new Set(out.map((m) => m.ruleId));
     const candidates = rules
       .filter((r) => used.has(r.id) && !taken.has(r.id))
-      .flatMap((r) => r.declarations.filter((d) => CLASSES[cls].includes(d.property) && mutable(d.property, d.value)).map((d) => ({ rule: r, d })));
+      .flatMap((r) => r.declarations.filter((d) => drawable(d, cls, skip)).map((d) => ({ rule: r, d })));
     if (candidates.length === 0) continue;
     const { rule, d } = pick(candidates, random);
     out.push({

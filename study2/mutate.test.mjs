@@ -79,3 +79,16 @@ test('several mutations land on different rules; applying them edits the source 
   assert.equal(drawMutations(rules, new Set([3]), mulberry32(1), 1).length, 1, 'a rule outside the used set is never drawn... unless it is the only one used');
   assert.deepEqual(drawMutations(rules, new Set(), mulberry32(1), 1), [], 'nothing used, nothing drawn');
 });
+
+test('declarations already mutated by another task (by their place in the file) are not drawn again', () => {
+  const rules = parseRules(CSS);
+  const used = new Set([0, 1, 2]);
+  const all = rules.slice(0, 3).flatMap((r) => r.declarations).filter((d) => perturb(d.property, d.value, () => 0) !== null);
+  const keep = all[0];
+  const skip = new Set(all.slice(1).map((d) => d.valueStart));
+  for (let seed = 1; seed <= 20; seed++) {
+    const [m] = drawMutations(rules, used, mulberry32(seed), 1, { skip });
+    assert.equal(m.valueStart, keep.valueStart, `seed ${seed}`);
+  }
+  assert.deepEqual(drawMutations(rules, used, mulberry32(1), 1, { skip: new Set(all.map((d) => d.valueStart)) }), []);
+});
