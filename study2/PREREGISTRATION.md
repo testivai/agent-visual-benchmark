@@ -68,30 +68,84 @@ and rendering noise?
   - **Not a new draw:** the eligibility rule was not changed after the draw, and the six sites stand.
   - **Check:** after the import, every site makes no remote request and no failed local request
     offline (`study2/sites/manifest.json`).
-- **Proposed:** mutations are drawn only from CSS rules that match at least one element in a captured
-  view. Most rules of a compiled Bootstrap stylesheet match nothing on the page.
+- **Proposed:** mutations are drawn only from CSS rules that are used: under the rule's `@media`,
+  its selector, with pseudo-elements taken off, matches at least one element in a captured view
+  (`study2/usage.mjs`). The page is loaded as the oracle loads it: each viewport, reduced motion,
+  after its scripts run. On the six sites, 63 to 207 of about 2,300 to 2,500 rules are used.
+- **Views (Proposed):** each page at desktop (1280×800) and mobile (390×844) size, the oracle's two
+  viewports. The six sites are one page each and have no states to reach, so each has two views.
 
-**Mutations (Proposed).**
+**Mutations (Proposed).** The rules are code (`study2/mutate.mjs`, `study2/generate.mjs`); this is
+what the code does.
 
-- **What a mutation is:** one change to one declaration in the site's own CSS:
-  - a rule chosen at random from the site's stylesheets;
-  - a property class chosen at random from a published list: colour, background, font size,
+- **What a mutation is:** one change to one declaration in the site's own stylesheet, in place:
+  - first a property class, chosen at random from a published list: colour, background, font size,
     font weight, letter spacing, line height, margin, padding, width, display and flex, position
     and z-index, border, opacity, overflow, text transform;
-  - a new value from a fixed rule per class (for example: a length scaled by 0.5 or 1.5, a colour
-    rotated in hue, a keyword swapped for another valid one).
-- **Validity filters:** a mutation is kept only if it changes at least one measured property of a
-  rendered element in a captured view, and at least one pixel of a captured screenshot. Otherwise
-  another is drawn. These filters look only at the page, never at either tool's verdict.
+  - then one declaration of that class, chosen at random among the used rules' declarations that
+    the class's rule can change;
+  - then a new value by the class's fixed rule:
+    - **lengths** (font size, letter spacing, line height, margin, padding, width, border): the
+      first non-zero number scaled by 0.5 or 1.5 (even odds); a px value moves by at least 1px;
+      values with `var()` or `calc()` are left out;
+    - **colours** (colour, background): hue turned half-way round; a grey (saturation below 0.15),
+      black or white has its lightness inverted instead; `var()` is left out;
+    - **keywords:** font weight bold↔normal by a fixed table; text transform none↔uppercase;
+      overflow hidden↔visible; opacity 0.5 or more → 0.3, else 1; z-index above 0 → −1, else 10;
+      display, flex direction, justify content, align items, flex wrap and position: another value
+      of the property, at random from a fixed list;
+    - `!important` is kept.
+  - **Custom properties:** one that holds a literal colour (`--bs-btn-bg: #0d6efd`), or an r, g, b
+    triple under a name ending in `-rgb`, is a colour declaration. No other custom property is
+    mutated.
+- **Validity filters:** a mutation is kept only if both hold (`study2/validity.mjs`):
+  - it changes at least one measured property of an element rendered before or after (a box of
+    non-zero size, not clipped away, not `visibility: hidden`), or the page size, in a captured
+    view, as the oracle's own capture measures it;
+  - it changes at least one pixel of a captured full-page screenshot **at Playwright's default
+    threshold (0.2)**, the one arm B's check uses. TestivAI's default (0.1) is more sensitive, so
+    both arms' checks flag every kept mutation.
+
+  Otherwise another mutation is drawn, from the class up. These filters look only at the page,
+  never at either tool's verdict. Each site captures identically twice, in what is measured and in
+  every pixel, which the filters need and a test checks.
+- **Several mutations (S2):** on different rules, each showing on its own, and showing together;
+  if they do not show together, the last is dropped and another drawn.
 - **Who chooses:** the RNG chooses everything, with recorded seeds. No person picks, reviews or
   discards an individual task before the runs, except by these filters, which run as code.
+- **Allocation:** one site order from the seed, dealt round-robin through the strata in turn, so
+  each site gets 12 tasks and each stratum is spread as evenly as its count allows. Task ids are
+  given in a seeded order that says nothing of the stratum. Each task draws from its own seeded
+  stream. On a site, no declaration is mutated by two tasks.
+- **The seed** for the real generation is written here at the freeze, before the generation runs.
+
+**Trial generation (2026-11-18), disclosed.** The generator was run on the six sites with a
+throwaway seed (1), to check that it works on them. Its tasks are not used and were not committed.
+- **What it found, and changed:**
+  - Bootstrap 5 keeps most colours in custom properties. On three of the six sites no colour or
+    background declaration could be mutated, and on a fourth only one. Custom properties holding a
+    colour were added to the colour class (above).
+  - One kept mutation changed 128 pixels, but none at Playwright's default threshold. Arm B's check
+    would pass on it while arm C's might not, a difference of default settings rather than of what
+    the study measures. The pixel filter now uses B's threshold (above).
+- **After both changes, the same seed:**
+  - All 72 tasks were generated, from 227 candidates, of which 90 were kept, in about 3 minutes.
+  - **The kept mix is uneven.** Kept per class: line height 15, font size 12, margin 10,
+    padding 10, display and flex 10, font weight 9, width 9, position and z-index 6, colour 3,
+    background 3, border 2, text transform 1, letter spacing, opacity and overflow 0.
+  - **Why:** the class is drawn evenly, but classes differ in how often a change shows. Most
+    colour candidates are palette entries nothing reads, and most overflow changes clip nothing.
+    The write-up reports the mix of the real tasks.
+  - **Alternative, not adopted (for the maintainer):** draw the class once per mutation, then
+    retry declarations of that class until one shows. That would even out the mix where a site
+    allows, at the cost of more checks. The draft keeps the literal rule above.
 
 **Strata (Proposed), 72 tasks:**
 
 | stratum | what the agent starts from | tasks |
 | --- | --- | --- |
 | S1, one defect | one mutation | 20 |
-| S2, several defects | two or three mutations on different elements | 20 |
+| S2, several defects | two or three mutations (even odds) on different rules | 20 |
 | S3, defect and drift | one mutation, and baselines recorded under a different rendering setting | 20 |
 | S4, drift only (decoy) | no mutation, baselines recorded under a different rendering setting | 12 |
 
@@ -200,10 +254,14 @@ oracle measures what the seed changed.
 
 ## 10. What has to be built
 
-None of this is built yet. The order:
+The order, with what is built so far:
 
-1. **Site import:** fetch, strip remote resources, check that it renders offline.
-2. **Mutation generator and validity filters,** with tests.
+1. **Site import:** fetch, strip remote resources, check that it renders offline. *Built:*
+   `study2/sites.mjs`, `study2/select-sites.mjs`.
+2. **Mutation generator and validity filters,** with tests. *Built:* `study2/css.mjs`,
+   `study2/usage.mjs`, `study2/mutate.mjs`, `study2/validity.mjs`, `study2/generate.mjs`,
+   `study2/generate-tasks.mjs`; the oracle's capture takes a page by file name and can screenshot
+   each view.
 3. **Views per site, and the generalised oracle:** restore and collateral without hand-written tests.
 4. **Drifted baselines** for B and C, with the setting search.
 5. **Per-task validation,** as code.
