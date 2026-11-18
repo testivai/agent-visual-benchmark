@@ -53,8 +53,12 @@ and rendering noise?
 - **Eligibility:** a built page in the package; not an admin dashboard; renders offline once its
   remote fonts and scripts are removed. Remote resources are stripped the same way for every site,
   and both arms see the same files.
-- **Selection:** 6 sites drawn at random from the eligible ones, with a recorded seed, before any
-  task is generated.
+- **Selection:** 6 sites drawn at random from the eligible ones, before any task is generated. The
+  candidates are the 39 names in `study2/sites/candidates.json` (taken 2026-11-18). They are tried in
+  the order given by seed **20261118** (`selectionOrder` in `study2/sites.mjs`), and the first six
+  eligible are kept. Each is pinned to the version and integrity hash it had when drawn.
+- **Proposed:** mutations are drawn only from CSS rules that match at least one element in a captured
+  view. Most rules of a compiled Bootstrap stylesheet match nothing on the page.
 
 **Mutations (Proposed).**
 
