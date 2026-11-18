@@ -268,6 +268,18 @@ oracle measures what the seed changed.
 - **H2:** C and B differ in tokens per run on S1 to S3: the per-task median, on a log scale, paired.
 - **Direction:** two-sided, since study 1 found C using about a third more tokens.
 - **Correction:** with two tests, Holm's correction at 5% overall.
+- **How the two fit together (Proposed, `study2/analysis.mjs`):**
+  - Each test's p-value comes from the same bootstrap as its interval (over tasks, 10,000
+    resamples, seed 1):
+    - H1, one-sided: the share of resampled means at or below 0;
+    - H2, two-sided: twice the smaller tail.
+  - Holm's procedure compares the smaller p-value with 2.5%, then the other with 5%.
+  - **H1 is supported when Holm rejects it.** That is the draft's "one-sided lower bound above 0",
+    taken at the level Holm assigns: 97.5% if H1 has the smaller p-value, 95% otherwise. A test
+    checks that the 95% bound and the p-value agree.
+  - The kill line is unchanged.
+  - **H2** is reported as the ratio of C's tokens to B's, the per-task median taken first, with its
+    interval.
 
 **Description only.**
 
@@ -358,7 +370,17 @@ The order, with what is built so far:
    arm's baselines under it is part of the runner integration.
 5. **Per-task validation,** as code. *Built:* `study2/validation.mjs`, `study2/validate-tasks.mjs`.
 6. **The calibration script,** pooled only. *Built:* `study2/calibration.mjs`, `study2/calibrate.mjs`.
-7. **Analysis by stratum,** H2, and partial credit.
+7. **Analysis by stratum,** H2, and partial credit. *Built:* `study2/analysis.mjs`,
+   `study2/analyze.mjs`, on top of study 1's analysis. The markdown summary comes with the runner
+   integration.
+
+**Still to build, before the pilot:** the runner integration.
+- Each task's site as the app, with study 2's prompt and `CLAUDE.md`.
+- Each arm's tests for the site's views.
+- Each arm's baselines: clean for S1 and S2, drifted for S3 and S4.
+- The scorer, which applies `study2/oracle.mjs` and the S4 file rule, and records partial credit.
+- Tampering as in study 1.
+- The probe is run again before the pilot.
 
 Each step is test first. The probe and the isolation stay as they are.
 
