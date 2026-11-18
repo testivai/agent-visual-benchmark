@@ -178,10 +178,31 @@ throwaway seed (1), to check that it works on them. Its tasks are not used and w
 | S3, defect and drift | one mutation, and baselines recorded under a different rendering setting | 20 |
 | S4, drift only (decoy) | no mutation, baselines recorded under a different rendering setting | 12 |
 
-**Rendering drift (Proposed).** Baselines recorded with one fixed Chromium setting that changes
-anti-aliasing or hinting but no CSS. The exact setting is chosen in the pilot as the first, in a
-fixed list, that makes every page differ in pixels while the DOM and computed styles stay identical.
-B and C get the same drifted baselines.
+**Rendering drift (Proposed; setting chosen 2026-11-18, `study2/drift.mjs`).**
+
+- **What:** the S3 and S4 baselines are recorded under one setting that changes how text is drawn
+  but no CSS, as a different machine's font setup does. Both arms' baselines are recorded under the
+  same setting. The agent's own checks run under the machine's normal setting, so its first check
+  shows the drift.
+- **The list, in order,** committed before the search ran on the six sites:
+  1. full font hinting (fontconfig);
+  2. font anti-aliasing off (fontconfig);
+  3. Chromium's `--disable-font-subpixel-positioning`;
+  4. Chromium drawing through ANGLE's SwiftShader.
+- **The rule:** the first setting under which every view of every site is flagged by both arms'
+  checks, while the DOM and computed styles stay as they are. Geometry may move, since hinting
+  changes how wide text is drawn.
+- **Chosen:** full font hinting (`study2/drift.json`). All 12 views are flagged by both checks,
+  with 8,749 to 312,185 pixels differing per view.
+- **Changed from the first draft, disclosed:** the first draft named a Chromium setting that changes
+  anti-aliasing or hinting. A look at two of the sites (agency, bare), before the list was set,
+  showed:
+  - Chromium's own hinting flags change nothing on this machine;
+  - colour-profile flags change many pixels, by too little for arm B's check;
+  - a change in anti-aliasing alone is skipped by arm B's check by design.
+
+  The list was set after that look, and the search on all six sites ran after the list was
+  committed.
 
 **Prompt (Proposed).** Every task gets the same prompt, which names no category: "The site looks
 different since the last change. Can you take a look and fix it?"
@@ -305,7 +326,9 @@ The order, with what is built so far:
    each view.
 3. **Views per site, and the generalised oracle:** restore and collateral without hand-written tests.
    *Built:* `study2/oracle.mjs` (scope, judge, partial credit); views in `study2/validity.mjs`.
-4. **Drifted baselines** for B and C, with the setting search.
+4. **Drifted baselines** for B and C, with the setting search. *Built:* the search
+   (`study2/drift.mjs`, `study2/choose-drift.mjs`, result in `study2/drift.json`). Recording each
+   arm's baselines under it is part of the runner integration.
 5. **Per-task validation,** as code.
 6. **The calibration script,** pooled only.
 7. **Analysis by stratum,** H2, and partial credit.
