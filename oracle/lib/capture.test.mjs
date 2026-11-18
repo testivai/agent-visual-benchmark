@@ -213,3 +213,27 @@ test('a view whose state cannot be reached is an error on that view, not a crash
     await server.close();
   }
 });
+
+test('a page not in the study 1 list is the file of that name (study 2); screenshots on request, outside the measurements', async () => {
+  const site = path.join(REPO_ROOT, 'study2', 'sites', 'bare', 'site');
+  const server = await startStaticServer(site);
+  try {
+    const views = [{ page: 'index.html', viewport: 'desktop' }, { page: 'index.html', viewport: 'mobile' }];
+    const plain = await captureSnapshot(browser, server.url, { views });
+    const shot = await captureSnapshot(browser, server.url, { views, screenshots: true });
+    assert.deepEqual(Object.keys(plain.views), ['index.html@desktop', 'index.html@mobile']);
+    for (const view of Object.values(plain.views)) {
+      assert.equal(view.error, undefined, view.error);
+      assert.equal(view.doc.title, 'Bare - Start Bootstrap Template', 'the site page, not a 404');
+    }
+    assert.equal(plain.screenshots, undefined, 'no screenshots unless asked');
+    assert.deepEqual(diffSnapshots(plain, shot), [], 'taking a screenshot does not change what is measured');
+    const desktop = shot.screenshots['index.html@desktop'];
+    assert.ok(Buffer.isBuffer(desktop) && desktop.subarray(1, 4).toString() === 'PNG');
+    assert.equal(desktop.readUInt32BE(16), 1280, 'the width of the viewport');
+    assert.equal(desktop.readUInt32BE(20), plain.views['index.html@desktop'].doc.scrollH, 'the height of the whole page');
+    assert.equal(shot.screenshots['index.html@mobile'].readUInt32BE(16), 390);
+  } finally {
+    await server.close();
+  }
+});
