@@ -305,6 +305,20 @@ oracle measures what the seed changed.
 - **If it is below 40%,** the ladder goes the other way.
 - **The pilot's per-arm results** are not computed until the study is frozen.
 - **The pilot also measures** cost per run, and the per-task spread for section 6.
+- **As built (`study2/calibration.mjs`, `study2/calibrate.mjs`):**
+  - The script reports the pooled rate, the decision and the next rung, the median cost per run,
+    and the SD of the per-task C − B difference over S1 to S3.
+  - It never computes a per-arm rate or the mean difference. A test checks that swapping the arms'
+    labels changes nothing in what it returns. The SD is the one quantity that uses the arms
+    separately, and it does not say which arm did better.
+  - From the SD, it gives the power at 60 tasks and the task count by section 6's rule.
+- **Gaps found while building, for the maintainer (Proposed answers):**
+  - The ladder has no rung below the start. If the pilot at the start is below 40%, the script
+    says so and the maintainer decides; it does not invent an easier rung.
+  - "Up to 120 tasks" is read as the S1 to S3 count, raised in steps of three (one per stratum).
+    The 12 decoys stay as they are.
+  - The rungs are not built into the generator. They are built only if the pilot calls for one,
+    test first, before that pilot runs again.
 
 ## 8. Runs
 
@@ -343,7 +357,7 @@ The order, with what is built so far:
    (`study2/drift.mjs`, `study2/choose-drift.mjs`, result in `study2/drift.json`). Recording each
    arm's baselines under it is part of the runner integration.
 5. **Per-task validation,** as code. *Built:* `study2/validation.mjs`, `study2/validate-tasks.mjs`.
-6. **The calibration script,** pooled only.
+6. **The calibration script,** pooled only. *Built:* `study2/calibration.mjs`, `study2/calibrate.mjs`.
 7. **Analysis by stratum,** H2, and partial credit.
 
 Each step is test first. The probe and the isolation stay as they are.
