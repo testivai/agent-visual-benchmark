@@ -48,14 +48,14 @@ test('the effect of a mutation: measured changes, differing pixels per view, and
   const effect = effectOf(clean, broken);
   assert.deepEqual(effect.errors, ['index.html@desktop: could not load the index.html page: timeout']);
   assert.equal(shows(effect), false, 'a view that cannot be captured never counts as showing');
-  assert.equal(shows({ measured: ['v|.a[0]|color'], pixels: { v: { any: 3, atDefault: 2 } }, errors: [] }), true);
-  assert.equal(
-    shows({ measured: ['v|.a[0]|color'], pixels: { v: { any: 128, atDefault: 0 } }, errors: [] }),
-    false,
-    'pixels that differ only below the threshold of arm B\'s check (Playwright\'s default, 0.2) do not count',
-  );
-  assert.equal(shows({ measured: ['v|.a[0]|color'], pixels: { v: { any: 0, atDefault: 0 } }, errors: [] }), false, 'no pixel');
-  assert.equal(shows({ measured: [], pixels: { v: { any: 3, atDefault: 3 } }, errors: [] }), false, 'no measured change');
+  const px = (any, playwright, testivai) => ({ any, playwright, testivai });
+  const changed = (pixels) => ({ measured: ['v|.a[0]|color'], pixels, errors: [] });
+  assert.equal(shows(changed({ v: px(3, true, 3) })), true);
+  assert.equal(shows(changed({ desktop: px(3, true, 0), mobile: px(9, false, 9) })), true, 'each arm flags some view');
+  assert.equal(shows(changed({ v: px(128, false, 128) })), false, 'arm B\'s check would pass it');
+  assert.equal(shows(changed({ v: px(1, true, 0) })), false, 'arm C\'s check would pass it');
+  assert.equal(shows(changed({ v: px(0, false, 0) })), false, 'no pixel');
+  assert.equal(shows({ measured: [], pixels: { v: px(3, true, 3) }, errors: [] }), false, 'no measured change');
 });
 
 const DRAWN = ['agency', 'bare', 'full-width-pics', 'heroic-features', 'shop-item', 'small-business'];
@@ -70,7 +70,7 @@ test('each drawn site, captured twice, is identical in what is measured and in e
     assert.deepEqual(effect.errors, [], name);
     assert.deepEqual(effect.measured, [], name);
     assert.deepEqual(Object.keys(effect.pixels), ['index.html@desktop', 'index.html@mobile'], name);
-    for (const [view, p] of Object.entries(effect.pixels)) assert.equal(p.any, 0, `${name} ${view}`);
+    for (const [view, p] of Object.entries(effect.pixels)) assert.deepEqual(p, { any: 0, playwright: false, testivai: 0 }, `${name} ${view}`);
   }
 });
 
@@ -89,7 +89,8 @@ test('on a drawn site: a used rule whose change shows is kept; one that matches 
   const lead = await mutationEffect(browser, { siteDir: site, cssFile, css: applyMutations(css, [mutation('.lead', 'font-size', '1.875rem')]), views, clean });
   assert.equal(shows(lead), true, JSON.stringify(lead).slice(0, 300));
   assert.ok(lead.measured.some((e) => /\|\.lead\[0\]\|fontSize$/.test(e)), lead.measured.join('\n'));
-  assert.ok(lead.pixels['index.html@desktop'].atDefault > 0);
+  assert.equal(lead.pixels['index.html@desktop'].playwright, true, 'arm B\'s check flags it');
+  assert.ok(lead.pixels['index.html@desktop'].testivai > 0, 'arm C\'s check flags it');
 
   const divider = await mutationEffect(browser, { siteDir: site, cssFile, css: applyMutations(css, [mutation('.dropdown-divider', 'opacity', '0.3')]), views, clean });
   assert.equal(shows(divider), false, JSON.stringify(divider).slice(0, 300));

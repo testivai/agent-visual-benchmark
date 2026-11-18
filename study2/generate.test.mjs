@@ -44,12 +44,17 @@ const CSS = `.a { color: #0d6efd; padding: 1rem; }
 .d { color: #000; }`;
 const RULES = parseRules(CSS);
 const USED = new Set([0, 1, 2, 3]);
-const effect = (ok) => ({ measured: ok ? ['v|.a[0]|color'] : [], pixels: { v: { any: ok ? 5 : 0, atDefault: ok ? 5 : 0 } }, errors: [] });
+const effect = (ok) => ({ measured: ok ? ['v|.a[0]|color'] : [], pixels: { v: { any: ok ? 5 : 0, playwright: ok, testivai: ok ? 5 : 0 } }, errors: [] });
 
 test('why a candidate is rejected, in words', () => {
   assert.equal(reasonOf({ measured: [], pixels: {}, errors: ['v: could not load'] }), 'a view could not be captured');
   assert.equal(reasonOf(effect(false)), 'no measured change on a rendered element');
-  assert.equal(reasonOf({ measured: ['v|.a[0]|color'], pixels: { v: { any: 0, atDefault: 0 } }, errors: [] }), 'no pixel changed');
+  const measured = ['v|.a[0]|color'];
+  const px = (any, playwright, testivai) => ({ measured, pixels: { v: { any, playwright, testivai } }, errors: [] });
+  assert.equal(reasonOf(px(0, false, 0)), 'no pixel changed');
+  assert.equal(reasonOf(px(4, false, 0)), 'neither arm\'s check flags it');
+  assert.equal(reasonOf(px(4, false, 4)), 'arm B\'s check (Playwright) does not flag it');
+  assert.equal(reasonOf(px(4, true, 0)), 'arm C\'s check (TestivAI) does not flag it');
 });
 
 test('a task: candidates are drawn until one shows; the rejected ones are recorded with the reason', async () => {

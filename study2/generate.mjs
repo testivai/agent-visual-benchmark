@@ -7,7 +7,7 @@ import path from 'node:path';
 import { parseRules } from './css.mjs';
 import { drawMutations, applyMutations } from './mutate.mjs';
 import { usedRules } from './usage.mjs';
-import { shows, siteViews, captureSite, mutationEffect } from './validity.mjs';
+import { shows, flaggedByB, flaggedByC, siteViews, captureSite, mutationEffect } from './validity.mjs';
 import { mulberry32, shuffle } from '../runner/rng.mjs';
 
 export const STRATA = {
@@ -36,7 +36,10 @@ export function allocate(strata, sites, seed) {
 export function reasonOf(effect) {
   if (effect.errors.length > 0) return 'a view could not be captured';
   if (effect.measured.length === 0) return 'no measured change on a rendered element';
-  return 'no pixel changed';
+  if (!Object.values(effect.pixels).some((p) => p && p.any > 0)) return 'no pixel changed';
+  const [b, c] = [flaggedByB(effect), flaggedByC(effect)];
+  if (!b && !c) return 'neither arm\'s check flags it';
+  return b ? 'arm C\'s check (TestivAI) does not flag it' : 'arm B\'s check (Playwright) does not flag it';
 }
 
 const brief = (m) => ({

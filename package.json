@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
+    "@testivai/witness": "2.7.2",
     "pixelmatch": "7.1.0",
     "pngjs": "7.0.0"
   }

@@ -102,13 +102,22 @@ what the code does.
   - it changes at least one measured property of an element rendered before or after (a box of
     non-zero size, not clipped away, not `visibility: hidden`), or the page size, in a captured
     view, as the oracle's own capture measures it;
-  - it changes at least one pixel of a captured full-page screenshot **at Playwright's default
-    threshold (0.2)**, the one arm B's check uses. TestivAI's default (0.1) is more sensitive, so
-    both arms' checks flag every kept mutation.
+  - **both arms' own screenshot checks flag it**, each in at least one view, at their default
+    settings (`study2/arm-checks.mjs`). Each is the code that arm runs, at the version it installs
+    (a test pins both):
+    - arm B, Playwright 1.63.0's `toHaveScreenshot` comparator: threshold 0.2, anti-aliased
+      pixels skipped, any counted pixel fails;
+    - arm C, TestivAI 2.7.2's pixel diff, called as its reporter calls it: threshold 0.1,
+      anti-aliased pixels counted, a difference whose summed luminance is at most 0.5 × 256 read
+      as identical.
 
-  Otherwise another mutation is drawn, from the class up. These filters look only at the page,
-  never at either tool's verdict. Each site captures identically twice, in what is measured and in
-  every pixel, which the filters need and a test checks.
+    Neither check is more sensitive than the other in every case: a test shows a single pixel
+    that Playwright flags and TestivAI does not, and thin lines can be the reverse.
+
+  Otherwise another mutation is drawn, from the class up. The filters look at the page and at the
+  two pixel comparisons only: never at TestivAI's analysis (DOM diff, labels, verdicts), and never
+  at any agent. Each site captures identically twice, in what is measured and in every pixel, which
+  the filters need and a test checks.
 - **Several mutations (S2):** on different rules, each showing on its own, and showing together;
   if they do not show together, the last is dropped and another drawn.
 - **Who chooses:** the RNG chooses everything, with recorded seeds. No person picks, reviews or
@@ -127,9 +136,29 @@ throwaway seed (1), to check that it works on them. Its tasks are not used and w
     colour were added to the colour class (above).
   - One kept mutation changed 128 pixels, but none at Playwright's default threshold. Arm B's check
     would pass on it while arm C's might not, a difference of default settings rather than of what
-    the study measures. The pixel filter now uses B's threshold (above).
-- **After both changes, the same seed:**
-  - All 72 tasks were generated, from 227 candidates, of which 90 were kept, in about 3 minutes.
+    the study measures. The pixel filter was first changed to B's threshold.
+  - **That change rested on a wrong assumption, corrected the same day.** I had written that
+    TestivAI's default is more sensitive than Playwright's. Reading both comparators showed
+    otherwise:
+    - Playwright skips anti-aliased pixels;
+    - TestivAI counts them, but reads a difference whose summed luminance is small as none.
+
+    The filter now asks each arm's own check, as above.
+- **After these changes, the same seed:**
+  - All 72 tasks were generated, from 228 candidates, of which 90 were kept, in about 4 minutes.
+  - **Rejected by the arms' checks:** 3 of the 228 candidates.
+    - Two were flagged by TestivAI's check and not by Playwright's: a button's border colour, and
+      a form field's border radius. Both are thin lines, which Playwright's anti-aliasing
+      detection is likely to skip.
+    - One was flagged by neither: a toggler border at 10% opacity.
+    - None was flagged by Playwright's check alone.
+  - **What this means:** requiring both checks keeps the study on what TestivAI's analysis adds,
+    given a difference both tools report. It leaves out the cases where its check catches what
+    Playwright's misses.
+  - **Alternative, not adopted (for the maintainer):** keep a mutation that either check flags.
+    This measures detection as well, but mixes in differences of default settings. The draft
+    keeps both-flag, and the write-up reports how many real candidates each check alone would
+    have caught.
   - **The kept mix is uneven.** Kept per class: line height 15, font size 12, margin 10,
     padding 10, display and flex 10, font weight 9, width 9, position and z-index 6, colour 3,
     background 3, border 2, text transform 1, letter spacing, opacity and overflow 0.
