@@ -138,3 +138,50 @@ test('choose: sites are tried in the seeded order, ineligible ones skipped with 
   for (const name of out.chosen) assert.ok(fs.existsSync(path.join(root, 'sites', name.replace('startbootstrap-', ''), 'site', 'index.html')));
   for (const tried of out.tried.filter((x) => !x.ok)) assert.ok(!fs.existsSync(path.join(root, 'sites', tried.name.replace('startbootstrap-', ''))), 'a skipped site is not kept');
 });
+
+// Found at the draw: three sites load placeholder images from other hosts. Each becomes a local
+// SVG stand-in of the same size, made from its URL, the same way on every site.
+import { standInFor, localizeImages } from './sites.mjs';
+
+test('a stand-in for a placeholder image: same size, colours from the URL, a stable file name', () => {
+  const d = standInFor('https://dummyimage.com/450x300/dee2e6/6c757d.jpg');
+  assert.equal(d.width, 450);
+  assert.equal(d.height, 300);
+  assert.match(d.svg, /width="450" height="300"/);
+  assert.match(d.svg, /fill="#dee2e6"/);
+  assert.match(d.svg, /fill="#6c757d"/);
+  assert.match(d.svg, />450×300</);
+  assert.equal(d.file, standInFor('https://dummyimage.com/450x300/dee2e6/6c757d.jpg').file);
+  const u = standInFor('https://source.unsplash.com/4ulffa6qoKA/1200x800');
+  assert.equal(u.width, 1200);
+  assert.equal(u.height, 800);
+  assert.notEqual(u.file, standInFor('https://source.unsplash.com/wfh8dDlNFOk/1600x900').file);
+  assert.equal(standInFor('https://example.com/photo.jpg'), null, 'an image from an unknown host has no stand-in');
+});
+
+test('localize: img src and url() in a page point at local stand-ins, written into the site', (t) => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'avb-s2-local-'));
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const html = [
+    '<img class="img-fluid" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" alt="..." />',
+    '<header style="background-image: url(\'https://source.unsplash.com/4ulffa6qoKA/1200x800\')"></header>',
+    '<img src="https://example.com/x.png">',
+    '<a href="https://startbootstrap.com/">link</a>',
+  ].join('\n');
+  const out = localizeImages(html, dir);
+  assert.equal(out.localized.length, 2);
+  assert.deepEqual(out.unknown, ['https://example.com/x.png']);
+  assert.doesNotMatch(out.html, /dummyimage|unsplash/);
+  assert.match(out.html, /startbootstrap\.com/, 'links stay');
+  for (const rel of out.html.match(/assets\/stand-in\/[\w-]+\.svg/g)) assert.ok(fs.existsSync(path.join(dir, rel)), rel);
+});
+
+test('import also replaces known remote images with stand-ins, and lists any it could not', (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'avb-s2-import-img-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const tgz = fakePackage(root, 'startbootstrap-img', { ...GOOD, 'dist/index.html': '<img src="https://dummyimage.com/900x400/dee2e6/6c757d.jpg"><img src="https://example.com/a.png"><h1>Shop</h1>' });
+  const out = importTarball(tgz, path.join(root, 'out'));
+  assert.deepEqual(out.localized, ['https://dummyimage.com/900x400/dee2e6/6c757d.jpg']);
+  assert.deepEqual(out.unknownImages, ['https://example.com/a.png']);
+  assert.ok(fs.existsSync(path.join(root, 'out', 'site', 'assets', 'stand-in', 'dummy-900x400-dee2e6-6c757d.svg')));
+});

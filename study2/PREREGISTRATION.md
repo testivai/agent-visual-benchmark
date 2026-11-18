@@ -49,7 +49,9 @@ and rendering noise?
 **Sites (Proposed).**
 
 - **Pool:** the Start Bootstrap templates published on npm (`startbootstrap-*`, MIT licence, 39
-  packages on 2026-11-17).
+  packages on 2026-11-18).
+- **Drawn (2026-11-18):** heroic-features, agency, full-width-pics, bare, shop-item and small-business,
+  each a one-page site. Three older packages were skipped on the way, because they ship no built page.
 - **Eligibility:** a built page in the package; not an admin dashboard; renders offline once its
   remote fonts and scripts are removed. Remote resources are stripped the same way for every site,
   and both arms see the same files.
@@ -57,6 +59,15 @@ and rendering noise?
   candidates are the 39 names in `study2/sites/candidates.json` (taken 2026-11-18). They are tried in
   the order given by seed **20261118** (`selectionOrder` in `study2/sites.mjs`), and the first six
   eligible are kept. Each is pinned to the version and integrity hash it had when drawn.
+- **Found at the draw (2026-11-18), Proposed:** three of the six sites load placeholder images from
+  other hosts (`dummyimage.com`, `source.unsplash.com`), which offline would show as broken.
+  - **Why it matters:** TestivAI reports broken images as warnings and a pixel comparison does not, so
+    this could draw arm C's agents into "fixing" images that are not part of the task.
+  - **The rule:** the importer replaces every such image with a local SVG stand-in of the same size,
+    made from its URL, the same way on every site.
+  - **Not a new draw:** the eligibility rule was not changed after the draw, and the six sites stand.
+  - **Check:** after the import, every site makes no remote request and no failed local request
+    offline (`study2/sites/manifest.json`).
 - **Proposed:** mutations are drawn only from CSS rules that match at least one element in a captured
   view. Most rules of a compiled Bootstrap stylesheet match nothing on the page.
 

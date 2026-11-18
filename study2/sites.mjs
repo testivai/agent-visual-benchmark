@@ -65,6 +65,52 @@ export function eligibility(facts) {
   return { ok: reasons.length === 0, reasons };
 }
 
+// Placeholder images some templates load from other hosts. Each gets a local
+// SVG stand-in of the same size, made from its URL (found at the draw: three of
+// the six sites use them; study2/PREREGISTRATION.md, section 4).
+const DUMMY = /^https?:\/\/dummyimage\.com\/(\d+)x(\d+)(?:\/([0-9a-f]{3,6})\/([0-9a-f]{3,6}))?/i;
+const UNSPLASH = /^https?:\/\/source\.unsplash\.com\/([\w-]+)\/(\d+)x(\d+)/i;
+const REMOTE_IMAGE = /(\bsrc=["']|url\(\s*["']?)(https?:\/\/[^"')\s]+)/gi;
+
+function svg(width, height, bg, fg, label) {
+  const text = label ? `<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="${Math.max(10, Math.round(Math.min(width, height) / 8))}" fill="#${fg}">${label}</text>` : '';
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="100%" height="100%" fill="#${bg}"/>${text}</svg>\n`;
+}
+
+export function standInFor(url) {
+  const d = url.match(DUMMY);
+  if (d) {
+    const [, w, h, bg = 'cccccc', fg = '969696'] = d;
+    return { width: Number(w), height: Number(h), file: `dummy-${w}x${h}-${bg}-${fg}.svg`, svg: svg(Number(w), Number(h), bg, fg, `${w}×${h}`) };
+  }
+  const u = url.match(UNSPLASH);
+  if (u) {
+    const [, id, w, h] = u;
+    return { width: Number(w), height: Number(h), file: `photo-${id}-${w}x${h}.svg`, svg: svg(Number(w), Number(h), '8a9199', 'ffffff', '') };
+  }
+  return null;
+}
+
+// Points every known remote image in a page at its local stand-in (written to
+// <siteDir>/assets/stand-in/); returns the page and what it could not replace.
+export function localizeImages(html, siteDir) {
+  const localized = [];
+  const unknown = [];
+  const out = html.replace(REMOTE_IMAGE, (whole, prefix, url) => {
+    const stand = standInFor(url);
+    if (!stand) {
+      unknown.push(url);
+      return whole;
+    }
+    const dir = path.join(siteDir, 'assets', 'stand-in');
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, stand.file), stand.svg);
+    localized.push(url);
+    return `${prefix}assets/stand-in/${stand.file}`;
+  });
+  return { html: out, localized, unknown };
+}
+
 function filesUnder(dir, ext) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
     const full = path.join(dir, e.name);
@@ -77,11 +123,16 @@ function filesUnder(dir, ext) {
 // and how many remote url() are left.
 function stripSite(siteDir) {
   const removed = [];
+  const localized = [];
+  const unknownImages = [];
   let remoteLeft = 0;
   for (const file of filesUnder(siteDir, '.html')) {
     const out = stripRemoteHtml(fs.readFileSync(file, 'utf8'));
-    fs.writeFileSync(file, out.html);
+    const images = localizeImages(out.html, siteDir);
+    fs.writeFileSync(file, images.html);
     removed.push(...out.removed);
+    localized.push(...images.localized);
+    unknownImages.push(...images.unknown);
   }
   for (const file of filesUnder(siteDir, '.css')) {
     const out = stripRemoteCss(fs.readFileSync(file, 'utf8'));
@@ -89,7 +140,7 @@ function stripSite(siteDir) {
     removed.push(...out.removed);
     remoteLeft += out.remoteLeft;
   }
-  return { removed, remoteLeft };
+  return { removed, remoteLeft, localized, unknownImages };
 }
 
 // A package as `npm pack` makes it: the built site (package/dist) goes to
@@ -102,7 +153,7 @@ export function importTarball(tarball, dest) {
     fs.mkdirSync(dest, { recursive: true });
     const license = path.join(work, 'package', 'LICENSE');
     if (fs.existsSync(license)) fs.copyFileSync(license, path.join(dest, 'LICENSE'));
-    if (!fs.existsSync(dist)) return { pages: [], removed: [], remoteLeft: 0 };
+    if (!fs.existsSync(dist)) return { pages: [], removed: [], remoteLeft: 0, localized: [], unknownImages: [] };
     const site = path.join(dest, 'site');
     fs.cpSync(dist, site, { recursive: true });
     return { pages: sitePages(site), ...stripSite(site) };
