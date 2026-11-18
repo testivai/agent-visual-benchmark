@@ -48,7 +48,12 @@ test('the effect of a mutation: measured changes, differing pixels per view, and
   const effect = effectOf(clean, broken);
   assert.deepEqual(effect.errors, ['index.html@desktop: could not load the index.html page: timeout']);
   assert.equal(shows(effect), false, 'a view that cannot be captured never counts as showing');
-  assert.equal(shows({ measured: ['v|.a[0]|color'], pixels: { v: { any: 3, atDefault: 0 } }, errors: [] }), true);
+  assert.equal(shows({ measured: ['v|.a[0]|color'], pixels: { v: { any: 3, atDefault: 2 } }, errors: [] }), true);
+  assert.equal(
+    shows({ measured: ['v|.a[0]|color'], pixels: { v: { any: 128, atDefault: 0 } }, errors: [] }),
+    false,
+    'pixels that differ only below the threshold of arm B\'s check (Playwright\'s default, 0.2) do not count',
+  );
   assert.equal(shows({ measured: ['v|.a[0]|color'], pixels: { v: { any: 0, atDefault: 0 } }, errors: [] }), false, 'no pixel');
   assert.equal(shows({ measured: [], pixels: { v: { any: 3, atDefault: 3 } }, errors: [] }), false, 'no measured change');
 });

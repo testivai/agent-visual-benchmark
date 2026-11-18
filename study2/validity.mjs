@@ -1,6 +1,8 @@
 // Study 2's validity filters (study2/PREREGISTRATION.md, section 4): a mutation
 // is kept only if it changes at least one measured property of a rendered
-// element in a captured view, and at least one pixel of a captured screenshot.
+// element in a captured view, and at least one pixel of a captured screenshot
+// at Playwright's default threshold (0.2), the one arm B's check uses; TestivAI's
+// default (0.1) is more sensitive, so both arms' checks flag every kept change.
 // Both look at the page only, measured by the oracle's own capture, never at
 // either tool's verdict.
 import fs from 'node:fs';
@@ -46,7 +48,7 @@ export function effectOf(clean, after) {
 
 export const shows = (effect) => effect.errors.length === 0
   && effect.measured.length > 0
-  && Object.values(effect.pixels).some((p) => p && p.any > 0);
+  && Object.values(effect.pixels).some((p) => p && p.atDefault > 0);
 
 // The site's views, measured and screenshotted.
 export async function captureSite(browser, siteDir, views) {

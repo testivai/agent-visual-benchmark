@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
-import { STRATA, allocate, drawTask, generateTasks, reasonOf, siteChecker } from './generate.mjs';
+import { STRATA, allocate, drawTask, generateTasks, reasonOf, siteChecker, drawStats } from './generate.mjs';
 import { parseRules } from './css.mjs';
 import { mulberry32 } from '../runner/rng.mjs';
 import { applyMutations } from './mutate.mjs';
@@ -111,6 +111,23 @@ test('all tasks: the counts of each stratum, no declaration mutated twice on a s
     assert.equal(new Set(starts).size, starts.length, site);
   }
   assert.deepEqual(await generateTasks({ sites, strata, seed: 5, check }), a);
+});
+
+test('draw statistics: per class, the mutations kept and the candidates rejected, by reason', () => {
+  const tasks = [
+    { mutations: [{ class: 'colour' }], rejected: [{ class: 'opacity', reason: 'no pixel changed' }, { class: 'colour', reason: 'no pixel changed' }] },
+    { mutations: [{ class: 'colour' }, { class: 'margin' }], rejected: [{ class: 'opacity', reason: 'no measured change on a rendered element' }] },
+    { mutations: [], rejected: [] },
+  ];
+  assert.deepEqual(drawStats(tasks), {
+    candidates: 6,
+    kept: 3,
+    byClass: {
+      colour: { kept: 2, rejected: { 'no pixel changed': 1 } },
+      margin: { kept: 1, rejected: {} },
+      opacity: { kept: 0, rejected: { 'no pixel changed': 1, 'no measured change on a rendered element': 1 } },
+    },
+  });
 });
 
 let browser;

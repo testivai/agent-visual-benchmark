@@ -3,6 +3,8 @@
 // rules the page uses, then a new value by the class's fixed rule. Every choice
 // comes from the random passed in, which comes from a recorded seed.
 
+// The published classes and their properties; the colour class also takes
+// custom properties that hold a colour (see classOf).
 export const CLASSES = {
   colour: ['color'],
   background: ['background-color', 'background'],
@@ -133,11 +135,28 @@ function perturbKeyword(property, value, random) {
 
 const LENGTH_CLASSES = new Set(['font-size', 'letter-spacing', 'line-height', 'margin', 'padding', 'width', 'border']);
 const COLOUR_CLASSES = new Set(['colour', 'background']);
+const RGB_TRIPLE = /^\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*$/;
+
+// The class of a declaration, by its property. A custom property is a colour
+// when it holds a literal colour, or an r, g, b triple under a name ending in
+// -rgb (Bootstrap 5 keeps most of its colours in custom properties); any other
+// custom property has no class and is never mutated.
+export function classOf(property, value) {
+  if (!property.startsWith('--')) return CLASS_OF[property] ?? null;
+  if (property.endsWith('-rgb') && RGB_TRIPLE.test(value)) return 'colour';
+  return perturbColour(value) === null ? null : 'colour';
+}
+
+function perturbCustom(property, value) {
+  const m = property.endsWith('-rgb') ? value.match(RGB_TRIPLE) : null;
+  return m ? shiftColour([m[1], m[2], m[3]].map(Number)).join(', ') : perturbColour(value);
+}
 
 // A new value for property: value, or null when the class's rule cannot apply.
 export function perturb(property, value, random) {
-  const cls = CLASS_OF[property];
+  const cls = classOf(property, value);
   if (!cls) return null;
+  if (property.startsWith('--')) return perturbCustom(property, value);
   if (COLOUR_CLASSES.has(cls)) return perturbColour(value);
   if (LENGTH_CLASSES.has(cls)) return perturbLength(value, random);
   return perturbKeyword(property, value, random);
@@ -146,7 +165,7 @@ export function perturb(property, value, random) {
 // Whether perturb can change this value, without using the random.
 const mutable = (property, value) => perturb(property, value, () => 0) !== null;
 
-const drawable = (d, cls, skip) => CLASSES[cls].includes(d.property) && !skip.has(d.valueStart) && mutable(d.property, d.value);
+const drawable = (d, cls, skip) => classOf(d.property, d.value) === cls && !skip.has(d.valueStart) && mutable(d.property, d.value);
 
 const MAX_DRAWS = 500;
 

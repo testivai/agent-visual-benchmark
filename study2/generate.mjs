@@ -128,3 +128,24 @@ export async function siteChecker(browser, { siteDir, cssFile, pages }) {
   };
   return { rules, used, check };
 }
+
+// Per class, how many mutations were kept and how many candidates were rejected, by reason.
+export function drawStats(tasks) {
+  const byClass = {};
+  const entry = (cls) => (byClass[cls] ??= { kept: 0, rejected: {} });
+  let kept = 0;
+  let rejected = 0;
+  for (const t of tasks) {
+    for (const m of t.mutations) {
+      entry(m.class).kept += 1;
+      kept += 1;
+    }
+    for (const r of t.rejected) {
+      const e = entry(r.class);
+      e.rejected[r.reason] = (e.rejected[r.reason] ?? 0) + 1;
+      rejected += 1;
+    }
+  }
+  const sorted = Object.fromEntries(Object.keys(byClass).sort().map((k) => [k, byClass[k]]));
+  return { candidates: kept + rejected, kept, byClass: sorted };
+}

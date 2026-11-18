@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { CLASSES, perturb, drawMutations, applyMutations } from './mutate.mjs';
+import { CLASSES, perturb, classOf, drawMutations, applyMutations } from './mutate.mjs';
 import { parseRules } from './css.mjs';
 import { mulberry32 } from '../runner/rng.mjs';
 
@@ -91,4 +91,31 @@ test('declarations already mutated by another task (by their place in the file) 
     assert.equal(m.valueStart, keep.valueStart, `seed ${seed}`);
   }
   assert.deepEqual(drawMutations(rules, used, mulberry32(1), 1, { skip: new Set(all.map((d) => d.valueStart)) }), []);
+});
+
+test('a custom property holding a literal colour is a colour declaration (Bootstrap 5 keeps its colours there)', () => {
+  assert.equal(classOf('--bs-btn-bg', '#0d6efd'), 'colour');
+  assert.equal(perturb('--bs-btn-bg', '#0d6efd', fixed(0.5)), '#fd9c0d');
+  assert.equal(classOf('--bs-dark-rgb', '33, 37, 41'), 'colour', 'the r, g, b triple behind rgba(var(--bs-dark-rgb), ...)');
+  assert.equal(perturb('--bs-dark-rgb', '33, 37, 41', fixed(0.5)), '214, 218, 222');
+  assert.equal(perturb('--bs-box-shadow', '0 0.5rem 1rem rgba(0, 0, 0, 0.15)', fixed(0.5)), '0 0.5rem 1rem rgba(255, 255, 255, 0.15)');
+  for (const [property, value] of [['--bs-gutter-x', '1.5rem'], ['--bs-font-sans-serif', 'system-ui, -apple-system, "Segoe UI"'],
+    ['--bs-btn-color', 'var(--bs-white)'], ['--bs-bg-opacity', '1'], ['--bs-rgb', '1, 2'], ['--bs-z', '33, 37, 41']]) {
+    assert.equal(classOf(property, value), null, `${property}: ${value}`);
+    assert.equal(perturb(property, value, fixed(0.5)), null, `${property}: ${value}`);
+  }
+  assert.equal(classOf('padding', '1rem'), 'padding');
+  assert.equal(classOf('transform', 'none'), null);
+});
+
+test('the draw finds colours held in custom properties', () => {
+  const css = '.btn-primary { --bs-btn-bg: #0d6efd; --bs-btn-padding-x: 0.75rem; }\n.navbar { --bs-dark-rgb: 33, 37, 41; }';
+  const rules = parseRules(css);
+  const seen = new Set();
+  for (let seed = 1; seed <= 60; seed++) {
+    const [m] = drawMutations(rules, new Set([0, 1]), mulberry32(seed), 1);
+    assert.equal(m.class, 'colour', 'nothing else here can be mutated');
+    seen.add(m.property);
+  }
+  assert.deepEqual([...seen].sort(), ['--bs-btn-bg', '--bs-dark-rgb']);
 });
