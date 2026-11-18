@@ -21,6 +21,7 @@ test('the strata: 72 tasks; one mutation in S1 and S3, two or three in S2, none 
   assert.deepEqual([...counts('S2')].sort(), [2, 3]);
   assert.deepEqual([...counts('S3')], [1]);
   assert.deepEqual([...counts('S4')], [0]);
+  for (const k of Object.keys(STRATA)) assert.deepEqual([...counts(k)].sort(), STRATA[k].counts, `${k}: the counts listed are the counts drawn`);
 });
 
 test('allocation: each stratum spread evenly over the sites in a seeded order; ids in a seeded order that hides the stratum', () => {

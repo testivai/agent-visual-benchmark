@@ -208,12 +208,25 @@ throwaway seed (1), to check that it works on them. Its tasks are not used and w
 different since the last change. Can you take a look and fix it?"
 
 **Validation (Proposed).** Every task must pass, as code, before the freeze, like study 1's
-`npm run validate`:
+`npm run validate` (`study2/validation.mjs`, `study2/validate-tasks.mjs`):
 
-- the seeded state fails the oracle;
-- reverting the seed passes it;
-- the clean site passes the collateral check;
-- each decoy's pages differ from their baselines in pixels but not in DOM or styles.
+- **the set:**
+  - each stratum's count, drift flag and number of mutations;
+  - unique ids;
+  - no declaration mutated by two tasks on a site;
+  - every mutation still where it was recorded in the stylesheet, with a new value;
+- **each seeded task (S1 to S3):**
+  - the seeded site fails the oracle;
+  - reverting the seed passes it (so the clean site has no collateral);
+  - the seed still shows to both arms' checks;
+- **in S2:** each mutation shows on its own, and partial credit is 0 on the seeded site and full
+  on the reverted one;
+- **under drift (S3, S4):** the drift is pure (no DOM or computed-style change, every view
+  flagged by both checks), and in S3 the seeded site differs from the drifted baselines for both
+  arms;
+- **each decoy (S4):** the clean site, captured again, passes as a decoy.
+
+The 72 tasks of the trial generation (seed 1, not used) all pass it, in about 4 minutes.
 
 ## 5. Scoring
 
@@ -329,7 +342,7 @@ The order, with what is built so far:
 4. **Drifted baselines** for B and C, with the setting search. *Built:* the search
    (`study2/drift.mjs`, `study2/choose-drift.mjs`, result in `study2/drift.json`). Recording each
    arm's baselines under it is part of the runner integration.
-5. **Per-task validation,** as code.
+5. **Per-task validation,** as code. *Built:* `study2/validation.mjs`, `study2/validate-tasks.mjs`.
 6. **The calibration script,** pooled only.
 7. **Analysis by stratum,** H2, and partial credit.
 

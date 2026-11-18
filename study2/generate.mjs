@@ -10,11 +10,12 @@ import { usedRules } from './usage.mjs';
 import { shows, flaggedByB, flaggedByC, siteViews, captureSite, mutationEffect } from './validity.mjs';
 import { mulberry32, shuffle } from '../runner/rng.mjs';
 
+// counts: the numbers of mutations a task of the stratum may have; mutations: the draw.
 export const STRATA = {
-  S1: { tasks: 20, drift: false, mutations: () => 1 },
-  S2: { tasks: 20, drift: false, mutations: (random) => (random() < 0.5 ? 2 : 3) },
-  S3: { tasks: 20, drift: true, mutations: () => 1 },
-  S4: { tasks: 12, drift: true, mutations: () => 0 },
+  S1: { tasks: 20, drift: false, counts: [1], mutations: () => 1 },
+  S2: { tasks: 20, drift: false, counts: [2, 3], mutations: (random) => (random() < 0.5 ? 2 : 3) },
+  S3: { tasks: 20, drift: true, counts: [1], mutations: () => 1 },
+  S4: { tasks: 12, drift: true, counts: [0], mutations: () => 0 },
 };
 
 const nextSeed = (random) => Math.floor(random() * 2 ** 32);
