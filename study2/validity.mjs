@@ -12,17 +12,16 @@ import { diffSnapshots } from '../oracle/lib/compare.mjs';
 import { comparePngs } from '../harness/pixels.mjs';
 import { startStaticServer } from '../harness/static-server.mjs';
 import { withTempDir } from '../runner/tempdir.mjs';
+import { isRendered } from './oracle.mjs';
 
 // Every page at desktop and mobile size. Study 2's sites have no states to reach.
 export const siteViews = (pages) => pages.flatMap((page) => ['desktop', 'mobile'].map((viewport) => ({ page, viewport })));
-
-const rendered = (e) => Boolean(e) && e.w > 0 && e.h > 0 && e.vis > 0 && e.visibility !== 'hidden';
 
 function counts(clean, after, entry) {
   const [view, key, field] = entry.split('|');
   if (key === '@view') return false;
   if (key === '@doc') return field === 'scrollW' || field === 'scrollH';
-  return rendered(clean.views[view]?.elements?.[key]) || rendered(after.views[view]?.elements?.[key]);
+  return isRendered(clean.views[view]?.elements?.[key]) || isRendered(after.views[view]?.elements?.[key]);
 }
 
 // The oracle's differences that are on an element rendered before or after, or

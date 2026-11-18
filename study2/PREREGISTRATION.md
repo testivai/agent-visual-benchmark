@@ -174,9 +174,21 @@ oracle measures what the seed changed.
   - every property the mutations changed is back as it was (`checkRestored`);
   - nothing else changed (`checkCollateral`);
   - nothing protected was changed (tampering, as in study 1).
+- **What is judged (Proposed, `study2/oracle.mjs`):**
+  - the oracle's measurements of each view, with study 1's tolerances (0.5 px; 0.02 of the
+    visible fraction);
+  - the page itself always (title, size, fonts);
+  - an element only when it is rendered on either side (a box of non-zero size, not clipped away,
+    not hidden). Study 2 has no states to reach, so an element never rendered is never seen, and
+    is neither required nor penalised. The validity filters use the same rule.
+- **Any fix counts:** the oracle compares measurements, not files, so reverting the seed and
+  overriding it elsewhere both pass. A test checks both on a drawn site, and checks that a fix
+  with an unrelated change fails.
 - **S4 (decoy):** success means no file under the site changed.
 - **Proposed partial credit, for S2:** the share of the mutations restored, reported beside the strict
-  rate.
+  rate. A mutation counts as restored when all of its own changes (the clean site with that
+  mutation alone) are back. Where two mutations change the same property, neither counts until
+  both are restored there.
 
 ## 6. Outcomes and analysis
 
@@ -263,6 +275,7 @@ The order, with what is built so far:
    `study2/generate-tasks.mjs`; the oracle's capture takes a page by file name and can screenshot
    each view.
 3. **Views per site, and the generalised oracle:** restore and collateral without hand-written tests.
+   *Built:* `study2/oracle.mjs` (scope, judge, partial credit); views in `study2/validity.mjs`.
 4. **Drifted baselines** for B and C, with the setting search.
 5. **Per-task validation,** as code.
 6. **The calibration script,** pooled only.
