@@ -1,20 +1,20 @@
 # Study 2: preregistration (draft)
 
-**Status: draft, nothing decided.** Every item marked **Proposed** waits for the maintainer's yes or
-change. When all are settled, this file is frozen and tagged (`study2-prereg-v1`) before the first
+**Status: draft.** The five design decisions below were made by the maintainer on 2026-11-18. Every
+item still marked **Proposed** waits for the maintainer's yes or change. When all are settled, this file is frozen and tagged (`study2-prereg-v1`) before the first
 pilot run. The rules of study 1 carry over: the pilot may calibrate difficulty and find broken tasks,
 never choose anything after looking at which arm is ahead, and later changes go in a dated Deviations
 section.
 
-## Decisions for the maintainer
+## Decided by the maintainer (2026-11-18)
 
-1. **Task source:** random CSS mutations on third-party open-source sites (section 4), or hand-picked
-   real regressions from projects' history (more realistic, slower, and harder to keep blind).
-2. **Arms:** pixel comparison (B) and TestivAI (C) only, or also the no-tool arm (A).
-3. **Second test:** success only (H1), or also token use (H2), with a correction for two tests.
-4. **Model:** Sonnet 5.5 alone, or Opus 5.5 as well.
-5. **Size:** 72 tasks × 2 arms × 3 repeats = 432 runs (about 6 to 8 hours on the subscription), or
-   smaller.
+1. **Task source:** random CSS mutations on third-party open-source sites (section 4), not hand-picked
+   regressions.
+2. **Arms:** the pixel comparison (B) and TestivAI (C) only.
+3. **A second test:** token use (H2), two-sided, with Holm's correction for the two tests (section 6).
+4. **Model:** Claude Sonnet 5.5 only.
+5. **Size:** 72 tasks × 2 arms × 3 repeats = 432 runs, raised by the power rule of section 6 if the
+   pilot calls for it.
 
 ## 1. Why a second study
 
@@ -38,10 +38,10 @@ and rendering noise?
 
 ## 3. Arms
 
-- **Proposed:** the same two arms as study 1, with the same tools, versions and instruction lines:
+- **Decided:** the same two arms as study 1, with the same tools, versions and instruction lines:
   - B: Playwright `toHaveScreenshot()` and its diff images;
   - C: TestivAI capture, MCP server and `results.json`.
-- **Proposed:** the no-tool arm A is dropped. Study 1 settled that having a visual tool helps; A would
+- **Decided:** the no-tool arm A is dropped. Study 1 settled that having a visual tool helps; A would
   cost a third of the runs and does not bear on the question.
 
 ## 4. Tasks
@@ -119,7 +119,7 @@ oracle measures what the seed changed.
 - **Kill line:** if C − B is under 10 points, or its one-sided interval reaches 0, the write-up says
   that TestivAI did not measurably help over a pixel comparison in study 2 either.
 
-**Second test (Proposed, decision 3).**
+**Second test (Decided).**
 
 - **H2:** C and B differ in tokens per run on S1 to S3: the per-task median, on a log scale, paired.
 - **Direction:** two-sided, since study 1 found C using about a third more tokens.
@@ -164,12 +164,12 @@ oracle measures what the seed changed.
 
 ## 8. Runs
 
-- **Proposed:** Claude Sonnet 5.5 in Claude Code 2.1.322, the locked-down harness and isolation of
+- **Decided:** Claude Sonnet 5.5 in Claude Code 2.1.322, the locked-down harness and isolation of
   study 1 unchanged. The probe must pass before the pilot and before the full run.
 - **Size:** 72 tasks × 2 arms × 3 repeats = 432 runs, in a seeded random order. At study 1's pace,
   that is about 6 to 8 hours on the subscription.
 - **Errors:** retried once; double errors excluded and listed, with a flag above 5%.
-- **Proposed:** Opus 5.5 not run (decision 4).
+- **Decided:** Opus 5.5 is not run.
 
 ## 9. Known limits, to be stated in the write-up
 
@@ -180,7 +180,7 @@ oracle measures what the seed changed.
 - **S3 and S4 test a case TestivAI was built for.** It labels pixel differences with identical DOM and
   styles as likely render noise. A difference there is expected by design and is reported per stratum,
   apart from S1 and S2.
-- **One model and one agent,** unless decision 4 adds Opus.
+- **One model and one agent.**
 - **Static sites only:** no dynamic content, no JavaScript-driven layout.
 
 ## 10. What has to be built
