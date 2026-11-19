@@ -2,7 +2,6 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { buildWorkspace } from './workspace.mjs';
 import { buildSettings, buildMcpConfig, buildClaudeArgs, buildAgentEnv, caFiles, closedRoots } from './claude.mjs';
 import { makeRunDir } from './rundir.mjs';
 import { runAgent } from './agent.mjs';
@@ -11,7 +10,8 @@ import { classifyAgentRun, runOutcome } from './outcome.mjs';
 import { startupProblems } from './startup.mjs';
 import { usageLimit, runCost } from './limits.mjs';
 import { snapshotFiles, tamperCheck } from './tamper.mjs';
-import { scoreWorkspace, finalDiff } from './score.mjs';
+import { finalDiff } from './score.mjs';
+import { STUDY1 } from './study1.mjs';
 import { scrub, secretValues } from './scrub.mjs';
 import { browsersPath } from './templates.mjs';
 import { freePort } from '../harness/run-specs.mjs';
@@ -88,9 +88,9 @@ function agentFields(parsed, agentRes, stopReason) {
   };
 }
 
-async function scoreFields({ benchRoot, run, ws, before, parsed, resultsDir, attempt, secrets }) {
+async function scoreFields({ study, benchRoot, run, ws, before, parsed, resultsDir, attempt, secrets }) {
   const tamper = tamperCheck(before, snapshotFiles(ws));
-  const scored = await scoreWorkspace({ benchRoot, taskId: run.task, ws });
+  const scored = await study.score({ benchRoot, run, ws });
   const diff = finalDiff(ws);
   fs.writeFileSync(path.join(resultsDir, 'diffs', `${run.runId}-a${attempt}.patch`), scrub(diff.text, secrets));
   const outcome = runOutcome({
@@ -98,7 +98,8 @@ async function scoreFields({ benchRoot, run, ws, before, parsed, resultsDir, att
   });
   return {
     ...outcome,
-    functional: scored.functional,
+    functional: scored.functional ?? null,
+    ...study.recordFields(scored, run),
     tampered: tamper.tampered,
     tamper_paths: tamper.tamperPaths,
     site_files_changed: tamper.siteChanges.length,
@@ -113,14 +114,16 @@ async function scoreFields({ benchRoot, run, ws, before, parsed, resultsDir, att
   };
 }
 
-// context: { templateDir, configHash, benchCommit, versions, extraEnv, keepRunDir }
+// context: { templateDir, configHash, benchCommit, versions, extraEnv, keepRunDir, study }
+// study: what makes the run a study 1 or study 2 run (runner/study1.mjs); study 1 if absent.
 export async function runOne({ benchRoot, config, run, phase, attempt, resultsDir, context }) {
-  const task = JSON.parse(fs.readFileSync(path.join(benchRoot, 'tasks', run.task, 'task.json'), 'utf8'));
+  const study = context.study ?? STUDY1;
+  const task = study.task({ benchRoot, run });
   const record = baseRecord({ run, phase, attempt, task, config, context });
   const secrets = secretValues(process.env);
   const runDir = makeRunDir();
   try {
-    const ws = buildWorkspace({ benchRoot, taskId: run.task, arm: run.arm, templateDir: context.templateDir, runDir });
+    const ws = study.workspace({ benchRoot, run, templateDir: context.templateDir, runDir });
     const before = snapshotFiles(ws);
     const { settingsFile, mcpConfigFile } = prepareRunDir(runDir, { arm: run.arm, config, benchRoot, ws });
     const agentRes = await runAgent({
@@ -143,7 +146,7 @@ export async function runOne({ benchRoot, config, run, phase, attempt, resultsDi
       : classifyAgentRun({ parsed, agentRes, config, arm: run.arm });
     Object.assign(record, agentFields(parsed, agentRes, stopReason), costFields(parsed, config.agent));
     if (error) return { ...record, error };
-    return { ...record, ...(await scoreFields({ benchRoot, run, ws, before, parsed, resultsDir, attempt, secrets })) };
+    return { ...record, ...(await scoreFields({ study, benchRoot, run, ws, before, parsed, resultsDir, attempt, secrets })) };
   } catch (err) {
     return { ...record, error: { stage: 'setup', message: scrub(String(err.stack ?? err.message), secrets).slice(0, 2000) } };
   } finally {
