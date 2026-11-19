@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 // Validates a generated task set (study2/validation.mjs) on the drawn sites,
 // with the drift setting chosen in study2/drift.json. Exits 1 on any problem.
-//   node study2/validate-tasks.mjs <tasks.json>
+// --arms also runs each arm's own visual test in each task's real workspace
+// (study2/runner/arm-check.mjs): every task must be flagged by both.
+//   node study2/validate-tasks.mjs <tasks.json> [--arms]
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,13 +11,29 @@ import { chromium } from '@playwright/test';
 import { setProblems, taskProblems } from './validation.mjs';
 import { captureSite, siteViews } from './validity.mjs';
 import { DRIFT_SETTINGS, withDriftBrowser } from './drift.mjs';
+import { armTestFlags } from './runner/arm-check.mjs';
+import { ensureSiteTemplate } from './runner/templates.mjs';
+import { REPO_ROOT } from '../harness/workspace.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SITES = path.join(HERE, 'sites');
 const CSS_FILE = path.join('css', 'styles.css');
 
-const file = process.argv[2];
-if (!file) throw new Error('usage: node study2/validate-tasks.mjs <tasks.json>');
+const file = process.argv.slice(2).find((a) => !a.startsWith('--'));
+if (!file) throw new Error('usage: node study2/validate-tasks.mjs <tasks.json> [--arms]');
+const withArms = process.argv.includes('--arms');
+
+// Each arm's own visual test in the task's workspace, as the agent will run it.
+async function armProblems(task) {
+  const out = [];
+  for (const arm of ['B', 'C']) {
+    const template = await ensureSiteTemplate({ site: task.site, arm, drift: task.drift ? setting : null, cacheRoot: path.join(REPO_ROOT, '.cache', 'runner') });
+    const { flagged, views } = await armTestFlags({ task, arm, templateDir: template.dir, benchRoot: REPO_ROOT });
+    if (!flagged) out.push(`${task.id}: arm ${arm}'s own visual test does not flag it`);
+    else task.armViews = { ...task.armViews, [arm]: views };
+  }
+  return out;
+}
 const { tasks } = JSON.parse(fs.readFileSync(file, 'utf8'));
 const manifest = JSON.parse(fs.readFileSync(path.join(SITES, 'manifest.json'), 'utf8'));
 const { chosen } = JSON.parse(fs.readFileSync(path.join(HERE, 'drift.json'), 'utf8'));
@@ -37,7 +55,9 @@ try {
   });
   for (const task of tasks) {
     const found = await taskProblems(browser, { task, ...sites[task.site] });
-    console.log(`${task.id} ${task.stratum} ${task.site}: ${found.length === 0 ? 'ok' : found.join('; ')}`);
+    if (withArms) found.push(...await armProblems(task));
+    const views = task.armViews ? ` (views flagged: B ${task.armViews.B ?? 0}, C ${task.armViews.C ?? 0})` : '';
+    console.log(`${task.id} ${task.stratum} ${task.site}: ${found.length === 0 ? 'ok' : found.join('; ')}${views}`);
     problems.push(...found);
   }
 } finally {

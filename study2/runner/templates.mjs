@@ -69,7 +69,7 @@ export function leakProblems(dir, { holder }) {
 }
 
 // The arm's test as the agent's machine runs it: no font setting added. Never throws.
-async function asTheAgentRunsIt(dir) {
+export async function asTheAgentRunsIt(dir) {
   const { FONTCONFIG_FILE, ...base } = process.env;
   const env = { ...base, PORT: String(await freePort()), PLAYWRIGHT_BROWSERS_PATH: browsersPath(), FORCE_COLOR: '0', CI: '' };
   const r = spawnSync(process.execPath, [path.join(dir, 'node_modules', '@playwright', 'test', 'cli.js'), 'test', 'tests/visual.spec.ts'], {
@@ -78,7 +78,7 @@ async function asTheAgentRunsIt(dir) {
   return { status: r.status, stdout: `${r.stdout ?? ''}${r.stderr ?? ''}` };
 }
 
-const summaryOf = (dir) => JSON.parse(fs.readFileSync(path.join(dir, 'visual-report', 'results.json'), 'utf8')).summary;
+export const summaryOf = (dir) => JSON.parse(fs.readFileSync(path.join(dir, 'visual-report', 'results.json'), 'utf8')).summary;
 
 async function recordPixel(dir, env) {
   await playwright(dir, ['tests/visual.spec.ts', '--update-snapshots'], 'recording the screenshot baselines', env);
