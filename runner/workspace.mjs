@@ -124,6 +124,25 @@ function copyInto(fromRoot, toRoot, rel) {
   if (fs.existsSync(from)) fs.cpSync(from, path.join(toRoot, rel), { recursive: true, verbatimSymlinks: true });
 }
 
+// The workspace's one commit: .gitignore, the same list where deleting
+// .gitignore cannot remove it, and the sandbox's placeholders, listed where
+// the agent does not look.
+export function initRepo(ws) {
+  fs.writeFileSync(path.join(ws, '.gitignore'), GITIGNORE);
+  git(ws, ['init', '-q']);
+  fs.writeFileSync(path.join(ws, '.git', 'info', 'exclude'), `${GITIGNORE}${SANDBOX_PLACEHOLDERS.map((p) => `/${p}`).join('\n')}\n`);
+  git(ws, ['add', '-A']);
+  git(ws, ['commit', '-q', '-m', 'Initial commit', '--date', '2026-01-05T10:00:00Z']);
+}
+
+// After the commit: the installed packages from the template, then the check.
+export function finishWorkspace(ws, { arm, benchRoot, templateDir }) {
+  copyInto(templateDir, ws, 'node_modules');
+  const problems = checkWorkspace(ws, { arm, benchRoot });
+  if (problems.length > 0) throw new Error(`workspace check failed:\n- ${problems.join('\n- ')}`);
+  return ws;
+}
+
 // runDir is a fresh temporary directory; the workspace is runDir/project, a
 // name that says nothing about the task or the arm.
 export function buildWorkspace({ benchRoot, taskId, arm, templateDir, runDir }) {
@@ -133,15 +152,6 @@ export function buildWorkspace({ benchRoot, taskId, arm, templateDir, runDir }) 
   fs.cpSync(armFilesDir(arm), ws, { recursive: true });
   for (const dir of BASELINE_DIRS[arm]) copyInto(templateDir, ws, dir);
   fs.writeFileSync(path.join(ws, 'CLAUDE.md'), instructionsFor(arm));
-  fs.writeFileSync(path.join(ws, '.gitignore'), GITIGNORE);
-  git(ws, ['init', '-q']);
-  // the same list, kept where deleting .gitignore cannot remove it, and the
-  // sandbox's placeholders, listed where the agent does not look
-  fs.writeFileSync(path.join(ws, '.git', 'info', 'exclude'), `${GITIGNORE}${SANDBOX_PLACEHOLDERS.map((p) => `/${p}`).join('\n')}\n`);
-  git(ws, ['add', '-A']);
-  git(ws, ['commit', '-q', '-m', 'Initial commit', '--date', '2026-01-05T10:00:00Z']);
-  copyInto(templateDir, ws, 'node_modules');
-  const problems = checkWorkspace(ws, { arm, benchRoot });
-  if (problems.length > 0) throw new Error(`workspace check failed:\n- ${problems.join('\n- ')}`);
-  return ws;
+  initRepo(ws);
+  return finishWorkspace(ws, { arm, benchRoot, templateDir });
 }
