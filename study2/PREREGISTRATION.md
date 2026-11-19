@@ -406,16 +406,36 @@ The order, with what is built so far:
 5. **Per-task validation,** as code. *Built:* `study2/validation.mjs`, `study2/validate-tasks.mjs`.
 6. **The calibration script,** pooled only. *Built:* `study2/calibration.mjs`, `study2/calibrate.mjs`.
 7. **Analysis by stratum,** H2, and partial credit. *Built:* `study2/analysis.mjs`,
-   `study2/analyze.mjs`, on top of study 1's analysis. The markdown summary comes with the runner
-   integration.
+   `study2/analyze.mjs`, on top of study 1's analysis. It prints JSON. A markdown summary like study
+   1's is not built yet: it is needed for the write-up, not before the pilot.
+8. **The runner integration.** *Built:* `study2/runner/`, through study 1's runner with `--study 2`
+   (`RUNNING.md`, "Study 2"):
+   - **Each site as the agent's app:** the site, a server that serves every file as the oracle's
+     server does, and each arm's files. These are study 1's packages and Playwright config (without
+     the functional tests), study 1's visual test for the site's one page, and study 1's
+     instruction lines. Tests pin each against study 1's.
+   - **Templates per site, arm and baselines:** drifted ones are recorded under the chosen font
+     setting. The build refuses a drifted template unless the arm's own test, run as the agent
+     runs it, flags every view.
+   - **The workspace:** the task's mutations in the stylesheet, one commit, and study 1's
+     workspace checks.
+   - **The scorer:** restore and collateral by measurement (S1 to S3), the file rule (S4), partial
+     credit (S2), and tampering as in study 1. Every measurement of the benchmark's own site is
+     taken before any agent runs.
+   - **The plans:** the pilot is one site drawn by a seed, then two tasks of each stratum from it;
+     the full study is every task. Both are in a seeded order, with seeds left unset until the
+     freeze.
+   - **The validation checks each arm's own test, too:** `validate-tasks --arms` runs it in every
+     task's real workspace, where the filter had used the arms' comparators on the oracle's
+     screenshots.
+   - **End to end with the fake agent:** every outcome, as study 1's runner test checks them. Study
+     1's runner tests pass unchanged.
 
-**Still to build, before the pilot:** the runner integration.
-- Each task's site as the app, with study 2's prompt and `CLAUDE.md`.
-- Each arm's tests for the site's views.
-- Each arm's baselines: clean for S1 and S2, drifted for S3 and S4.
-- The scorer, which applies `study2/oracle.mjs` and the S4 file rule, and records partial credit.
-- Tampering as in study 1.
-- The probe is run again before the pilot.
+**Before the pilot:**
+- write the seeds (generation, pilot, order) in this draft and in `study2/study.config.json`;
+- freeze and tag `study2-prereg-v1`;
+- generate the task set and validate it with `--arms`;
+- run the probe.
 
 Each step is test first. The probe and the isolation stay as they are.
 

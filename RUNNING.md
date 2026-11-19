@@ -124,3 +124,43 @@ results/probe/        probe and image-check transcripts, image-check.jsonl
 Credentials are removed from every transcript, diff and error before it is written (any value of
 `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, `CLAUDE_CODE_OAUTH_TOKEN` or `DEEPSEEK_API_KEY`, and
 anything shaped like an Anthropic key). Read through the results before publishing them anyway.
+
+## Study 2
+
+Study 2 (`study2/PREREGISTRATION.md`) runs through the same runner, agent, limits and isolation,
+with `--study 2`. Arms B and C only; results go to `results/study2/<model>/<phase>/`.
+
+1. **Before the freeze, nothing runs.** `study2/study.config.json` holds the seeds as `null`, and
+   `plan --study 2` refuses until they are written there and in the draft.
+2. **The task set,** with the generation seed written first:
+
+   ```bash
+   node study2/generate-tasks.mjs --seed <seeds.generation> --out study2
+   node study2/validate-tasks.mjs study2/tasks.json --arms   # every task, and each arm's own test
+   ```
+
+   `--arms` builds every template (site × arm × clean or drifted baselines) and runs each arm's
+   visual test in each task's workspace. Every task must pass before the freeze.
+3. **Prepare and check, at no cost:**
+
+   ```bash
+   node runner/run.mjs plan    --study 2 --phase pilot
+   node runner/run.mjs prepare --study 2   # templates, and the scorer's measurements
+   node runner/run.mjs check
+   node runner/run.mjs probe                # the isolation, as in study 1
+   ```
+
+4. **The pilot,** then the arm-blind calibration (never per arm before the freeze):
+
+   ```bash
+   node runner/run.mjs dry-run --study 2 --phase pilot
+   node runner/run.mjs start   --study 2 --phase pilot
+   node study2/calibrate.mjs results/study2/sonnet/pilot/runs.jsonl study2/tasks.json
+   ```
+
+5. **The full study and its analysis:**
+
+   ```bash
+   node runner/run.mjs start --study 2 --phase full
+   node study2/analyze.mjs results/study2/sonnet/full/runs.jsonl study2/tasks.json
+   ```
