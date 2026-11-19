@@ -283,6 +283,10 @@ oracle measures what the seed changed.
   rate. A mutation counts as restored when all of its own changes (the clean site with that
   mutation alone) are back. Where two mutations change the same property, neither counts until
   both are restored there.
+  - **Known limit, found while building the scorer:** on a one-page site, two layout mutations
+    often move the same elements. Partial credit then counts neither until both are restored, so
+    it can undercount a half-done fix. A test shows such a case. It is description only, and the
+    write-up says so beside the numbers.
 
 ## 6. Outcomes and analysis
 
