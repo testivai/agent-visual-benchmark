@@ -4,7 +4,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
-import { STRATA, allocate, drawTask, generateTasks, reasonOf, siteChecker, drawStats } from './generate.mjs';
+import { STRATA, allocate, drawTask, generateTasks, reasonOf, siteChecker, drawStats, siteState } from './generate.mjs';
+import { CLASSES } from './mutate.mjs';
 import { parseRules } from './css.mjs';
 import { mulberry32 } from '../runner/rng.mjs';
 import { applyMutations } from './mutate.mjs';
@@ -58,22 +59,52 @@ test('why a candidate is rejected, in words', () => {
   assert.equal(reasonOf(px(4, true, 0)), 'arm C\'s check (TestivAI) does not flag it');
 });
 
-test('a task: candidates are drawn until one shows; the rejected ones are recorded with the reason', async () => {
-  const checked = [];
-  const check = async (ms) => {
-    checked.push(ms);
-    return effect(ms.every((m) => m.property === 'padding'));
-  };
+test('a task: the class from the site\'s deck; its candidates in random order until one shows; a class with none that shows is dead on the site', async () => {
+  const check = async (ms) => effect(ms.every((m) => m.property === 'padding'));
   for (let seed = 1; seed <= 10; seed++) {
-    const { mutations, rejected } = await drawTask({ rules: RULES, used: USED, count: 1, random: mulberry32(seed), skip: new Set(), check });
+    const site = siteState(seed);
+    const { mutations, rejected } = await drawTask({ rules: RULES, used: USED, count: 1, random: mulberry32(seed), skip: new Set(), check, site });
     assert.equal(mutations.length, 1);
     assert.equal(mutations[0].property, 'padding');
     assert.ok(mutations[0].effect.pixels.v.any > 0, 'the effect is kept with the mutation');
+    assert.ok(!site.deck.includes('padding'), 'the class is used up for this round');
+    assert.ok(!site.dead.has('padding'));
     for (const r of rejected) {
       assert.notEqual(r.property, 'padding');
       assert.equal(r.reason, 'no measured change on a rendered element');
+      assert.ok(site.dead.has(r.class), `${r.class}: every candidate failed, so it is dead on the site`);
     }
   }
+});
+
+const EVEN = [
+  ['color', '#112233'], ['background-color', '#445566'], ['font-size', '1rem'], ['font-weight', '700'], ['letter-spacing', '1px'],
+  ['line-height', '1.5'], ['margin', '1rem'], ['padding', '1rem'], ['width', '50%'], ['display', 'flex'],
+  ['position', 'relative'], ['border', '1px solid #000'], ['opacity', '1'], ['overflow', 'hidden'], ['text-transform', 'uppercase'],
+];
+const EVEN_RULES = parseRules(EVEN.flatMap(([p, v], i) => [`.k${i}a { ${p}: ${v}; }`, `.k${i}b { ${p}: ${v}; }`]).join('\n'));
+const EVEN_USED = new Set(EVEN_RULES.map((r) => r.id));
+const ones = (tasks) => ({ S1: { tasks, drift: false, counts: [1], mutations: () => 1 } });
+const tally = (tasks) => tasks.flatMap((t) => t.mutations.map((m) => m.class)).reduce((o, c) => ({ ...o, [c]: (o[c] ?? 0) + 1 }), {});
+
+test('an even mix: where every class can show, each class once per round of the deck', async () => {
+  const sites = { x: { rules: EVEN_RULES, used: EVEN_USED } };
+  const fifteen = await generateTasks({ sites, strata: ones(15), seed: 3, check: async () => effect(true) });
+  assert.deepEqual(tally(fifteen.tasks), Object.fromEntries(Object.keys(CLASSES).map((c) => [c, 1])));
+  const thirty = await generateTasks({ sites, strata: ones(30), seed: 3, check: async () => effect(true) });
+  assert.deepEqual(tally(thirty.tasks), Object.fromEntries(Object.keys(CLASSES).map((c) => [c, 2])));
+});
+
+test('a class that cannot show on a site is tried once, then skipped there; the record says which classes died', async () => {
+  const sites = { x: { rules: EVEN_RULES, used: EVEN_USED } };
+  const check = async (site, ms) => effect(ms.every((m) => m.class !== 'colour'));
+  const { tasks, dead } = await generateTasks({ sites, strata: ones(15), seed: 4, check });
+  const counts = tally(tasks);
+  assert.equal(counts.colour, undefined);
+  assert.equal(Object.keys(counts).length, 14, 'every other class in the first round');
+  assert.equal(Object.values(counts).reduce((a, b) => a + b), 15, 'and one of them again in the next');
+  assert.equal(tasks.flatMap((t) => t.rejected).filter((r) => r.class === 'colour').length, 2, 'its two candidates, each checked once');
+  assert.deepEqual(dead, { x: ['colour'] });
 });
 
 test('several mutations: each shows on its own, on different rules, and together; a pair that cancels out is drawn again', async () => {
@@ -82,7 +113,7 @@ test('several mutations: each shows on its own, on different rules, and together
     if (ms.length > 1) together += 1;
     return effect(ms.length === 1 || together > 1);
   };
-  const { mutations, rejected } = await drawTask({ rules: RULES, used: USED, count: 2, random: mulberry32(3), skip: new Set(), check });
+  const { mutations, rejected } = await drawTask({ rules: RULES, used: USED, count: 2, random: mulberry32(3), skip: new Set(), check, site: siteState(3) });
   assert.equal(mutations.length, 2);
   assert.equal(new Set(mutations.map((m) => m.ruleId)).size, 2);
   assert.equal(together, 2, 'the first pair did not show together, the second did');
@@ -91,10 +122,15 @@ test('several mutations: each shows on its own, on different rules, and together
   assert.ok(!mutations.some((m) => m.valueStart === dropped[0].valueStart), 'the dropped one is not drawn again');
 });
 
-test('a task with nothing left that shows fails loudly, after a bounded number of candidates', async () => {
+test('a task fails loudly when no class can still show on the site, or after a bounded number of candidates', async () => {
+  const never = async () => effect(false);
   await assert.rejects(
-    drawTask({ rules: RULES, used: USED, count: 1, random: mulberry32(1), skip: new Set(), check: async () => effect(false), maxCandidates: 15 }),
-    /no mutation that shows after 15 candidates/,
+    drawTask({ rules: RULES, used: USED, count: 1, random: mulberry32(1), skip: new Set(), check: never, site: siteState(1) }),
+    /no class can still produce a change that shows on this site/,
+  );
+  await assert.rejects(
+    drawTask({ rules: EVEN_RULES, used: EVEN_USED, count: 1, random: mulberry32(1), skip: new Set(), check: never, site: siteState(1), maxCandidates: 3 }),
+    /no mutation that shows after 3 candidates/,
   );
 });
 
@@ -119,19 +155,21 @@ test('all tasks: the counts of each stratum, no declaration mutated twice on a s
   assert.deepEqual(await generateTasks({ sites, strata, seed: 5, check }), a);
 });
 
-test('draw statistics: per class, the mutations kept and the candidates rejected, by reason', () => {
+test('draw statistics: per class, the mutations kept and the candidates rejected, by reason; a candidate checked again counts once', () => {
+  const again = { class: 'opacity', reason: 'no pixel changed', valueStart: 5, to: '0.3' };
   const tasks = [
-    { mutations: [{ class: 'colour' }], rejected: [{ class: 'opacity', reason: 'no pixel changed' }, { class: 'colour', reason: 'no pixel changed' }] },
-    { mutations: [{ class: 'colour' }, { class: 'margin' }], rejected: [{ class: 'opacity', reason: 'no measured change on a rendered element' }] },
-    { mutations: [], rejected: [] },
+    { site: 'x', mutations: [{ class: 'colour' }], rejected: [again, { class: 'colour', reason: 'no pixel changed', valueStart: 9, to: '#000000' }] },
+    { site: 'x', mutations: [{ class: 'colour' }, { class: 'margin' }], rejected: [{ class: 'opacity', reason: 'no measured change on a rendered element', valueStart: 7, to: '1' }, again] },
+    { site: 'y', mutations: [], rejected: [again] },
+    { site: 'x', mutations: [], rejected: [] },
   ];
   assert.deepEqual(drawStats(tasks), {
-    candidates: 6,
+    candidates: 7,
     kept: 3,
     byClass: {
       colour: { kept: 2, rejected: { 'no pixel changed': 1 } },
       margin: { kept: 1, rejected: {} },
-      opacity: { kept: 0, rejected: { 'no pixel changed': 1, 'no measured change on a rendered element': 1 } },
+      opacity: { kept: 0, rejected: { 'no pixel changed': 2, 'no measured change on a rendered element': 1 } },
     },
   });
 });

@@ -1,7 +1,8 @@
-// Study 2's mutations (study2/PREREGISTRATION.md, section 4): a property class
-// chosen at random, then one declaration of that class at random among the CSS
-// rules the page uses, then a new value by the class's fixed rule. Every choice
-// comes from the random passed in, which comes from a recorded seed.
+// Study 2's mutations (study2/PREREGISTRATION.md, section 4): the property
+// classes, the candidates of a class among the CSS rules the page uses, and a
+// new value by the class's fixed rule. Which class and which candidate are
+// drawn is decided in generate.mjs. Every choice comes from a random passed in,
+// which comes from a recorded seed.
 
 // The published classes and their properties; the colour class also takes
 // custom properties that hold a colour (see classOf).
@@ -165,30 +166,24 @@ export function perturb(property, value, random) {
 // Whether perturb can change this value, without using the random.
 const mutable = (property, value) => perturb(property, value, () => 0) !== null;
 
-const drawable = (d, cls, skip) => classOf(d.property, d.value) === cls && !skip.has(d.valueStart) && mutable(d.property, d.value);
+// The candidates of a class: its declarations that the class's rule can change,
+// in the rules whose ids are in used. skip: the valueStart of declarations
+// already mutated by another task on the site; takenRules: rules this task has
+// already changed. In file order; the caller draws among them.
+export function candidatesOf(rules, used, cls, { skip = new Set(), takenRules = new Set() } = {}) {
+  return rules
+    .filter((r) => used.has(r.id) && !takenRules.has(r.id))
+    .flatMap((r) => r.declarations
+      .filter((d) => classOf(d.property, d.value) === cls && !skip.has(d.valueStart) && mutable(d.property, d.value))
+      .map((d) => ({ rule: r, d })));
+}
 
-const MAX_DRAWS = 500;
-
-// count mutations on different rules, each a declaration of a class drawn at
-// random, among the rules whose ids are in used. skip: the valueStart of
-// declarations not to draw (already mutated by another task on the site).
-export function drawMutations(rules, used, random, count, { skip = new Set() } = {}) {
-  const out = [];
-  const classes = Object.keys(CLASSES);
-  for (let tries = 0; out.length < count && tries < MAX_DRAWS; tries++) {
-    const cls = pick(classes, random);
-    const taken = new Set(out.map((m) => m.ruleId));
-    const candidates = rules
-      .filter((r) => used.has(r.id) && !taken.has(r.id))
-      .flatMap((r) => r.declarations.filter((d) => drawable(d, cls, skip)).map((d) => ({ rule: r, d })));
-    if (candidates.length === 0) continue;
-    const { rule, d } = pick(candidates, random);
-    out.push({
-      ruleId: rule.id, selector: rule.selector, media: rule.media, class: cls, property: d.property,
-      from: d.value, to: perturb(d.property, d.value, random), valueStart: d.valueStart, valueEnd: d.valueEnd,
-    });
-  }
-  return out;
+// The mutation of one declaration: where it is in the file, and its new value.
+export function mutationOf(rule, d, cls, random) {
+  return {
+    ruleId: rule.id, selector: rule.selector, media: rule.media, class: cls, property: d.property,
+    from: d.value, to: perturb(d.property, d.value, random), valueStart: d.valueStart, valueEnd: d.valueEnd,
+  };
 }
 
 // The stylesheet with each mutation's value replaced in place.

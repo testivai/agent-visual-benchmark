@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { CLASSES, perturb, classOf, drawMutations, applyMutations } from './mutate.mjs';
+import { CLASSES, perturb, classOf, candidatesOf, mutationOf, applyMutations } from './mutate.mjs';
 import { parseRules } from './css.mjs';
 import { mulberry32 } from '../runner/rng.mjs';
 
@@ -57,40 +57,43 @@ const CSS = `.a { color: #0d6efd; padding: 1rem; }
 .c { display: flex; }
 .unused { color: #000; }`;
 
-test('draw: a class at random, then a declaration of it at random among the rules the page uses', () => {
+const decl = (c) => `${c.rule.selector} ${c.d.property}`;
+
+test('the candidates of a class: its declarations that the rule can change, in the rules the page uses', () => {
   const rules = parseRules(CSS);
   const used = new Set([0, 1, 2]);
-  for (let seed = 1; seed <= 40; seed++) {
-    const [m] = drawMutations(rules, used, mulberry32(seed), 1);
-    assert.ok(m, `seed ${seed}`);
-    assert.notEqual(m.selector, '.unused');
-    assert.notEqual(m.to, m.from);
-    assert.equal(CSS.slice(m.valueStart, m.valueEnd), m.from);
-  }
+  assert.deepEqual(candidatesOf(rules, used, 'colour').map(decl), ['.a color'], 'not the unused rule');
+  assert.deepEqual(candidatesOf(rules, used, 'margin').map(decl), [], '0 auto has nothing to scale');
+  assert.deepEqual(candidatesOf(rules, used, 'font-weight').map(decl), ['.b font-weight']);
+  assert.deepEqual(candidatesOf(rules, new Set([3]), 'colour').map(decl), ['.unused color']);
+  assert.deepEqual(candidatesOf(rules, new Set(), 'colour'), [], 'nothing used, nothing to draw');
 });
 
-test('several mutations land on different rules; applying them edits the source in place', () => {
+test('declarations already mutated by another task are not candidates; nor are rules this task has already changed', () => {
   const rules = parseRules(CSS);
-  const ms = drawMutations(rules, new Set([0, 1, 2]), mulberry32(11), 3);
-  assert.equal(new Set(ms.map((m) => m.ruleId)).size, ms.length);
+  const used = new Set([0, 1, 2]);
+  const padding = candidatesOf(rules, used, 'padding')[0].d;
+  assert.deepEqual(candidatesOf(rules, used, 'padding', { skip: new Set([padding.valueStart]) }), []);
+  assert.deepEqual(candidatesOf(rules, used, 'padding', { takenRules: new Set([0]) }), []);
+  assert.deepEqual(candidatesOf(rules, used, 'display-and-flex', { takenRules: new Set([0]) }).map(decl), ['.c display']);
+});
+
+test('a mutation: the declaration where it is in the file, and a new value by its class\'s rule', () => {
+  const rules = parseRules(CSS);
+  const used = new Set([0, 1, 2]);
+  const ms = ['colour', 'font-weight', 'display-and-flex'].map((cls) => {
+    const [{ rule, d }] = candidatesOf(rules, used, cls);
+    return mutationOf(rule, d, cls, mulberry32(4));
+  });
+  assert.deepEqual(ms[0], {
+    ruleId: 0, selector: '.a', media: null, class: 'colour', property: 'color', from: '#0d6efd', to: '#fd9c0d',
+    valueStart: CSS.indexOf('#0d6efd'), valueEnd: CSS.indexOf('#0d6efd') + 7,
+  });
+  assert.equal(ms[1].to, '400');
+  assert.ok(['block', 'inline-block', 'none'].includes(ms[2].to));
   const out = applyMutations(CSS, ms);
   for (const m of ms) assert.ok(out.includes(m.to), m.to);
   assert.equal(out.split('\n').length, CSS.split('\n').length, 'no line added or removed');
-  assert.equal(drawMutations(rules, new Set([3]), mulberry32(1), 1).length, 1, 'a rule outside the used set is never drawn... unless it is the only one used');
-  assert.deepEqual(drawMutations(rules, new Set(), mulberry32(1), 1), [], 'nothing used, nothing drawn');
-});
-
-test('declarations already mutated by another task (by their place in the file) are not drawn again', () => {
-  const rules = parseRules(CSS);
-  const used = new Set([0, 1, 2]);
-  const all = rules.slice(0, 3).flatMap((r) => r.declarations).filter((d) => perturb(d.property, d.value, () => 0) !== null);
-  const keep = all[0];
-  const skip = new Set(all.slice(1).map((d) => d.valueStart));
-  for (let seed = 1; seed <= 20; seed++) {
-    const [m] = drawMutations(rules, used, mulberry32(seed), 1, { skip });
-    assert.equal(m.valueStart, keep.valueStart, `seed ${seed}`);
-  }
-  assert.deepEqual(drawMutations(rules, used, mulberry32(1), 1, { skip: new Set(all.map((d) => d.valueStart)) }), []);
 });
 
 test('a custom property holding a literal colour is a colour declaration (Bootstrap 5 keeps its colours there)', () => {
@@ -108,14 +111,9 @@ test('a custom property holding a literal colour is a colour declaration (Bootst
   assert.equal(classOf('transform', 'none'), null);
 });
 
-test('the draw finds colours held in custom properties', () => {
+test('colours held in custom properties are candidates of the colour class', () => {
   const css = '.btn-primary { --bs-btn-bg: #0d6efd; --bs-btn-padding-x: 0.75rem; }\n.navbar { --bs-dark-rgb: 33, 37, 41; }';
   const rules = parseRules(css);
-  const seen = new Set();
-  for (let seed = 1; seed <= 60; seed++) {
-    const [m] = drawMutations(rules, new Set([0, 1]), mulberry32(seed), 1);
-    assert.equal(m.class, 'colour', 'nothing else here can be mutated');
-    seen.add(m.property);
-  }
-  assert.deepEqual([...seen].sort(), ['--bs-btn-bg', '--bs-dark-rgb']);
+  assert.deepEqual(candidatesOf(rules, new Set([0, 1]), 'colour').map(decl), ['.btn-primary --bs-btn-bg', '.navbar --bs-dark-rgb']);
+  assert.deepEqual(candidatesOf(rules, new Set([0, 1]), 'padding'), [], 'a custom property is never a length declaration');
 });

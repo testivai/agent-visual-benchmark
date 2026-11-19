@@ -16,6 +16,20 @@ section.
 5. **Size:** 72 tasks × 2 arms × 3 repeats = 432 runs, raised by the power rule of section 6 if the
    pilot calls for it.
 
+## Decided by the maintainer (2026-11-19)
+
+After the build of sections 4 to 7, and the trial generations, the maintainer chose:
+
+1. **The pixel filter:** a change is kept only when both arms' own checks flag it (section 4). The
+   write-up also reports how many candidates each check alone would have caught.
+2. **An even mix of classes:** each mutation's class comes from a per-site deck (section 4), not
+   from a fresh draw per candidate.
+3. **Drift:** full font hinting, as chosen by the rule (section 4).
+4. **The gaps found in sections 6 and 7:**
+   - no rung below the start: the maintainer decides if the pilot is below 40%;
+   - "up to 120 tasks" counts S1 to S3;
+   - H1 is supported when Holm's procedure rejects it.
+
 ## 1. Why a second study
 
 Study 1 found no measurable difference between TestivAI and a plain pixel comparison: both solved
@@ -75,15 +89,20 @@ and rendering noise?
 - **Views (Proposed):** each page at desktop (1280×800) and mobile (390×844) size, the oracle's two
   viewports. The six sites are one page each and have no states to reach, so each has two views.
 
-**Mutations (Proposed).** The rules are code (`study2/mutate.mjs`, `study2/generate.mjs`); this is
-what the code does.
+**Mutations (Proposed; the class deck decided 2026-11-19).** The rules are code
+(`study2/mutate.mjs`, `study2/generate.mjs`); this is what the code does.
 
 - **What a mutation is:** one change to one declaration in the site's own stylesheet, in place:
-  - first a property class, chosen at random from a published list: colour, background, font size,
-    font weight, letter spacing, line height, margin, padding, width, display and flex, position
-    and z-index, border, opacity, overflow, text transform;
-  - then one declaration of that class, chosen at random among the used rules' declarations that
-    the class's rule can change;
+  - first a property class, from a published list: colour, background, font size, font weight,
+    letter spacing, line height, margin, padding, width, display and flex, position and z-index,
+    border, opacity, overflow, text transform. **The class comes from the site's deck:**
+    - each site has the 15 classes in a seeded order, and each mutation takes the next class in
+      that order that can serve it, so each class is used once per round;
+    - when the deck is used up, a new round starts in a new seeded order;
+    - a class with no declaration left on the site whose change shows is dead there, and skipped
+      from then on;
+  - then the class's candidates, the used rules' declarations that the class's rule can change,
+    in a random order, one at a time until one shows (below);
   - then a new value by the class's fixed rule:
     - **lengths** (font size, letter spacing, line height, margin, padding, width, border): the
       first non-zero number scaled by 0.5 or 1.5 (even odds); a px value moves by at least 1px;
@@ -114,7 +133,8 @@ what the code does.
     Neither check is more sensitive than the other in every case: a test shows a single pixel
     that Playwright flags and TestivAI does not, and thin lines can be the reverse.
 
-  Otherwise another mutation is drawn, from the class up. The filters look at the page and at the
+  Otherwise the class's next candidate is tried, and when the class has none left, the next class.
+  The filters look at the page and at the
   two pixel comparisons only: never at TestivAI's analysis (DOM diff, labels, verdicts), and never
   at any agent. Each site captures identically twice, in what is measured and in every pixel, which
   the filters need and a test checks.
@@ -155,19 +175,29 @@ throwaway seed (1), to check that it works on them. Its tasks are not used and w
   - **What this means:** requiring both checks keeps the study on what TestivAI's analysis adds,
     given a difference both tools report. It leaves out the cases where its check catches what
     Playwright's misses.
-  - **Alternative, not adopted (for the maintainer):** keep a mutation that either check flags.
-    This measures detection as well, but mixes in differences of default settings. The draft
-    keeps both-flag, and the write-up reports how many real candidates each check alone would
-    have caught.
-  - **The kept mix is uneven.** Kept per class: line height 15, font size 12, margin 10,
+  - **The alternative, either check, was not adopted** (decided 2026-11-19). It would measure
+    detection as well, but mix in differences of default settings. The write-up reports how many
+    real candidates each check alone would have caught.
+  - **The kept mix was uneven.** Kept per class: line height 15, font size 12, margin 10,
     padding 10, display and flex 10, font weight 9, width 9, position and z-index 6, colour 3,
     background 3, border 2, text transform 1, letter spacing, opacity and overflow 0.
-  - **Why:** the class is drawn evenly, but classes differ in how often a change shows. Most
-    colour candidates are palette entries nothing reads, and most overflow changes clip nothing.
-    The write-up reports the mix of the real tasks.
-  - **Alternative, not adopted (for the maintainer):** draw the class once per mutation, then
-    retry declarations of that class until one shows. That would even out the mix where a site
-    allows, at the cost of more checks. The draft keeps the literal rule above.
+  - **Why:** the class was drawn afresh for each candidate, and classes differ in how often a
+    change shows. Most colour candidates are palette entries nothing reads, and most overflow
+    changes clip nothing.
+- **Second trial (2026-11-19), with the class deck, the same throwaway seed (1):**
+  - All 72 tasks were generated, from 249 candidates, of which 90 were kept, in about 7 minutes.
+  - **Kept per class:** margin 11, width 11, display and flex 10, padding 10, colour 9,
+    line height 9, font size 8, font weight 7, position and z-index 6, border 3, background 2,
+    text transform 2, letter spacing 1, opacity 1, overflow 0. Perfectly even would be 6 each.
+  - **What is left uneven comes from the sites:**
+    - overflow can make no visible change on any of the six;
+    - letter spacing and opacity can on one site each;
+    - background and text transform can on two;
+    - border can on three.
+
+    The record of a generation lists the dead classes per site, and the write-up reports the real
+    tasks' mix.
+  - **S2:** 10 tasks with two mutations and 10 with three.
 
 **Strata (Proposed), 72 tasks:**
 

@@ -41,10 +41,11 @@ try {
     chromium: browser.version(),
     sites: Object.fromEntries(Object.entries(sites).map(([k, s]) => [k, { rules: s.rules.length, used: s.used.size }])),
     stats,
+    dead: result.dead,
     tasks: result.tasks,
   };
   fs.writeFileSync(path.join(out, 'tasks.json'), `${JSON.stringify(record, null, 2)}\n`);
-  console.log(JSON.stringify({ seconds: Math.round((Date.now() - started) / 1000), sites: record.sites, stats }, null, 2));
+  console.log(JSON.stringify({ seconds: Math.round((Date.now() - started) / 1000), sites: record.sites, dead: result.dead, stats }, null, 2));
 } finally {
   await browser.close();
 }
