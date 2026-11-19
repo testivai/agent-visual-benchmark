@@ -34,7 +34,7 @@ export function templateKey({ benchRoot, arm }) {
     .slice(0, 16);
 }
 
-function run(cwd, command, args, env, what) {
+export function run(cwd, command, args, env, what) {
   const r = spawnSync(command, args, { cwd, env, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, timeout: 10 * 60 * 1000 });
   if (r.status !== 0) {
     throw new Error(`${what} failed (exit ${r.status}${r.signal ? `, ${r.signal}` : ''}):\n${(r.stdout ?? '').slice(-3000)}\n${(r.stderr ?? '').slice(-3000)}`);
@@ -42,10 +42,11 @@ function run(cwd, command, args, env, what) {
   return r.stdout;
 }
 
-const clearOutputs = (dir) => OUTPUTS.forEach((o) => fs.rmSync(path.join(dir, o), { recursive: true, force: true }));
+export const clearOutputs = (dir) => OUTPUTS.forEach((o) => fs.rmSync(path.join(dir, o), { recursive: true, force: true }));
 
-async function playwright(dir, args, what) {
-  const env = { ...process.env, PORT: String(await freePort()), PLAYWRIGHT_BROWSERS_PATH: browsersPath(), FORCE_COLOR: '0', CI: '' };
+// extraEnv: added to the environment the tests and their browser run in (study 2's drift).
+export async function playwright(dir, args, what, extraEnv = {}) {
+  const env = { ...process.env, PORT: String(await freePort()), PLAYWRIGHT_BROWSERS_PATH: browsersPath(), FORCE_COLOR: '0', CI: '', ...extraEnv };
   return run(dir, process.execPath, [path.join(dir, 'node_modules', '@playwright', 'test', 'cli.js'), 'test', ...args], env, what);
 }
 
