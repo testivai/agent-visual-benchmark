@@ -1,0 +1,7 @@
+{
+  "tasksFile": "study2/tasks.json",
+  "arms": ["B", "C"],
+  "repeats": { "pilot": 3, "full": 3 },
+  "pilot": { "perStratum": 2 },
+  "seeds": { "generation": null, "pilot": null, "order": null }
+}

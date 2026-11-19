@@ -14,6 +14,9 @@
 //
 // Options: --model <id>, --config <file> (default runner.config.json),
 // --results <dir> (default results/<model>/<phase>), --budget-file <file> (default BUDGET.md).
+// --study 2 runs study 2 (study2/PREREGISTRATION.md): its tasks, arms, seeds
+// and results (default results/study2/<model>/<phase>), from --study-config
+// (default study2/study.config.json). The agent, limits and isolation are the same.
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -43,6 +46,9 @@ import { runCost } from './limits.mjs';
 import { secretValues } from './scrub.mjs';
 import { makeRunDir } from './rundir.mjs';
 import { probePrompt, probeProblems } from './probe.mjs';
+import { STUDY1 } from './study1.mjs';
+import { loadStudyTwo, studyTwoPlan } from '../study2/runner/plan.mjs';
+import { studyTwo } from '../study2/runner/study.mjs';
 import { freePort } from '../harness/run-specs.mjs';
 
 const CACHE = path.join(REPO_ROOT, '.cache', 'runner');
@@ -63,7 +69,7 @@ export function planFor({ benchRoot, config, phase }) {
 function benchCommit(benchRoot) {
   try {
     const sha = execFileSync('git', ['rev-parse', '--short=12', 'HEAD'], { cwd: benchRoot, encoding: 'utf8' }).trim();
-    const dirty = execFileSync('git', ['status', '--porcelain', '--', 'app', 'tasks', 'oracle', 'arms', 'runner'], { cwd: benchRoot, encoding: 'utf8' }).trim();
+    const dirty = execFileSync('git', ['status', '--porcelain', '--', 'app', 'tasks', 'oracle', 'arms', 'runner', 'study2'], { cwd: benchRoot, encoding: 'utf8' }).trim();
     return dirty ? `${sha}-dirty` : sha;
   } catch {
     return 'unknown';
@@ -75,8 +81,9 @@ function packageVersions() {
   return { node: process.version, ...pkg.devDependencies };
 }
 
-function runContext(config, claudeVersion) {
+function runContext(config, claudeVersion, study = STUDY1) {
   return {
+    study,
     configHash: configHash(config),
     benchCommit: benchCommit(REPO_ROOT),
     versions: { claude_code: claudeVersion, ...packageVersions() },
@@ -90,13 +97,17 @@ function parseArgs(argv, loaded) {
   const phase = value('--phase', 'pilot');
   if (!['pilot', 'full'].includes(phase)) throw new Error(`--phase must be pilot or full, not ${phase}`);
   const model = value('--model', primaryModel(loaded));
+  const study = value('--study', '1');
+  if (!['1', '2'].includes(study)) throw new Error(`--study must be 1 or 2, not ${study}`);
   return {
     command: argv[0],
     phase,
     model,
+    study,
+    studyConfig: value('--study-config', path.join('study2', 'study.config.json')),
     confirm: argv.includes('--confirm'),
     pushEvery: Number(value('--push-every', '0')),
-    resultsDir: value('--results', path.join(REPO_ROOT, 'results', model, phase)),
+    resultsDir: value('--results', path.join(REPO_ROOT, 'results', ...(study === '2' ? ['study2'] : []), model, phase)),
     budgetFile: value('--budget-file', path.join(REPO_ROOT, 'BUDGET.md')),
   };
 }
@@ -112,21 +123,43 @@ function requirePreflight(config) {
   return version;
 }
 
-function cmdPlan(config, { phase }) {
-  const plan = planFor({ benchRoot: REPO_ROOT, config, phase });
+// What differs between the studies: the plan, the runner's study object and
+// the seeds. Study 2 takes its arms and repeats from its own config.
+function studySetup(args, config) {
+  if (args.study === '1') {
+    return { config, study: STUDY1, plan: (phase) => planFor({ benchRoot: REPO_ROOT, config, phase }), pilotSeed: config.seeds.pilotTasks, label: '' };
+  }
+  const two = loadStudyTwo({ configFile: args.studyConfig });
+  return {
+    config: { ...config, arms: two.config.arms, repeats: two.config.repeats },
+    study: studyTwo({ tasks: two.tasks }),
+    plan: (phase) => studyTwoPlan({ tasks: two.tasks, config: two.config, phase }),
+    pilotSeed: two.config.seeds.pilot,
+    label: 'study 2, ',
+  };
+}
+
+function cmdPlan(config, { phase, setup }) {
+  const plan = setup.plan(phase);
   const tasks = [...new Set(plan.runs.map((r) => r.task))].sort();
   print([
-    `${phase}: ${plan.runs.length} runs = ${tasks.length} tasks x ${config.arms.length} arms x ${config.repeats[phase]} repeats`,
-    `tasks: ${tasks.join(', ')}${phase === 'pilot' ? ` (chosen with seed ${config.seeds.pilotTasks})` : ''}`,
+    `${setup.label}${phase}: ${plan.runs.length} runs = ${tasks.length} tasks x ${config.arms.length} arms x ${config.repeats[phase]} repeats`,
+    `tasks: ${tasks.join(', ')}${phase === 'pilot' ? ` (chosen with seed ${setup.pilotSeed})` : ''}`,
     `order: shuffled with seed ${plan.seed}; first runs:`,
     ...plan.runs.slice(0, 9).map((r) => `  ${r.runId}  ${r.task}  arm ${r.arm}  repeat ${r.repeat}`),
   ]);
 }
 
-async function cmdPrepare(config) {
-  for (const arm of config.arms) {
-    const t = await ensureTemplate({ benchRoot: REPO_ROOT, arm, cacheRoot: CACHE, log: console.log });
-    console.log(`arm ${arm}: ${t.dir} (${t.baselineCount} baselines)`);
+// Every template the full study needs: one per arm in study 1; per site, arm
+// and baselines in study 2.
+async function cmdPrepare(config, { setup }) {
+  const seen = new Set();
+  for (const run of setup.plan('full').runs) {
+    const key = setup.study.templateKey(run);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const t = await setup.study.template({ benchRoot: REPO_ROOT, run, log: console.log });
+    console.log(`${key}: ${t.dir} (${t.baselineCount} baselines)`);
   }
 }
 
@@ -143,20 +176,20 @@ function gateFor(config, args, plannedRuns) {
 
 async function cmdDryRun(config, args) {
   const version = requirePreflight(config);
-  const plan = planFor({ benchRoot: REPO_ROOT, config, phase: args.phase });
+  const plan = args.setup.plan(args.phase);
   const run = plan.runs.find((r) => r.arm === 'C') ?? plan.runs[0];
   const dir = path.join(args.resultsDir, 'dry-run');
   for (const sub of ['transcripts', 'diffs']) fs.mkdirSync(path.join(dir, sub), { recursive: true });
-  const template = await ensureTemplate({ benchRoot: REPO_ROOT, arm: run.arm, cacheRoot: CACHE, log: console.log });
+  const template = await args.setup.study.template({ benchRoot: REPO_ROOT, run, log: console.log });
   console.log(`dry run: ${run.task} in arm ${run.arm} (one real run, not counted in the study)`);
-  const record = await runOne({ benchRoot: REPO_ROOT, config, run, phase: 'dry-run', attempt: 1, resultsDir: dir, context: { ...runContext(config, version), templateDir: template.dir } });
+  const record = await runOne({ benchRoot: REPO_ROOT, config, run, phase: 'dry-run', attempt: 1, resultsDir: dir, context: { ...runContext(config, version, args.setup.study), templateDir: template.dir } });
   fs.appendFileSync(path.join(args.resultsDir, 'dry-run.jsonl'), `${JSON.stringify(record)}\n`);
   if (record.error) {
     print([`the dry run ended in an error (${record.error.stage}): ${record.error.message}`]);
     process.exit(1);
   }
   const g = gateFor(config, args, plan.runs.length);
-  const full = planFor({ benchRoot: REPO_ROOT, config, phase: 'full' }).runs.length;
+  const full = args.setup.plan('full').runs.length;
   print([...g.lines, `projected for the full study (${full} runs): $${(record.cost_usd * full).toFixed(2)}`,
     `this run: ${record.success ? 'success' : 'failure'}, ${record.turns} turns, ${Math.round(record.seconds)} s`]);
 }
@@ -175,7 +208,7 @@ function checkPlanFile(dir, plan) {
 }
 
 async function cmdStart(config, args) {
-  const plan = planFor({ benchRoot: REPO_ROOT, config, phase: args.phase });
+  const plan = args.setup.plan(args.phase);
   const done = finishedRuns(readRecords(path.join(args.resultsDir, 'runs.jsonl')));
   const remaining = plan.runs.filter((r) => !done.has(r.runId)).length;
   const g = gateFor(config, args, remaining);
@@ -192,14 +225,14 @@ async function cmdStart(config, args) {
     console.log(r.saved ? `saved and pushed results (${finished} runs)` : `results not pushed: ${r.reason}`);
   };
   const records = await executePlan({
-    benchRoot: REPO_ROOT, config, plan, resultsDir: args.resultsDir, context: runContext(config, version), log: console.log, onRunFinished: () => save(false),
+    benchRoot: REPO_ROOT, config, plan, resultsDir: args.resultsDir, context: runContext(config, version, args.setup.study), log: console.log, onRunFinished: () => save(false),
   });
   save(true);
   print([`${finishedRuns(records).size} of ${plan.runs.length} runs finished.`, `next: npm run analyze -- --phase ${args.phase}`]);
 }
 
 function cmdStatus(config, args) {
-  const plan = planFor({ benchRoot: REPO_ROOT, config, phase: args.phase });
+  const plan = args.setup.plan(args.phase);
   const records = readRecords(path.join(args.resultsDir, 'runs.jsonl'));
   const finished = finishedRuns(records);
   const cost = records.reduce((s, r) => s + (r.cost_usd ?? 0), 0);
@@ -317,7 +350,8 @@ async function main() {
     print([`unknown command "${args.command ?? ''}". Commands: ${Object.keys(COMMANDS).join(', ')}`]);
     process.exit(2);
   }
-  await command(config, args);
+  const setup = studySetup(args, config);
+  await command(setup.config, { ...args, setup });
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
