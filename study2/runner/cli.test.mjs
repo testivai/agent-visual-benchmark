@@ -22,10 +22,17 @@ function frozenSetup() {
   return dir;
 }
 
-test('before the freeze, study 2 has no plan: its seeds are not set', () => {
-  const r = cli('plan', '--study', '2', '--phase', 'pilot');
-  assert.equal(r.status, 1);
-  assert.match(r.stderr, /seeds\.generation is not set: study 2's seeds are written in study2\/PREREGISTRATION\.md at the freeze/);
+test('without the seeds, study 2 has no plan', () => {
+  const dir = frozenSetup();
+  try {
+    const config = JSON.parse(fs.readFileSync(path.join(dir, 'study.json'), 'utf8'));
+    fs.writeFileSync(path.join(dir, 'study.json'), JSON.stringify({ ...config, seeds: { ...config.seeds, generation: null } }));
+    const r = cli('plan', '--study', '2', '--study-config', path.join(dir, 'study.json'), '--phase', 'pilot');
+    assert.equal(r.status, 1);
+    assert.match(r.stderr, /seeds\.generation is not set: study 2's seeds are written in study2\/PREREGISTRATION\.md at the freeze/);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
 });
 
 test('with the seeds and the task set: the pilot is 8 tasks x 2 arms x 3 repeats, the full study 72 x 2 x 3', () => {

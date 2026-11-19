@@ -1,10 +1,15 @@
-# Study 2: preregistration (draft)
+# Study 2: preregistration
 
-**Status: draft.** The five design decisions below were made by the maintainer on 2026-11-18. Every
-item still marked **Proposed** waits for the maintainer's yes or change. When all are settled, this file is frozen and tagged (`study2-prereg-v1`) before the first
-pilot run. The rules of study 1 carry over: the pilot may calibrate difficulty and find broken tasks,
-never choose anything after looking at which arm is ahead, and later changes go in a dated Deviations
-section.
+**Status: frozen** on 2026-11-19, tagged `study2-prereg-v1`, before the task set is generated and
+before any pilot run. Every item below was decided by the maintainer: the decisions of 2026-11-18
+and 2026-11-19 are listed first, and the items first drafted as proposals were approved as written
+on 2026-11-19. The seeds are written below, and no task has been generated with them.
+
+The rules of study 1 carry over:
+- the pilot may calibrate difficulty, by the ladder of section 7, and find broken tasks;
+- it must not be used to choose anything after looking at which arm is ahead;
+- later changes go in the Deviations section at the end, each with a date and a reason, and the
+  frozen text is never edited.
 
 ## Decided by the maintainer (2026-11-18)
 
@@ -29,6 +34,21 @@ After the build of sections 4 to 7, and the trial generations, the maintainer ch
    - no rung below the start: the maintainer decides if the pilot is below 40%;
    - "up to 120 tasks" counts S1 to S3;
    - H1 is supported when Holm's procedure rejects it.
+
+## Seeds (written at the freeze, 2026-11-19)
+
+Each seed is the freeze date with a two-digit purpose number. None has been used before: the trial
+generations used seed 1.
+
+| seed | value | what it decides |
+| --- | --- | --- |
+| `seeds.generation` | 2026111901 | the task set: the allocation of the 72 slots, and every draw of every task (`study2/generate-tasks.mjs`) |
+| `seeds.pilot` | 2026111902 | the pilot's site, and its two tasks per stratum (`study2/runner/plan.mjs`) |
+| `seeds.order` | 2026111903 | the order of the runs, in the pilot and in the full study |
+| `seeds.extension` | 2026111904 | the extra tasks, only if section 6's power rule adds any |
+
+The same values are in `study2/study.config.json`, and a test checks that the two agree. The
+bootstrap's seed (1) and the site draw's (20261118) are as written in their sections.
 
 ## 1. Why a second study
 
@@ -60,7 +80,7 @@ and rendering noise?
 
 ## 4. Tasks
 
-**Sites (Proposed).**
+**Sites.**
 
 - **Pool:** the Start Bootstrap templates published on npm (`startbootstrap-*`, MIT licence, 39
   packages on 2026-11-18).
@@ -73,7 +93,7 @@ and rendering noise?
   candidates are the 39 names in `study2/sites/candidates.json` (taken 2026-11-18). They are tried in
   the order given by seed **20261118** (`selectionOrder` in `study2/sites.mjs`), and the first six
   eligible are kept. Each is pinned to the version and integrity hash it had when drawn.
-- **Found at the draw (2026-11-18), Proposed:** three of the six sites load placeholder images from
+- **Found at the draw (2026-11-18):** three of the six sites load placeholder images from
   other hosts (`dummyimage.com`, `source.unsplash.com`), which offline would show as broken.
   - **Why it matters:** TestivAI reports broken images as warnings and a pixel comparison does not, so
     this could draw arm C's agents into "fixing" images that are not part of the task.
@@ -82,14 +102,14 @@ and rendering noise?
   - **Not a new draw:** the eligibility rule was not changed after the draw, and the six sites stand.
   - **Check:** after the import, every site makes no remote request and no failed local request
     offline (`study2/sites/manifest.json`).
-- **Proposed:** mutations are drawn only from CSS rules that are used: under the rule's `@media`,
+- **Used rules:** mutations are drawn only from CSS rules that are used: under the rule's `@media`,
   its selector, with pseudo-elements taken off, matches at least one element in a captured view
   (`study2/usage.mjs`). The page is loaded as the oracle loads it: each viewport, reduced motion,
   after its scripts run. On the six sites, 63 to 207 of about 2,300 to 2,500 rules are used.
-- **Views (Proposed):** each page at desktop (1280×800) and mobile (390×844) size, the oracle's two
+- **Views:** each page at desktop (1280×800) and mobile (390×844) size, the oracle's two
   viewports. The six sites are one page each and have no states to reach, so each has two views.
 
-**Mutations (Proposed; the class deck decided 2026-11-19).** The rules are code
+**Mutations (the class deck decided 2026-11-19).** The rules are code
 (`study2/mutate.mjs`, `study2/generate.mjs`); this is what the code does.
 
 - **What a mutation is:** one change to one declaration in the site's own stylesheet, in place:
@@ -146,7 +166,8 @@ and rendering noise?
   each site gets 12 tasks and each stratum is spread as evenly as its count allows. Task ids are
   given in a seeded order that says nothing of the stratum. Each task draws from its own seeded
   stream. On a site, no declaration is mutated by two tasks.
-- **The seed** for the real generation is written here at the freeze, before the generation runs.
+- **The seed** for the real generation is `seeds.generation` (section "Seeds"), written before the
+  generation runs.
 
 **Trial generation (2026-11-18), disclosed.** The generator was run on the six sites with a
 throwaway seed (1), to check that it works on them. Its tasks are not used and were not committed.
@@ -204,7 +225,7 @@ throwaway seed (1), to check that it works on them. Its tasks are not used and w
     - In 8 (S1 and S2), both arms flag one view: the change shows at one size only.
     - The two arms never disagreed on a task.
 
-**Strata (Proposed), 72 tasks:**
+**Strata, 72 tasks:**
 
 | stratum | what the agent starts from | tasks |
 | --- | --- | --- |
@@ -213,7 +234,7 @@ throwaway seed (1), to check that it works on them. Its tasks are not used and w
 | S3, defect and drift | one mutation, and baselines recorded under a different rendering setting | 20 |
 | S4, drift only (decoy) | no mutation, baselines recorded under a different rendering setting | 12 |
 
-**Rendering drift (Proposed; setting chosen 2026-11-18, `study2/drift.mjs`).**
+**Rendering drift (setting chosen 2026-11-18, `study2/drift.mjs`).**
 
 - **What:** the S3 and S4 baselines are recorded under one setting that changes how text is drawn
   but no CSS, as a different machine's font setup does. Both arms' baselines are recorded under the
@@ -239,11 +260,11 @@ throwaway seed (1), to check that it works on them. Its tasks are not used and w
   The list was set after that look, and the search on all six sites ran after the list was
   committed.
 
-**Prompt (Proposed).** Every task gets the same prompt, which names no category: "The site looks
+**Prompt.** Every task gets the same prompt, which names no category: "The site looks
 different since the last change. Can you take a look and fix it?"
 
-**Validation (Proposed).** Every task must pass, as code, before the freeze, like study 1's
-`npm run validate` (`study2/validation.mjs`, `study2/validate-tasks.mjs`):
+**Validation.** Every task must pass, as code, before the pilot, like study 1's `npm run validate`
+(`study2/validation.mjs`, `study2/validate-tasks.mjs --arms`):
 
 - **the set:**
   - each stratum's count, drift flag and number of mutations;
@@ -259,7 +280,12 @@ different since the last change. Can you take a look and fix it?"
 - **under drift (S3, S4):** the drift is pure (no DOM or computed-style change, every view
   flagged by both checks), and in S3 the seeded site differs from the drifted baselines for both
   arms;
-- **each decoy (S4):** the clean site, captured again, passes as a decoy.
+- **each decoy (S4):** the clean site, captured again, passes as a decoy;
+- **each task, in its real workspace:** each arm's own visual test flags it (`--arms`).
+
+**If a generated task fails validation,** the set is not used. The failure is recorded as a dated
+deviation, its cause is fixed in code (test first), and the set is generated again with the same
+seed. No task is dropped or replaced by hand.
 
 The 72 tasks of the trial generation (seed 1, not used) all pass it, in about 4 minutes.
 
@@ -268,11 +294,11 @@ The 72 tasks of the trial generation (seed 1, not used) all pass it, in about 4 
 Decided by the oracle of study 1, generalised. No hand-written test per task is needed, since the
 oracle measures what the seed changed.
 
-- **S1 to S3, Proposed:** success means:
+- **S1 to S3:** success means:
   - every property the mutations changed is back as it was (`checkRestored`);
   - nothing else changed (`checkCollateral`);
   - nothing protected was changed (tampering, as in study 1).
-- **What is judged (Proposed, `study2/oracle.mjs`):**
+- **What is judged (`study2/oracle.mjs`):**
   - the oracle's measurements of each view, with study 1's tolerances (0.5 px; 0.02 of the
     visible fraction);
   - the page itself always (title, size, fonts);
@@ -283,7 +309,7 @@ oracle measures what the seed changed.
   overriding it elsewhere both pass. A test checks both on a drawn site, and checks that a fix
   with an unrelated change fails.
 - **S4 (decoy):** success means no file under the site changed.
-- **Proposed partial credit, for S2:** the share of the mutations restored, reported beside the strict
+- **Partial credit, for S2:** the share of the mutations restored, reported beside the strict
   rate. A mutation counts as restored when all of its own changes (the clean site with that
   mutation alone) are back. Where two mutations change the same property, neither counts until
   both are restored there.
@@ -294,7 +320,7 @@ oracle measures what the seed changed.
 
 ## 6. Outcomes and analysis
 
-**Primary (Proposed).**
+**Primary.**
 
 - **What is compared:** success of C against B over S1 to S3 (60 tasks), paired by task.
 - **Interval:** a percentile bootstrap over tasks (10,000 resamples, seed 1).
@@ -307,7 +333,7 @@ oracle measures what the seed changed.
 - **H2:** C and B differ in tokens per run on S1 to S3: the per-task median, on a log scale, paired.
 - **Direction:** two-sided, since study 1 found C using about a third more tokens.
 - **Correction:** with two tests, Holm's correction at 5% overall.
-- **How the two fit together (Proposed, `study2/analysis.mjs`):**
+- **How the two fit together (`study2/analysis.mjs`):**
   - Each test's p-value comes from the same bootstrap as its interval (over tasks, 10,000
     resamples, seed 1):
     - H1, one-sided: the share of resampled means at or below 0;
@@ -328,7 +354,7 @@ oracle measures what the seed changed.
 - partial credit in S2;
 - the tasks where B beat C, listed as prominently as the reverse.
 
-**What the design can detect (Proposed).**
+**What the design can detect.**
 
 - **The deciding quantity is the per-task spread of C − B,** which the pilot measures. With 60 tasks:
 
@@ -338,13 +364,21 @@ oracle measures what the seed changed.
   | 0.3 | 6 points | 83% |
   | 0.4 | 9 points | 61% |
 
-- **If the pilot's spread implies less than 80% power,** the task count is raised before the freeze,
-  by a rule fixed here: add tasks to S1 to S3 equally until the estimate reaches 80%, up to 120
-  tasks.
+- **If the pilot's spread implies less than 80% power,** the task count is raised before the full
+  study, by a rule fixed here: add tasks to S1 to S3 equally until the estimate reaches 80%, up to
+  120 tasks.
+- **How extra tasks are made:**
+  - a second generation, with `seeds.extension`, fills only the added slots;
+  - the slots are dealt over the sites round-robin, as the first set's are;
+  - it never mutates a declaration the first set mutates;
+  - the first set, the pilot's tasks included, stays as it is.
+
+  That code is built only if the rule fires, test first, before the full study.
 
 ## 7. The pilot and difficulty calibration
 
-**Proposed:** one site, 8 tasks (2 per stratum), B and C, 3 repeats each: 48 runs.
+**The pilot:** one site, 8 tasks (2 per stratum), B and C, 3 repeats each: 48 runs. They are drawn
+with `seeds.pilot` from the generated set, and stay in the full study, as in study 1.
 
 - **The calibration is arm-blind.** A script reports only the pooled success of B and C together on S1
   to S3.
@@ -354,7 +388,10 @@ oracle measures what the seed changed.
   2. smaller value changes (scale 0.8 or 1.2);
   3. mutations only on elements below the first screen.
 - **If it is below 40%,** the ladder goes the other way.
-- **The pilot's per-arm results** are not computed until the study is frozen.
+- **When a rung changes the tasks,** the whole set is generated again with `seeds.generation` under
+  the rung's rules, validated again, and the pilot runs again on its tasks.
+- **The pilot's per-arm results** are not computed until the full study's task set and size are final,
+  after the ladder and the power rule.
 - **The pilot also measures** cost per run, and the per-task spread for section 6.
 - **As built (`study2/calibration.mjs`, `study2/calibrate.mjs`):**
   - The script reports the pooled rate, the decision and the next rung, the median cost per run,
@@ -363,7 +400,7 @@ oracle measures what the seed changed.
     labels changes nothing in what it returns. The SD is the one quantity that uses the arms
     separately, and it does not say which arm did better.
   - From the SD, it gives the power at 60 tasks and the task count by section 6's rule.
-- **Gaps found while building, for the maintainer (Proposed answers):**
+- **Gaps found while building (decided 2026-11-19):**
   - The ladder has no rung below the start. If the pilot at the start is below 40%, the script
     says so and the maintainer decides; it does not invent an easier rung.
   - "Up to 120 tasks" is read as the S1 to S3 count, raised in steps of three (one per stratum).
@@ -436,9 +473,8 @@ The order, with what is built so far:
      1's runner tests pass unchanged.
 
 **Before the pilot:**
-- write the seeds (generation, pilot, order) in this draft and in `study2/study.config.json`;
-- freeze and tag `study2-prereg-v1`;
-- generate the task set and validate it with `--arms`;
+- the seeds are written (section "Seeds"), and this file is frozen and tagged `study2-prereg-v1`;
+- generate the task set with `seeds.generation` and validate it with `--arms`;
 - run the probe.
 
 Each step is test first. The probe and the isolation stay as they are.

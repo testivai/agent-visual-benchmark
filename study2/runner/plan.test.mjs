@@ -1,7 +1,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { pilotTasks, studyTwoPlan, loadStudyTwo } from './plan.mjs';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import { STRATA, allocate } from '../generate.mjs';
+import { REPO_ROOT } from '../../harness/workspace.mjs';
 
 const SITES = ['agency', 'bare', 'full-width-pics', 'heroic-features', 'shop-item', 'small-business'];
 const TASKS = allocate(STRATA, SITES, 7).map((slot) => ({ ...slot, mutations: [] }));
@@ -31,5 +35,24 @@ test('the plans: the pilot\'s 8 tasks and the full 72, each for B and C, 3 repea
 
 test('no plan before the freeze: the seeds and the task set are written first', () => {
   assert.throws(() => studyTwoPlan({ tasks: TASKS, config: { ...CONFIG, seeds: { generation: 1, pilot: null, order: 13 } }, phase: 'pilot' }), /seeds\.pilot is not set: study 2's seeds are written in study2\/PREREGISTRATION\.md at the freeze/);
-  assert.throws(() => loadStudyTwo({ configFile: 'study2/study.config.json' }), /seeds\.generation is not set|no task set/);
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'avb-s2-plan-'));
+  try {
+    const unset = path.join(dir, 'study.json');
+    fs.writeFileSync(unset, JSON.stringify({ ...CONFIG, tasksFile: path.join(dir, 'tasks.json'), seeds: { ...CONFIG.seeds, generation: null } }));
+    assert.throws(() => loadStudyTwo({ configFile: unset }), /seeds\.generation is not set/);
+    const noTasks = path.join(dir, 'study2.json');
+    fs.writeFileSync(noTasks, JSON.stringify({ ...CONFIG, tasksFile: path.join(dir, 'tasks.json') }));
+    assert.throws(() => loadStudyTwo({ configFile: noTasks }), /no task set at .*tasks\.json: it is generated with seeds\.generation after the freeze/);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('the seeds in the config are the ones written in the frozen preregistration', () => {
+  const config = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'study2', 'study.config.json'), 'utf8'));
+  const text = fs.readFileSync(path.join(REPO_ROOT, 'study2', 'PREREGISTRATION.md'), 'utf8');
+  const written = Object.fromEntries([...text.matchAll(/^\| `seeds\.(\w+)` \| (\d+) \|/gm)].map(([, name, value]) => [name, Number(value)]));
+  assert.deepEqual(written, { generation: 2026111901, pilot: 2026111902, order: 2026111903, extension: 2026111904 });
+  assert.deepEqual(config.seeds, written);
+  for (const v of Object.values(config.seeds)) assert.ok(Number.isInteger(v) && v < 2 ** 32, `${v} is a 32-bit seed`);
 });

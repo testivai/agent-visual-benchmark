@@ -130,12 +130,13 @@ anything shaped like an Anthropic key). Read through the results before publishi
 Study 2 (`study2/PREREGISTRATION.md`) runs through the same runner, agent, limits and isolation,
 with `--study 2`. Arms B and C only; results go to `results/study2/<model>/<phase>/`.
 
-1. **Before the freeze, nothing runs.** `study2/study.config.json` holds the seeds as `null`, and
-   `plan --study 2` refuses until they are written there and in the draft.
+1. **The seeds are written at the freeze,** in `study2/PREREGISTRATION.md` ("Seeds") and in
+   `study2/study.config.json`; a test checks that the two agree. Without them, or without the task
+   set generated with `seeds.generation`, `plan --study 2` refuses.
 2. **The task set,** with the generation seed written first:
 
    ```bash
-   node study2/generate-tasks.mjs --seed <seeds.generation> --out study2
+   node study2/generate-tasks.mjs --seed 2026111901 --out study2   # seeds.generation
    node study2/validate-tasks.mjs study2/tasks.json --arms   # every task, and each arm's own test
    ```
 
