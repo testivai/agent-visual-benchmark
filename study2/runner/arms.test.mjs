@@ -33,6 +33,18 @@ test('the instructions and prompt name no category, no study, no tool beyond the
   }
 });
 
+const filesUnder = (root) => {
+  const out = [];
+  const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).forEach((e) => (e.isDirectory() ? walk(path.join(d, e.name)) : out.push(path.relative(root, path.join(d, e.name)))));
+  walk(root);
+  return out.sort();
+};
+
+test('each arm has the same files as in study 1, hidden ones included; TestivAI\'s settings are study 1\'s', () => {
+  for (const arm of ARMS) assert.deepEqual(filesUnder(armFilesDir(arm)), filesUnder(path.join(REPO_ROOT, 'arms', arm, 'files')), arm);
+  assert.equal(read(armFilesDir('C'), '.testivai', 'config.json'), read(study1('C', '.testivai/config.json')));
+});
+
 test('the packages are study 1\'s exactly; only the project\'s name and description differ', () => {
   for (const arm of ARMS) {
     const pkg = json(armFilesDir(arm), 'package.json');
