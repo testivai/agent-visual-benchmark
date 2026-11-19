@@ -198,6 +198,7 @@ throwaway seed (1), to check that it works on them. Its tasks are not used and w
     The record of a generation lists the dead classes per site, and the write-up reports the real
     tasks' mix.
   - **S2:** 10 tasks with two mutations and 10 with three.
+  - **Validation:** all 72 tasks pass it (`study2/validate-tasks.mjs`).
 
 **Strata (Proposed), 72 tasks:**
 
