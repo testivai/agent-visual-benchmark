@@ -112,6 +112,22 @@ async function scoreWith(ctx, task, ws) {
   };
 }
 
+// Every measurement of the benchmark's own copy of the site that scoring the
+// task needs: clean, seeded, and each mutation alone (S2). Taken before any
+// agent runs, so no copy of the clean site is made while one works.
+export async function warmScorer({ task, cacheRoot = DEFAULT_CACHE, browser = null }) {
+  const own = browser === null;
+  const b = own ? await chromium.launch() : browser;
+  try {
+    const ctx = { browser: b, cacheRoot };
+    await measuredSite(ctx, task.site, []);
+    if (task.mutations.length > 0) await measuredSite(ctx, task.site, task.mutations);
+    if (task.mutations.length > 1) await singles(ctx, task);
+  } finally {
+    if (own) await b.close();
+  }
+}
+
 // task: a generated task ({ site, stratum, mutations, ... }); ws: the finished workspace.
 // A scorer that cannot reach a verdict says 'error', never 'failed'.
 export async function scoreTaskWorkspace({ task, ws, cacheRoot = DEFAULT_CACHE, browser = null }) {

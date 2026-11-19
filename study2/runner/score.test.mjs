@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from '@playwright/test';
-import { scoreTaskWorkspace } from './score.mjs';
+import { scoreTaskWorkspace, warmScorer } from './score.mjs';
 import { siteDir } from './arms.mjs';
 import { seededCss } from './workspace.mjs';
 import { parseRules } from '../css.mjs';
@@ -100,4 +100,24 @@ test('the clean, seeded and single-mutation measurements are cached on disk', ()
   const files = fs.readdirSync(cacheRoot).filter((f) => f.endsWith('.json'));
   // clean; [LEAD] (S1, and the single LEAD of each S2); [LEAD, BRAND]; [BRAND]; [LEAD, MT5]; [MT5]
   assert.equal(files.length, 6, files.join(', '));
+});
+
+test('the measurements a task needs can be taken before any agent runs; scoring then measures only the workspace', async () => {
+  const fresh = fs.mkdtempSync(path.join(WORK_ROOT, 's2-score-warm-'));
+  try {
+    const s2 = { id: 'w', stratum: 'S2', site: 'bare', drift: false, mutations: [LEAD, BRAND] };
+    await warmScorer({ task: s2, cacheRoot: fresh, browser });
+    const before = fs.readdirSync(fresh).sort();
+    assert.equal(before.length, 4, 'clean, seeded, and each mutation alone');
+    await withTempDir('avb-s2-score-', async (dir) => {
+      const ws = path.join(dir, 'ws');
+      fs.cpSync(siteDir('bare'), path.join(ws, 'site'), { recursive: true });
+      fs.writeFileSync(path.join(ws, 'site', 'css', 'styles.css'), seededCss(CSS, s2.mutations));
+      initRepo(ws);
+      await scoreTaskWorkspace({ task: s2, ws, cacheRoot: fresh, browser });
+    });
+    assert.deepEqual(fs.readdirSync(fresh).sort(), before, 'nothing new was measured from the benchmark\'s copy of the site');
+  } finally {
+    fs.rmSync(fresh, { recursive: true, force: true });
+  }
 });

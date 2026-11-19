@@ -9,7 +9,7 @@ import { DRIFT_SETTINGS } from '../drift.mjs';
 import { PROMPT } from './arms.mjs';
 import { ensureSiteTemplate } from './templates.mjs';
 import { buildTaskWorkspace } from './workspace.mjs';
-import { scoreTaskWorkspace } from './score.mjs';
+import { scoreTaskWorkspace, warmScorer } from './score.mjs';
 
 function chosenDrift() {
   const { chosen } = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'study2', 'drift.json'), 'utf8'));
@@ -43,6 +43,8 @@ export function studyTwo({ tasks, drift = chosenDrift() }) {
       return ensureSiteTemplate({ site: t.site, arm: run.arm, drift: baselines(t), cacheRoot: path.join(benchRoot, '.cache', 'runner'), log });
     },
     workspace: ({ benchRoot, run, templateDir, runDir }) => buildTaskWorkspace({ task: taskOf(run), arm: run.arm, templateDir, runDir, benchRoot }),
+    // before any agent runs: every measurement scoring will need of the benchmark's site
+    prepareTask: ({ run }) => warmScorer({ task: taskOf(run) }),
     score: ({ run, ws }) => scoreTaskWorkspace({ task: taskOf(run), ws }),
     recordFields: (scored, run) => {
       const t = taskOf(run);

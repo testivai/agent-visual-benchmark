@@ -57,6 +57,13 @@ export async function executePlan({
     const key = study.templateKey(run);
     if (!templates[key]) templates[key] = await study.template({ benchRoot, run, log });
   }
+  // anything the study needs ready before any agent starts (study 2: the scorer's measurements)
+  const prepared = new Set();
+  for (const run of pending) {
+    if (!study.prepareTask || prepared.has(run.task)) continue;
+    prepared.add(run.task);
+    await study.prepareTask({ benchRoot, run, log });
+  }
   await pool(pending, config.concurrency, async (run) => {
     let attempt = nextAttempt(readRecords(file), run.runId);
     let waits = 0;

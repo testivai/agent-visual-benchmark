@@ -161,6 +161,10 @@ async function cmdPrepare(config, { setup }) {
     const t = await setup.study.template({ benchRoot: REPO_ROOT, run, log: console.log });
     console.log(`${key}: ${t.dir} (${t.baselineCount} baselines)`);
   }
+  if (!setup.study.prepareTask) return;
+  const tasks = [...new Map(setup.plan('full').runs.map((r) => [r.task, r])).values()];
+  for (const run of tasks) await setup.study.prepareTask({ benchRoot: REPO_ROOT, run, log: console.log });
+  console.log(`the scorer's measurements are ready for ${tasks.length} tasks`);
 }
 
 function cmdCheck(config) {
