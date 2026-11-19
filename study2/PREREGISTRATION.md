@@ -199,6 +199,10 @@ throwaway seed (1), to check that it works on them. Its tasks are not used and w
     tasks' mix.
   - **S2:** 10 tasks with two mutations and 10 with three.
   - **Validation:** all 72 tasks pass it (`study2/validate-tasks.mjs`).
+  - **Each arm's own visual test** (`--arms`) flags every one of the 72, in its real workspace.
+    - In 64, both arms flag both views.
+    - In 8 (S1 and S2), both arms flag one view: the change shows at one size only.
+    - The two arms never disagreed on a task.
 
 **Strata (Proposed), 72 tasks:**
 
