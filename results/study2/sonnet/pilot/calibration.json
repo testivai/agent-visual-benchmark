@@ -1,0 +1,22 @@
+{
+  "runs": 48,
+  "errors": 0,
+  "pooled": {
+    "successes": 35,
+    "runs": 36,
+    "rate": 0.9722222222222222
+  },
+  "decision": "harder",
+  "next": {
+    "rung": 1,
+    "what": "two mutations per S1 task, three in S2"
+  },
+  "note": null,
+  "costPerRun": 0.17810310000000001,
+  "spread": {
+    "sd": 0.13608276348795434,
+    "tasks": 6,
+    "powerAt60": 0.9999740751282538,
+    "tasksNeeded": 60
+  }
+}
