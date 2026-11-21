@@ -1,0 +1,20 @@
+{
+  "tasksFile": "study2/tasks.json",
+  "arms": [
+    "B",
+    "C"
+  ],
+  "repeats": {
+    "pilot": 3,
+    "full": 3
+  },
+  "pilot": {
+    "perStratum": 2
+  },
+  "seeds": {
+    "generation": 2026111901,
+    "pilot": 2026111902,
+    "order": 2026111903,
+    "extension": 2026111904
+  }
+}

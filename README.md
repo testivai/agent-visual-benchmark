@@ -12,7 +12,12 @@ scores what it leaves and analyses the results (part 2). The plan and the number
 are in [PREREGISTRATION.md](PREREGISTRATION.md); the tasks are listed in [TASKS.md](TASKS.md); the arms
 side by side in [arms/README.md](arms/README.md); how to run it in [RUNNING.md](RUNNING.md).
 
-The result will be published whichever way it falls. Two rules keep it worth publishing:
+**Result ([RESULTS.md](RESULTS.md)):** on Claude Sonnet 5.5, TestivAI did not measurably help over a
+plain pixel comparison: both solved almost every task (119 and 118 of 120 runs). Having a visual tool at
+all did help: the agent without one succeeded in 100 of 120 runs, failing mostly by changing things that
+were never broken.
+
+The result is published as preregistered, whichever way it fell. Two rules keep it worth publishing:
 
 1. **Scoring does not depend on the tools being compared.** A run is scored by Playwright assertions
    on the DOM, computed styles and element boxes. No TestivAI verdict and no screenshot comparison

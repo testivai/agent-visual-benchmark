@@ -1,0 +1,5071 @@
+{
+  "seed": 2026111901,
+  "generated": "2026-11-21T04:20:00.926Z",
+  "chromium": "153.0.8010.12",
+  "sites": {
+    "heroic-features": {
+      "rules": 2526,
+      "used": 88
+    },
+    "agency": {
+      "rules": 2412,
+      "used": 207
+    },
+    "full-width-pics": {
+      "rules": 2316,
+      "used": 70
+    },
+    "bare": {
+      "rules": 2315,
+      "used": 63
+    },
+    "shop-item": {
+      "rules": 2315,
+      "used": 127
+    },
+    "small-business": {
+      "rules": 2315,
+      "used": 84
+    }
+  },
+  "stats": {
+    "candidates": 215,
+    "kept": 84,
+    "byClass": {
+      "background": {
+        "kept": 2,
+        "rejected": {}
+      },
+      "border": {
+        "kept": 4,
+        "rejected": {
+          "arm B's check (Playwright) does not flag it": 3,
+          "no measured change on a rendered element": 3
+        }
+      },
+      "colour": {
+        "kept": 11,
+        "rejected": {
+          "neither arm's check flags it": 2,
+          "no measured change on a rendered element": 75,
+          "arm B's check (Playwright) does not flag it": 1
+        }
+      },
+      "display-and-flex": {
+        "kept": 8,
+        "rejected": {
+          "no measured change on a rendered element": 7
+        }
+      },
+      "font-size": {
+        "kept": 9,
+        "rejected": {
+          "no measured change on a rendered element": 1
+        }
+      },
+      "font-weight": {
+        "kept": 6,
+        "rejected": {
+          "no measured change on a rendered element": 2
+        }
+      },
+      "letter-spacing": {
+        "kept": 1,
+        "rejected": {
+          "no pixel changed": 1
+        }
+      },
+      "line-height": {
+        "kept": 8,
+        "rejected": {
+          "no pixel changed": 2
+        }
+      },
+      "margin": {
+        "kept": 10,
+        "rejected": {
+          "no measured change on a rendered element": 5
+        }
+      },
+      "opacity": {
+        "kept": 0,
+        "rejected": {
+          "no measured change on a rendered element": 6
+        }
+      },
+      "overflow": {
+        "kept": 0,
+        "rejected": {
+          "no measured change on a rendered element": 4
+        }
+      },
+      "padding": {
+        "kept": 6,
+        "rejected": {
+          "no measured change on a rendered element": 4
+        }
+      },
+      "position-and-z-index": {
+        "kept": 7,
+        "rejected": {
+          "no measured change on a rendered element": 5
+        }
+      },
+      "text-transform": {
+        "kept": 2,
+        "rejected": {
+          "no pixel changed": 4
+        }
+      },
+      "width": {
+        "kept": 10,
+        "rejected": {
+          "no measured change on a rendered element": 6
+        }
+      }
+    }
+  },
+  "dead": {
+    "heroic-features": [
+      "background",
+      "font-weight",
+      "letter-spacing",
+      "border",
+      "opacity",
+      "overflow",
+      "text-transform"
+    ],
+    "agency": [
+      "overflow"
+    ],
+    "full-width-pics": [
+      "background",
+      "letter-spacing",
+      "position-and-z-index",
+      "border",
+      "opacity",
+      "overflow",
+      "text-transform"
+    ],
+    "bare": [
+      "background",
+      "letter-spacing",
+      "line-height",
+      "padding",
+      "opacity",
+      "overflow",
+      "text-transform"
+    ],
+    "shop-item": [
+      "letter-spacing",
+      "opacity",
+      "overflow"
+    ],
+    "small-business": [
+      "background",
+      "font-weight",
+      "letter-spacing",
+      "border",
+      "opacity",
+      "overflow",
+      "text-transform"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "s2t01",
+      "stratum": "S2",
+      "site": "small-business",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 716,
+          "selector": ".navbar-expand-lg .navbar-nav",
+          "media": "(min-width: 992px)",
+          "class": "display-and-flex",
+          "property": "flex-direction",
+          "from": "row",
+          "to": "column",
+          "valueStart": 88311,
+          "valueEnd": 88314,
+          "effect": {
+            "measured": 62,
+            "elements": 50,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 859507,
+                "playwright": true,
+                "testivai": 816033
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 559,
+          "selector": ".btn-primary",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-btn-bg",
+          "from": "#0d6efd",
+          "to": "#fd9c0d",
+          "valueStart": 58731,
+          "valueEnd": 58738,
+          "effect": {
+            "measured": 8,
+            "elements": 8,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 11417,
+                "playwright": true,
+                "testivai": 11051
+              },
+              "index.html@mobile": {
+                "any": 11417,
+                "playwright": true,
+                "testivai": 11051
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 70,
+        "elements": 54,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 859507,
+            "playwright": true,
+            "testivai": 816019
+          },
+          "index.html@mobile": {
+            "any": 11417,
+            "playwright": true,
+            "testivai": 11051
+          }
+        }
+      },
+      "rejected": [
+        {
+          "ruleId": 680,
+          "selector": ".navbar > .container, .navbar > .container-fluid, .navbar > .container-sm, .navbar > .container-md, .navbar > .container-lg, .navbar > .container-xl, .navbar > .container-xxl",
+          "media": null,
+          "class": "display-and-flex",
+          "property": "flex-wrap",
+          "from": "inherit",
+          "to": "nowrap",
+          "valueStart": 83522,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-secondary-rgb",
+          "from": "108, 117, 125",
+          "to": "130, 139, 147",
+          "valueStart": 1288,
+          "reason": "neither arm's check flags it"
+        },
+        {
+          "ruleId": 679,
+          "selector": ".navbar",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-navbar-disabled-color",
+          "from": "rgba(0, 0, 0, 0.3)",
+          "to": "rgba(255, 255, 255, 0.3)",
+          "valueStart": 82197,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-light",
+          "from": "#f8f9fa",
+          "to": "#faf9f8",
+          "valueStart": 1201,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 559,
+          "selector": ".btn-primary",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-btn-disabled-border-color",
+          "from": "#0d6efd",
+          "to": "#fd9c0d",
+          "valueStart": 59184,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 550,
+          "selector": ".btn",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-btn-color",
+          "from": "#212529",
+          "to": "#d6dade",
+          "valueStart": 56066,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-white",
+          "from": "#fff",
+          "to": "#000000",
+          "valueStart": 750,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-black",
+          "from": "#000",
+          "to": "#ffffff",
+          "valueStart": 730,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-gray-200",
+          "from": "#e9ecef",
+          "to": "#efece9",
+          "valueStart": 848,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t02",
+      "stratum": "S4",
+      "site": "full-width-pics",
+      "drift": true,
+      "mutations": [],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t03",
+      "stratum": "S1",
+      "site": "agency",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 2328,
+          "selector": "#mainNav .navbar-nav .nav-item .nav-link",
+          "media": null,
+          "class": "letter-spacing",
+          "property": "letter-spacing",
+          "from": "0.0625em",
+          "to": "0.094em",
+          "valueStart": 239637,
+          "valueEnd": 239645,
+          "effect": {
+            "measured": 32,
+            "elements": 11,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 2963,
+                "playwright": true,
+                "testivai": 2595
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 2326,
+          "selector": "#mainNav .navbar-brand",
+          "media": null,
+          "class": "letter-spacing",
+          "property": "letter-spacing",
+          "from": "0.0625em",
+          "to": "0.094em",
+          "valueStart": 239250,
+          "reason": "no pixel changed"
+        }
+      ]
+    },
+    {
+      "id": "s2t04",
+      "stratum": "S1",
+      "site": "shop-item",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 413,
+          "selector": ".form-control",
+          "media": null,
+          "class": "background",
+          "property": "background-color",
+          "from": "#fff",
+          "to": "#000000",
+          "valueStart": 32620,
+          "valueEnd": 32624,
+          "effect": {
+            "measured": 2,
+            "elements": 2,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 1645,
+                "playwright": true,
+                "testivai": 1638
+              },
+              "index.html@mobile": {
+                "any": 1645,
+                "playwright": true,
+                "testivai": 1638
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 419,
+          "selector": ".form-control::-moz-placeholder",
+          "media": null,
+          "class": "opacity",
+          "property": "opacity",
+          "from": "1",
+          "to": "0.3",
+          "valueStart": 33380,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 4,
+          "selector": "hr",
+          "media": null,
+          "class": "opacity",
+          "property": "opacity",
+          "from": "0.25",
+          "to": "1",
+          "valueStart": 3301,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 631,
+          "selector": ".dropdown-divider",
+          "media": null,
+          "class": "opacity",
+          "property": "opacity",
+          "from": "1",
+          "to": "0.3",
+          "valueStart": 74336,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 420,
+          "selector": ".form-control::placeholder",
+          "media": null,
+          "class": "opacity",
+          "property": "opacity",
+          "from": "1",
+          "to": "0.3",
+          "valueStart": 33443,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t05",
+      "stratum": "S3",
+      "site": "bare",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 755,
+          "selector": ".navbar-dark",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-navbar-brand-color",
+          "from": "#fff",
+          "to": "#000000",
+          "valueStart": 92835,
+          "valueEnd": 92839,
+          "effect": {
+            "measured": 2,
+            "elements": 2,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 1040,
+                "playwright": true,
+                "testivai": 958
+              },
+              "index.html@mobile": {
+                "any": 1040,
+                "playwright": true,
+                "testivai": 958
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 631,
+          "selector": ".dropdown-divider",
+          "media": null,
+          "class": "overflow",
+          "property": "overflow",
+          "from": "hidden",
+          "to": "visible",
+          "valueStart": 74247,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-light-rgb",
+          "from": "248, 249, 250",
+          "to": "250, 249, 248",
+          "valueStart": 1420,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-warning",
+          "from": "#ffc107",
+          "to": "#0745ff",
+          "valueStart": 1124,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-black",
+          "from": "#000",
+          "to": "#ffffff",
+          "valueStart": 700,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-gray-600",
+          "from": "#6c757d",
+          "to": "#828b93",
+          "valueStart": 922,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-success-rgb",
+          "from": "25, 135, 84",
+          "to": "135, 25, 76",
+          "valueStart": 1293,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-red",
+          "from": "#dc3545",
+          "to": "#35dccc",
+          "valueStart": 562,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-white-rgb",
+          "from": "255, 255, 255",
+          "to": "0, 0, 0",
+          "valueStart": 1482,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-info-rgb",
+          "from": "13, 202, 240",
+          "to": "240, 51, 13",
+          "valueStart": 1323,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t06",
+      "stratum": "S4",
+      "site": "agency",
+      "drift": true,
+      "mutations": [],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t07",
+      "stratum": "S3",
+      "site": "bare",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 5,
+          "selector": "h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1",
+          "media": null,
+          "class": "margin",
+          "property": "margin-bottom",
+          "from": "0.5rem",
+          "to": "0.75rem",
+          "valueStart": 3384,
+          "valueEnd": 3390,
+          "effect": {
+            "measured": 8,
+            "elements": 8,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 4912,
+                "playwright": true,
+                "testivai": 4058
+              },
+              "index.html@mobile": {
+                "any": 4956,
+                "playwright": true,
+                "testivai": 4041
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 631,
+          "selector": ".dropdown-divider",
+          "media": null,
+          "class": "opacity",
+          "property": "opacity",
+          "from": "1",
+          "to": "0.3",
+          "valueStart": 74321,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 4,
+          "selector": "hr",
+          "media": null,
+          "class": "opacity",
+          "property": "opacity",
+          "from": "0.25",
+          "to": "1",
+          "valueStart": 3286,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t08",
+      "stratum": "S1",
+      "site": "agency",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 2320,
+          "selector": ".page-section h3.section-subheading, .page-section .section-subheading.h3",
+          "media": null,
+          "class": "margin",
+          "property": "margin-bottom",
+          "from": "4rem",
+          "to": "6rem",
+          "valueStart": 238043,
+          "valueEnd": 238047,
+          "effect": {
+            "measured": 397,
+            "elements": 380,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 2730352,
+                "playwright": true,
+                "testivai": 1744630
+              },
+              "index.html@mobile": {
+                "any": 1656562,
+                "playwright": true,
+                "testivai": 1095058
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t09",
+      "stratum": "S3",
+      "site": "small-business",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 97,
+          "selector": ".img-fluid",
+          "media": null,
+          "class": "width",
+          "property": "max-width",
+          "from": "100%",
+          "to": "150%",
+          "valueStart": 9838,
+          "valueEnd": 9842,
+          "effect": {
+            "measured": 80,
+            "elements": 74,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 744902,
+                "playwright": true,
+                "testivai": 701544
+              },
+              "index.html@mobile": {
+                "any": 579460,
+                "playwright": true,
+                "testivai": 500972
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 51,
+          "selector": "button, select",
+          "media": null,
+          "class": "text-transform",
+          "property": "text-transform",
+          "from": "none",
+          "to": "uppercase",
+          "valueStart": 6424,
+          "reason": "no pixel changed"
+        },
+        {
+          "ruleId": 103,
+          "selector": ".container-sm, .container",
+          "media": "(min-width: 576px)",
+          "class": "width",
+          "property": "max-width",
+          "from": "540px",
+          "to": "810px",
+          "valueStart": 10577,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 104,
+          "selector": ".container-md, .container-sm, .container",
+          "media": "(min-width: 768px)",
+          "class": "width",
+          "property": "max-width",
+          "from": "720px",
+          "to": "360px",
+          "valueStart": 10678,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t10",
+      "stratum": "S4",
+      "site": "small-business",
+      "drift": true,
+      "mutations": [],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t11",
+      "stratum": "S3",
+      "site": "full-width-pics",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 106,
+          "selector": ".container-xl, .container-lg, .container-md, .container-sm, .container",
+          "media": "(min-width: 1200px)",
+          "class": "width",
+          "property": "max-width",
+          "from": "1140px",
+          "to": "1710px",
+          "valueStart": 10929,
+          "valueEnd": 10935,
+          "effect": {
+            "measured": 64,
+            "elements": 29,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 224840,
+                "playwright": true,
+                "testivai": 215554
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t12",
+      "stratum": "S1",
+      "site": "heroic-features",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 2525,
+          "selector": ".feature",
+          "media": null,
+          "class": "display-and-flex",
+          "property": "display",
+          "from": "inline-flex",
+          "to": "inline-block",
+          "valueStart": 250101,
+          "valueEnd": 250112,
+          "effect": {
+            "measured": 113,
+            "elements": 86,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 146536,
+                "playwright": true,
+                "testivai": 86526
+              },
+              "index.html@mobile": {
+                "any": 151427,
+                "playwright": true,
+                "testivai": 79569
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t13",
+      "stratum": "S1",
+      "site": "small-business",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 5,
+          "selector": "h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1",
+          "media": null,
+          "class": "font-weight",
+          "property": "font-weight",
+          "from": "500",
+          "to": "300",
+          "valueStart": 3437,
+          "valueEnd": 3440,
+          "effect": {
+            "measured": 52,
+            "elements": 39,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 11560,
+                "playwright": true,
+                "testivai": 10053
+              },
+              "index.html@mobile": {
+                "any": 212747,
+                "playwright": true,
+                "testivai": 146954
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t14",
+      "stratum": "S1",
+      "site": "small-business",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 756,
+          "selector": ".card",
+          "media": null,
+          "class": "position-and-z-index",
+          "property": "position",
+          "from": "relative",
+          "to": "absolute",
+          "valueStart": 93845,
+          "valueEnd": 93853,
+          "effect": {
+            "measured": 181,
+            "elements": 60,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 619206,
+                "playwright": true,
+                "testivai": 575291
+              },
+              "index.html@mobile": {
+                "any": 239687,
+                "playwright": true,
+                "testivai": 194984
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t15",
+      "stratum": "S2",
+      "site": "full-width-pics",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 720,
+          "selector": ".navbar-expand-lg .navbar-collapse",
+          "media": "(min-width: 992px)",
+          "class": "display-and-flex",
+          "property": "display",
+          "from": "flex !important",
+          "to": "none !important",
+          "valueStart": 88679,
+          "valueEnd": 88694,
+          "effect": {
+            "measured": 60,
+            "elements": 8,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 898,
+                "playwright": true,
+                "testivai": 762
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 1355,
+          "selector": ".my-5",
+          "media": null,
+          "class": "margin",
+          "property": "margin-top",
+          "from": "3rem !important",
+          "to": "4.5rem !important",
+          "valueStart": 177133,
+          "valueEnd": 177148,
+          "effect": {
+            "measured": 52,
+            "elements": 48,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 420326,
+                "playwright": true,
+                "testivai": 409296
+              },
+              "index.html@mobile": {
+                "any": 177189,
+                "playwright": true,
+                "testivai": 166178
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 112,
+        "elements": 56,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 421224,
+            "playwright": true,
+            "testivai": 410058
+          },
+          "index.html@mobile": {
+            "any": 177189,
+            "playwright": true,
+            "testivai": 166178
+          }
+        }
+      },
+      "rejected": [
+        {
+          "ruleId": 1513,
+          "selector": ".rounded-circle",
+          "media": null,
+          "class": "border",
+          "property": "border-radius",
+          "from": "50% !important",
+          "to": "25% !important",
+          "valueStart": 187207,
+          "reason": "arm B's check (Playwright) does not flag it"
+        },
+        {
+          "ruleId": 688,
+          "selector": ".navbar-collapse",
+          "media": null,
+          "class": "display-and-flex",
+          "property": "align-items",
+          "from": "center",
+          "to": "flex-start",
+          "valueStart": 84802,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 20,
+          "selector": "ol, ul, dl",
+          "media": null,
+          "class": "margin",
+          "property": "margin-bottom",
+          "from": "1rem",
+          "to": "1.5rem",
+          "valueStart": 4429,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 1373,
+          "selector": ".mb-2",
+          "media": null,
+          "class": "margin",
+          "property": "margin-bottom",
+          "from": "0.5rem !important",
+          "to": "0.75rem !important",
+          "valueStart": 177997,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t16",
+      "stratum": "S2",
+      "site": "bare",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 5,
+          "selector": "h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1",
+          "media": null,
+          "class": "line-height",
+          "property": "line-height",
+          "from": "1.2",
+          "to": "1.8",
+          "valueStart": 3427,
+          "valueEnd": 3430,
+          "effect": {
+            "measured": 15,
+            "elements": 10,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 17342,
+                "playwright": true,
+                "testivai": 15538
+              },
+              "index.html@mobile": {
+                "any": 13204,
+                "playwright": true,
+                "testivai": 11448
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 590,
+          "selector": ".dropdown-toggle::after",
+          "media": null,
+          "class": "border",
+          "property": "border-right",
+          "from": "0.3em solid transparent",
+          "to": "0.45em solid transparent",
+          "valueStart": 68914,
+          "valueEnd": 68937,
+          "effect": {
+            "measured": 10,
+            "elements": 7,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 1466,
+                "playwright": true,
+                "testivai": 1169
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 680,
+          "selector": ".navbar > .container, .navbar > .container-fluid, .navbar > .container-sm, .navbar > .container-md, .navbar > .container-lg, .navbar > .container-xl, .navbar > .container-xxl",
+          "media": null,
+          "class": "display-and-flex",
+          "property": "justify-content",
+          "from": "space-between",
+          "to": "flex-end",
+          "valueStart": 83543,
+          "valueEnd": 83556,
+          "effect": {
+            "measured": 1,
+            "elements": 1,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              },
+              "index.html@mobile": {
+                "any": 2042,
+                "playwright": true,
+                "testivai": 1870
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 26,
+        "elements": 18,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 18808,
+            "playwright": true,
+            "testivai": 16707
+          },
+          "index.html@mobile": {
+            "any": 15246,
+            "playwright": true,
+            "testivai": 13318
+          }
+        }
+      },
+      "rejected": [
+        {
+          "ruleId": 689,
+          "selector": ".navbar-toggler",
+          "media": null,
+          "class": "line-height",
+          "property": "line-height",
+          "from": "1",
+          "to": "0.5",
+          "valueStart": 84944,
+          "reason": "no pixel changed"
+        },
+        {
+          "ruleId": 19,
+          "selector": "ol, ul",
+          "media": null,
+          "class": "padding",
+          "property": "padding-left",
+          "from": "2rem",
+          "to": "1rem",
+          "valueStart": 4340,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 590,
+          "selector": ".dropdown-toggle::after",
+          "media": null,
+          "class": "border",
+          "property": "border-top",
+          "from": "0.3em solid",
+          "to": "0.15em solid",
+          "valueStart": 68885,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 19,
+          "selector": "ol, ul",
+          "media": null,
+          "class": "padding",
+          "property": "padding-left",
+          "from": "2rem",
+          "to": "3rem",
+          "valueStart": 4340,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 679,
+          "selector": ".navbar",
+          "media": null,
+          "class": "display-and-flex",
+          "property": "justify-content",
+          "from": "space-between",
+          "to": "flex-end",
+          "valueStart": 83202,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t17",
+      "stratum": "S2",
+      "site": "heroic-features",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 1375,
+          "selector": ".mb-4",
+          "media": null,
+          "class": "margin",
+          "property": "margin-bottom",
+          "from": "1.5rem !important",
+          "to": "0.75rem !important",
+          "valueStart": 178089,
+          "valueEnd": 178106,
+          "effect": {
+            "measured": 110,
+            "elements": 83,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 274527,
+                "playwright": true,
+                "testivai": 153045
+              },
+              "index.html@mobile": {
+                "any": 258541,
+                "playwright": true,
+                "testivai": 123312
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 756,
+          "selector": ".card",
+          "media": null,
+          "class": "position-and-z-index",
+          "property": "position",
+          "from": "relative",
+          "to": "absolute",
+          "valueStart": 93848,
+          "valueEnd": 93856,
+          "effect": {
+            "measured": 280,
+            "elements": 86,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 525233,
+                "playwright": true,
+                "testivai": 258744
+              },
+              "index.html@mobile": {
+                "any": 292345,
+                "playwright": true,
+                "testivai": 206804
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 286,
+        "elements": 86,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 527122,
+            "playwright": true,
+            "testivai": 258785
+          },
+          "index.html@mobile": {
+            "any": 289807,
+            "playwright": true,
+            "testivai": 204376
+          }
+        }
+      },
+      "rejected": [
+        {
+          "ruleId": 51,
+          "selector": "button, select",
+          "media": null,
+          "class": "text-transform",
+          "property": "text-transform",
+          "from": "none",
+          "to": "uppercase",
+          "valueStart": 6427,
+          "reason": "no pixel changed"
+        }
+      ]
+    },
+    {
+      "id": "s2t18",
+      "stratum": "S1",
+      "site": "heroic-features",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 85,
+          "selector": ".display-5",
+          "media": "(min-width: 1200px)",
+          "class": "font-size",
+          "property": "font-size",
+          "from": "3rem",
+          "to": "4.5rem",
+          "valueStart": 9073,
+          "valueEnd": 9077,
+          "effect": {
+            "measured": 55,
+            "elements": 50,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 411069,
+                "playwright": true,
+                "testivai": 196138
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 9,
+          "selector": "h2, .h2",
+          "media": "(min-width: 1200px)",
+          "class": "font-size",
+          "property": "font-size",
+          "from": "2rem",
+          "to": "3rem",
+          "valueStart": 3693,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t19",
+      "stratum": "S2",
+      "site": "small-business",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 689,
+          "selector": ".navbar-toggler",
+          "media": null,
+          "class": "line-height",
+          "property": "line-height",
+          "from": "1",
+          "to": "1.5",
+          "valueStart": 84974,
+          "valueEnd": 84975,
+          "effect": {
+            "measured": 44,
+            "elements": 42,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              },
+              "index.html@mobile": {
+                "any": 62184,
+                "playwright": true,
+                "testivai": 49050
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 1355,
+          "selector": ".my-5",
+          "media": null,
+          "class": "margin",
+          "property": "margin-bottom",
+          "from": "3rem !important",
+          "to": "1.5rem !important",
+          "valueStart": 177164,
+          "valueEnd": 177179,
+          "effect": {
+            "measured": 54,
+            "elements": 54,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 158654,
+                "playwright": true,
+                "testivai": 115778
+              },
+              "index.html@mobile": {
+                "any": 117656,
+                "playwright": true,
+                "testivai": 71259
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 72,
+        "elements": 69,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 158654,
+            "playwright": true,
+            "testivai": 115778
+          },
+          "index.html@mobile": {
+            "any": 139153,
+            "playwright": true,
+            "testivai": 89634
+          }
+        }
+      },
+      "rejected": []
+    },
+    {
+      "id": "s2t20",
+      "stratum": "S3",
+      "site": "shop-item",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-dark-rgb",
+          "from": "33, 37, 41",
+          "to": "214, 218, 222",
+          "valueStart": 1467,
+          "valueEnd": 1477,
+          "effect": {
+            "measured": 7,
+            "elements": 7,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 155421,
+                "playwright": true,
+                "testivai": 155116
+              },
+              "index.html@mobile": {
+                "any": 48174,
+                "playwright": true,
+                "testivai": 47891
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 592,
+          "selector": ".dropdown-menu",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-dropdown-link-hover-color",
+          "from": "#1e2125",
+          "to": "#dadde1",
+          "valueStart": 69781,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 420,
+          "selector": ".form-control::placeholder",
+          "media": null,
+          "class": "colour",
+          "property": "color",
+          "from": "#6c757d",
+          "to": "#828b93",
+          "valueStart": 33423,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-indigo",
+          "from": "#6610f2",
+          "to": "#9cf210",
+          "valueStart": 510,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 550,
+          "selector": ".btn",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-btn-color",
+          "from": "#212529",
+          "to": "#d6dade",
+          "valueStart": 56051,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-black-rgb",
+          "from": "0, 0, 0",
+          "to": "255, 255, 255",
+          "valueStart": 1530,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 592,
+          "selector": ".dropdown-menu",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-dropdown-link-hover-bg",
+          "from": "#e9ecef",
+          "to": "#efece9",
+          "valueStart": 69821,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-success",
+          "from": "#198754",
+          "to": "#87194c",
+          "valueStart": 1092,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 592,
+          "selector": ".dropdown-menu",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-dropdown-bg",
+          "from": "#fff",
+          "to": "#000000",
+          "valueStart": 69334,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t21",
+      "stratum": "S2",
+      "site": "full-width-pics",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 1477,
+          "selector": ".text-white-50",
+          "media": null,
+          "class": "colour",
+          "property": "color",
+          "from": "rgba(255, 255, 255, 0.5) !important",
+          "to": "rgba(0, 0, 0, 0.5) !important",
+          "valueStart": 184191,
+          "valueEnd": 184226,
+          "effect": {
+            "measured": 2,
+            "elements": 2,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 1117,
+                "playwright": true,
+                "testivai": 893
+              },
+              "index.html@mobile": {
+                "any": 1117,
+                "playwright": true,
+                "testivai": 893
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 689,
+          "selector": ".navbar-toggler",
+          "media": null,
+          "class": "line-height",
+          "property": "line-height",
+          "from": "1",
+          "to": "1.5",
+          "valueStart": 84977,
+          "valueEnd": 84978,
+          "effect": {
+            "measured": 31,
+            "elements": 29,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              },
+              "index.html@mobile": {
+                "any": 50080,
+                "playwright": true,
+                "testivai": 40611
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 33,
+        "elements": 30,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 1117,
+            "playwright": true,
+            "testivai": 893
+          },
+          "index.html@mobile": {
+            "any": 50432,
+            "playwright": true,
+            "testivai": 41214
+          }
+        }
+      },
+      "rejected": [
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-light",
+          "from": "#f8f9fa",
+          "to": "#faf9f8",
+          "valueStart": 1204,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-gradient",
+          "from": "linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0))",
+          "to": "linear-gradient(180deg, rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0))",
+          "valueStart": 1970,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 679,
+          "selector": ".navbar",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-navbar-toggler-border-color",
+          "from": "rgba(0, 0, 0, 0.1)",
+          "to": "rgba(255, 255, 255, 0.1)",
+          "valueStart": 82960,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-body-bg-rgb",
+          "from": "255, 255, 255",
+          "to": "0, 0, 0",
+          "valueStart": 1612,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-purple",
+          "from": "#6f42c1",
+          "to": "#94c142",
+          "valueStart": 552,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-white",
+          "from": "#fff",
+          "to": "#000000",
+          "valueStart": 753,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-gray-300",
+          "from": "#dee2e6",
+          "to": "#191d21",
+          "valueStart": 877,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 679,
+          "selector": ".navbar",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-navbar-brand-hover-color",
+          "from": "rgba(0, 0, 0, 0.9)",
+          "to": "rgba(255, 255, 255, 0.9)",
+          "valueStart": 82468,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 679,
+          "selector": ".navbar",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-navbar-hover-color",
+          "from": "rgba(0, 0, 0, 0.7)",
+          "to": "rgba(255, 255, 255, 0.7)",
+          "valueStart": 82150,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-black",
+          "from": "#000",
+          "to": "#ffffff",
+          "valueStart": 733,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-border-color",
+          "from": "#dee2e6",
+          "to": "#191d21",
+          "valueStart": 2312,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-teal",
+          "from": "#20c997",
+          "to": "#c92052",
+          "valueStart": 688,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-indigo",
+          "from": "#6610f2",
+          "to": "#9cf210",
+          "valueStart": 528,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-info-rgb",
+          "from": "13, 202, 240",
+          "to": "240, 51, 13",
+          "valueStart": 1356,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-gray-100",
+          "from": "#f8f9fa",
+          "to": "#faf9f8",
+          "valueStart": 825,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-link-color",
+          "from": "#0d6efd",
+          "to": "#fd9c0d",
+          "valueStart": 2591,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t22",
+      "stratum": "S4",
+      "site": "shop-item",
+      "drift": true,
+      "mutations": [],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t23",
+      "stratum": "S2",
+      "site": "heroic-features",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 755,
+          "selector": ".navbar-dark",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-navbar-active-color",
+          "from": "#fff",
+          "to": "#000000",
+          "valueStart": 92835,
+          "valueEnd": 92839,
+          "effect": {
+            "measured": 1,
+            "elements": 1,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 261,
+                "playwright": true,
+                "testivai": 236
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 1480,
+          "selector": ".fw-bold",
+          "media": null,
+          "class": "font-weight",
+          "property": "font-weight",
+          "from": "700 !important",
+          "to": "400 !important",
+          "valueStart": 183621,
+          "valueEnd": 183635,
+          "effect": {
+            "measured": 93,
+            "elements": 57,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 17661,
+                "playwright": true,
+                "testivai": 14965
+              },
+              "index.html@mobile": {
+                "any": 309714,
+                "playwright": true,
+                "testivai": 133106
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 5,
+          "selector": "h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1",
+          "media": null,
+          "class": "line-height",
+          "property": "line-height",
+          "from": "1.2",
+          "to": "0.6",
+          "valueStart": 3460,
+          "valueEnd": 3463,
+          "effect": {
+            "measured": 143,
+            "elements": 83,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 312266,
+                "playwright": true,
+                "testivai": 171700
+              },
+              "index.html@mobile": {
+                "any": 265837,
+                "playwright": true,
+                "testivai": 128526
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 202,
+        "elements": 93,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 316817,
+            "playwright": true,
+            "testivai": 175525
+          },
+          "index.html@mobile": {
+            "any": 400954,
+            "playwright": true,
+            "testivai": 199980
+          }
+        }
+      },
+      "rejected": [
+        {
+          "ruleId": 84,
+          "selector": ".display-5",
+          "media": null,
+          "class": "font-weight",
+          "property": "font-weight",
+          "from": "300",
+          "to": "700",
+          "valueStart": 8987,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t24",
+      "stratum": "S2",
+      "site": "shop-item",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 590,
+          "selector": ".dropdown-toggle::after",
+          "media": null,
+          "class": "border",
+          "property": "border-left",
+          "from": "0.3em solid transparent",
+          "to": "0.45em solid transparent",
+          "valueStart": 68989,
+          "valueEnd": 69012,
+          "effect": {
+            "measured": 3,
+            "elements": 3,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 25,
+                "playwright": true,
+                "testivai": 22
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 1395,
+          "selector": ".px-4",
+          "media": null,
+          "class": "padding",
+          "property": "padding-left",
+          "from": "1.5rem !important",
+          "to": "2.25rem !important",
+          "valueStart": 179102,
+          "valueEnd": 179119,
+          "effect": {
+            "measured": 194,
+            "elements": 63,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              },
+              "index.html@mobile": {
+                "any": 131107,
+                "playwright": true,
+                "testivai": 87952
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 683,
+          "selector": ".navbar-nav",
+          "media": null,
+          "class": "display-and-flex",
+          "property": "display",
+          "from": "flex",
+          "to": "none",
+          "valueStart": 84262,
+          "valueEnd": 84266,
+          "effect": {
+            "measured": 59,
+            "elements": 11,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 2410,
+                "playwright": true,
+                "testivai": 2132
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 253,
+        "elements": 74,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 2410,
+            "playwright": true,
+            "testivai": 2132
+          },
+          "index.html@mobile": {
+            "any": 131107,
+            "playwright": true,
+            "testivai": 87952
+          }
+        }
+      },
+      "rejected": [
+        {
+          "ruleId": 413,
+          "selector": ".form-control",
+          "media": null,
+          "class": "border",
+          "property": "border-radius",
+          "from": "0.375rem",
+          "to": "0.188rem",
+          "valueStart": 32788,
+          "reason": "arm B's check (Playwright) does not flag it"
+        },
+        {
+          "ruleId": 590,
+          "selector": ".dropdown-toggle::after",
+          "media": null,
+          "class": "border",
+          "property": "border-top",
+          "from": "0.3em solid",
+          "to": "0.15em solid",
+          "valueStart": 68900,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 4,
+          "selector": "hr",
+          "media": null,
+          "class": "border",
+          "property": "border-top",
+          "from": "1px solid",
+          "to": "2px solid",
+          "valueStart": 3279,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 413,
+          "selector": ".form-control",
+          "media": null,
+          "class": "border",
+          "property": "border",
+          "from": "1px solid #ced4da",
+          "to": "0px solid #ced4da",
+          "valueStart": 32668,
+          "reason": "arm B's check (Playwright) does not flag it"
+        },
+        {
+          "ruleId": 631,
+          "selector": ".dropdown-divider",
+          "media": null,
+          "class": "overflow",
+          "property": "overflow",
+          "from": "hidden",
+          "to": "visible",
+          "valueStart": 74262,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 631,
+          "selector": ".dropdown-divider",
+          "media": null,
+          "class": "overflow",
+          "property": "overflow",
+          "from": "hidden",
+          "to": "visible",
+          "valueStart": 74262,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 632,
+          "selector": ".dropdown-item",
+          "media": null,
+          "class": "display-and-flex",
+          "property": "display",
+          "from": "block",
+          "to": "flex",
+          "valueStart": 74370,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 679,
+          "selector": ".navbar",
+          "media": null,
+          "class": "display-and-flex",
+          "property": "justify-content",
+          "from": "space-between",
+          "to": "center",
+          "valueStart": 83217,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t25",
+      "stratum": "S1",
+      "site": "agency",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 2370,
+          "selector": ".timeline > li .timeline-image h4, .timeline > li .timeline-image .h4",
+          "media": null,
+          "class": "font-size",
+          "property": "font-size",
+          "from": "10px",
+          "to": "5px",
+          "valueStart": 245562,
+          "valueEnd": 245566,
+          "effect": {
+            "measured": 5,
+            "elements": 1,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              },
+              "index.html@mobile": {
+                "any": 561,
+                "playwright": true,
+                "testivai": 398
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t26",
+      "stratum": "S4",
+      "site": "full-width-pics",
+      "drift": true,
+      "mutations": [],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t27",
+      "stratum": "S1",
+      "site": "full-width-pics",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 5,
+          "selector": "h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1",
+          "media": null,
+          "class": "font-weight",
+          "property": "font-weight",
+          "from": "500",
+          "to": "300",
+          "valueStart": 3440,
+          "valueEnd": 3443,
+          "effect": {
+            "measured": 8,
+            "elements": 4,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 10967,
+                "playwright": true,
+                "testivai": 9679
+              },
+              "index.html@mobile": {
+                "any": 7049,
+                "playwright": true,
+                "testivai": 6074
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t28",
+      "stratum": "S3",
+      "site": "heroic-features",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 1424,
+          "selector": ".p-4",
+          "media": null,
+          "class": "padding",
+          "property": "padding",
+          "from": "1.5rem !important",
+          "to": "0.75rem !important",
+          "valueStart": 180642,
+          "valueEnd": 180659,
+          "effect": {
+            "measured": 124,
+            "elements": 50,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              },
+              "index.html@mobile": {
+                "any": 436409,
+                "playwright": true,
+                "testivai": 223311
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t29",
+      "stratum": "S1",
+      "site": "bare",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 102,
+          "selector": ".container, .container-fluid, .container-xxl, .container-xl, .container-lg, .container-md, .container-sm",
+          "media": null,
+          "class": "width",
+          "property": "width",
+          "from": "100%",
+          "to": "150%",
+          "valueStart": 10325,
+          "valueEnd": 10329,
+          "effect": {
+            "measured": 19,
+            "elements": 6,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              },
+              "index.html@mobile": {
+                "any": 175616,
+                "playwright": true,
+                "testivai": 174144
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 19,
+          "selector": "ol, ul",
+          "media": null,
+          "class": "padding",
+          "property": "padding-left",
+          "from": "2rem",
+          "to": "3rem",
+          "valueStart": 4340,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t30",
+      "stratum": "S2",
+      "site": "agency",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 1459,
+          "selector": ".text-uppercase",
+          "media": null,
+          "class": "text-transform",
+          "property": "text-transform",
+          "from": "uppercase !important",
+          "to": "none !important",
+          "valueStart": 183032,
+          "valueEnd": 183052,
+          "effect": {
+            "measured": 90,
+            "elements": 27,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 54691,
+                "playwright": true,
+                "testivai": 51091
+              },
+              "index.html@mobile": {
+                "any": 38791,
+                "playwright": true,
+                "testivai": 35607
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 2369,
+          "selector": ".timeline > li .timeline-image",
+          "media": null,
+          "class": "position-and-z-index",
+          "property": "z-index",
+          "from": "100",
+          "to": "-1",
+          "valueStart": 245291,
+          "valueEnd": 245294,
+          "effect": {
+            "measured": 20,
+            "elements": 20,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 1560,
+                "playwright": true,
+                "testivai": 1265
+              },
+              "index.html@mobile": {
+                "any": 624,
+                "playwright": true,
+                "testivai": 506
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 110,
+        "elements": 47,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 56251,
+            "playwright": true,
+            "testivai": 52356
+          },
+          "index.html@mobile": {
+            "any": 39415,
+            "playwright": true,
+            "testivai": 36113
+          }
+        }
+      },
+      "rejected": [
+        {
+          "ruleId": 946,
+          "selector": ".modal",
+          "media": null,
+          "class": "overflow",
+          "property": "overflow-y",
+          "from": "auto",
+          "to": "hidden",
+          "valueStart": 126750,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 946,
+          "selector": ".modal",
+          "media": null,
+          "class": "overflow",
+          "property": "overflow-x",
+          "from": "hidden",
+          "to": "visible",
+          "valueStart": 126728,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t31",
+      "stratum": "S2",
+      "site": "bare",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 7,
+          "selector": "h1, .h1",
+          "media": "(min-width: 1200px)",
+          "class": "font-size",
+          "property": "font-size",
+          "from": "2.5rem",
+          "to": "1.25rem",
+          "valueStart": 3540,
+          "valueEnd": 3546,
+          "effect": {
+            "measured": 11,
+            "elements": 5,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 15514,
+                "playwright": true,
+                "testivai": 13910
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 5,
+          "selector": "h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1",
+          "media": null,
+          "class": "font-weight",
+          "property": "font-weight",
+          "from": "500",
+          "to": "300",
+          "valueStart": 3407,
+          "valueEnd": 3410,
+          "effect": {
+            "measured": 6,
+            "elements": 2,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 8698,
+                "playwright": true,
+                "testivai": 7786
+              },
+              "index.html@mobile": {
+                "any": 4274,
+                "playwright": true,
+                "testivai": 3544
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 15,
+        "elements": 6,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 15208,
+            "playwright": true,
+            "testivai": 13595
+          },
+          "index.html@mobile": {
+            "any": 4274,
+            "playwright": true,
+            "testivai": 3544
+          }
+        }
+      },
+      "rejected": [
+        {
+          "ruleId": 51,
+          "selector": "button, select",
+          "media": null,
+          "class": "text-transform",
+          "property": "text-transform",
+          "from": "none",
+          "to": "uppercase",
+          "valueStart": 6394,
+          "reason": "no pixel changed"
+        }
+      ]
+    },
+    {
+      "id": "s2t32",
+      "stratum": "S2",
+      "site": "small-business",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 1401,
+          "selector": ".py-4",
+          "media": null,
+          "class": "padding",
+          "property": "padding-bottom",
+          "from": "1.5rem !important",
+          "to": "2.25rem !important",
+          "valueStart": 179593,
+          "valueEnd": 179610,
+          "effect": {
+            "measured": 56,
+            "elements": 56,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 129682,
+                "playwright": true,
+                "testivai": 102294
+              },
+              "index.html@mobile": {
+                "any": 99107,
+                "playwright": true,
+                "testivai": 70396
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 7,
+          "selector": "h1, .h1",
+          "media": "(min-width: 1200px)",
+          "class": "font-size",
+          "property": "font-size",
+          "from": "2.5rem",
+          "to": "3.75rem",
+          "valueStart": 3570,
+          "valueEnd": 3576,
+          "effect": {
+            "measured": 42,
+            "elements": 37,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 718622,
+                "playwright": true,
+                "testivai": 675878
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 71,
+        "elements": 65,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 743270,
+            "playwright": true,
+            "testivai": 700459
+          },
+          "index.html@mobile": {
+            "any": 99107,
+            "playwright": true,
+            "testivai": 70396
+          }
+        }
+      },
+      "rejected": []
+    },
+    {
+      "id": "s2t33",
+      "stratum": "S2",
+      "site": "agency",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 2398,
+          "selector": "section#contact",
+          "media": null,
+          "class": "background",
+          "property": "background-color",
+          "from": "#212529",
+          "to": "#d6dade",
+          "valueStart": 248247,
+          "valueEnd": 248254,
+          "effect": {
+            "measured": 2,
+            "elements": 2,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 653639,
+                "playwright": true,
+                "testivai": 653061
+              },
+              "index.html@mobile": {
+                "any": 212591,
+                "playwright": true,
+                "testivai": 212017
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 108,
+          "selector": ".row",
+          "media": null,
+          "class": "display-and-flex",
+          "property": "flex-wrap",
+          "from": "wrap",
+          "to": "nowrap",
+          "valueStart": 11487,
+          "valueEnd": 11491,
+          "effect": {
+            "measured": 472,
+            "elements": 338,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 8982729,
+                "playwright": true,
+                "testivai": 8344695
+              },
+              "index.html@mobile": {
+                "any": 13328232,
+                "playwright": true,
+                "testivai": 19932003
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 474,
+        "elements": 338,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 9055763,
+            "playwright": true,
+            "testivai": 8491798
+          },
+          "index.html@mobile": {
+            "any": 13329023,
+            "playwright": true,
+            "testivai": 19925656
+          }
+        }
+      },
+      "rejected": [
+        {
+          "ruleId": 946,
+          "selector": ".modal",
+          "media": null,
+          "class": "overflow",
+          "property": "overflow-y",
+          "from": "auto",
+          "to": "hidden",
+          "valueStart": 126750,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 946,
+          "selector": ".modal",
+          "media": null,
+          "class": "overflow",
+          "property": "overflow-x",
+          "from": "hidden",
+          "to": "visible",
+          "valueStart": 126728,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t34",
+      "stratum": "S2",
+      "site": "heroic-features",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 106,
+          "selector": ".container-xl, .container-lg, .container-md, .container-sm, .container",
+          "media": "(min-width: 1200px)",
+          "class": "width",
+          "property": "max-width",
+          "from": "1140px",
+          "to": "570px",
+          "valueStart": 10929,
+          "valueEnd": 10935,
+          "effect": {
+            "measured": 207,
+            "elements": 60,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 1761394,
+                "playwright": true,
+                "testivai": 1082966
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 16,
+          "selector": "p",
+          "media": null,
+          "class": "margin",
+          "property": "margin-bottom",
+          "from": "1rem",
+          "to": "1.5rem",
+          "valueStart": 4050,
+          "valueEnd": 4054,
+          "effect": {
+            "measured": 96,
+            "elements": 96,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 157342,
+                "playwright": true,
+                "testivai": 76088
+              },
+              "index.html@mobile": {
+                "any": 122570,
+                "playwright": true,
+                "testivai": 59860
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 255,
+        "elements": 108,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 1764859,
+            "playwright": true,
+            "testivai": 1093104
+          },
+          "index.html@mobile": {
+            "any": 122570,
+            "playwright": true,
+            "testivai": 59860
+          }
+        }
+      },
+      "rejected": [
+        {
+          "ruleId": 1373,
+          "selector": ".mb-2",
+          "media": null,
+          "class": "margin",
+          "property": "margin-bottom",
+          "from": "0.5rem !important",
+          "to": "0.75rem !important",
+          "valueStart": 177997,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 1403,
+          "selector": ".mt-n4",
+          "media": null,
+          "class": "margin",
+          "property": "margin-top",
+          "from": "-1.5rem !important",
+          "to": "-2.25rem !important",
+          "valueStart": 179692,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 20,
+          "selector": "ol, ul, dl",
+          "media": null,
+          "class": "margin",
+          "property": "margin-bottom",
+          "from": "1rem",
+          "to": "0.5rem",
+          "valueStart": 4429,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t35",
+      "stratum": "S3",
+      "site": "agency",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 109,
+          "selector": ".row > *",
+          "media": null,
+          "class": "width",
+          "property": "width",
+          "from": "100%",
+          "to": "50%",
+          "valueStart": 11675,
+          "valueEnd": 11679,
+          "effect": {
+            "measured": 458,
+            "elements": 190,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              },
+              "index.html@mobile": {
+                "any": 3008813,
+                "playwright": true,
+                "testivai": 2213152
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t36",
+      "stratum": "S3",
+      "site": "small-business",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 9,
+          "selector": "h2, .h2",
+          "media": "(min-width: 1200px)",
+          "class": "font-size",
+          "property": "font-size",
+          "from": "2rem",
+          "to": "3rem",
+          "valueStart": 3690,
+          "valueEnd": 3694,
+          "effect": {
+            "measured": 39,
+            "elements": 27,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 146868,
+                "playwright": true,
+                "testivai": 109171
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t37",
+      "stratum": "S4",
+      "site": "heroic-features",
+      "drift": true,
+      "mutations": [],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t38",
+      "stratum": "S4",
+      "site": "heroic-features",
+      "drift": true,
+      "mutations": [],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t39",
+      "stratum": "S3",
+      "site": "full-width-pics",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 1402,
+          "selector": ".py-5",
+          "media": null,
+          "class": "padding",
+          "property": "padding-bottom",
+          "from": "3rem !important",
+          "to": "4.5rem !important",
+          "valueStart": 179676,
+          "valueEnd": 179691,
+          "effect": {
+            "measured": 48,
+            "elements": 40,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 526600,
+                "playwright": true,
+                "testivai": 517969
+              },
+              "index.html@mobile": {
+                "any": 199234,
+                "playwright": true,
+                "testivai": 190642
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 19,
+          "selector": "ol, ul",
+          "media": null,
+          "class": "padding",
+          "property": "padding-left",
+          "from": "2rem",
+          "to": "1rem",
+          "valueStart": 4373,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t40",
+      "stratum": "S4",
+      "site": "bare",
+      "drift": true,
+      "mutations": [],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t41",
+      "stratum": "S1",
+      "site": "shop-item",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 413,
+          "selector": ".form-control",
+          "media": null,
+          "class": "font-weight",
+          "property": "font-weight",
+          "from": "400",
+          "to": "700",
+          "valueStart": 32557,
+          "valueEnd": 32560,
+          "effect": {
+            "measured": 2,
+            "elements": 2,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 54,
+                "playwright": true,
+                "testivai": 39
+              },
+              "index.html@mobile": {
+                "any": 54,
+                "playwright": true,
+                "testivai": 39
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 631,
+          "selector": ".dropdown-divider",
+          "media": null,
+          "class": "overflow",
+          "property": "overflow",
+          "from": "hidden",
+          "to": "visible",
+          "valueStart": 74262,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t42",
+      "stratum": "S4",
+      "site": "small-business",
+      "drift": true,
+      "mutations": [],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t43",
+      "stratum": "S2",
+      "site": "bare",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 679,
+          "selector": ".navbar",
+          "media": null,
+          "class": "position-and-z-index",
+          "property": "position",
+          "from": "relative",
+          "to": "absolute",
+          "valueStart": 83114,
+          "valueEnd": 83122,
+          "effect": {
+            "measured": 49,
+            "elements": 26,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 106576,
+                "playwright": true,
+                "testivai": 104485
+              },
+              "index.html@mobile": {
+                "any": 42928,
+                "playwright": true,
+                "testivai": 41129
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 75,
+          "selector": ".lead",
+          "media": null,
+          "class": "font-size",
+          "property": "font-size",
+          "from": "1.25rem",
+          "to": "0.625rem",
+          "valueStart": 8197,
+          "valueEnd": 8204,
+          "effect": {
+            "measured": 20,
+            "elements": 8,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 5058,
+                "playwright": true,
+                "testivai": 4322
+              },
+              "index.html@mobile": {
+                "any": 4868,
+                "playwright": true,
+                "testivai": 4041
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 67,
+        "elements": 26,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 105787,
+            "playwright": true,
+            "testivai": 103827
+          },
+          "index.html@mobile": {
+            "any": 40860,
+            "playwright": true,
+            "testivai": 39349
+          }
+        }
+      },
+      "rejected": [
+        {
+          "ruleId": 51,
+          "selector": "button, select",
+          "media": null,
+          "class": "text-transform",
+          "property": "text-transform",
+          "from": "none",
+          "to": "uppercase",
+          "valueStart": 6394,
+          "reason": "no pixel changed"
+        }
+      ]
+    },
+    {
+      "id": "s2t44",
+      "stratum": "S4",
+      "site": "bare",
+      "drift": true,
+      "mutations": [],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t45",
+      "stratum": "S3",
+      "site": "full-width-pics",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 9,
+          "selector": "h2, .h2",
+          "media": "(min-width: 1200px)",
+          "class": "font-size",
+          "property": "font-size",
+          "from": "2rem",
+          "to": "1rem",
+          "valueStart": 3693,
+          "valueEnd": 3697,
+          "effect": {
+            "measured": 32,
+            "elements": 19,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 210834,
+                "playwright": true,
+                "testivai": 202275
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 679,
+          "selector": ".navbar",
+          "media": null,
+          "class": "position-and-z-index",
+          "property": "position",
+          "from": "relative",
+          "to": "static",
+          "valueStart": 83147,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 51,
+          "selector": "button, select",
+          "media": null,
+          "class": "text-transform",
+          "property": "text-transform",
+          "from": "none",
+          "to": "uppercase",
+          "valueStart": 6427,
+          "reason": "no pixel changed"
+        }
+      ]
+    },
+    {
+      "id": "s2t46",
+      "stratum": "S2",
+      "site": "full-width-pics",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 755,
+          "selector": ".navbar-dark",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-navbar-color",
+          "from": "rgba(255, 255, 255, 0.55)",
+          "to": "rgba(0, 0, 0, 0.55)",
+          "valueStart": 92669,
+          "valueEnd": 92694,
+          "effect": {
+            "measured": 4,
+            "elements": 4,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 646,
+                "playwright": true,
+                "testivai": 535
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 1355,
+          "selector": ".my-5",
+          "media": null,
+          "class": "margin",
+          "property": "margin-bottom",
+          "from": "3rem !important",
+          "to": "1.5rem !important",
+          "valueStart": 177167,
+          "valueEnd": 177182,
+          "effect": {
+            "measured": 44,
+            "elements": 40,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 404163,
+                "playwright": true,
+                "testivai": 395448
+              },
+              "index.html@mobile": {
+                "any": 162018,
+                "playwright": true,
+                "testivai": 153463
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 48,
+        "elements": 44,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 404809,
+            "playwright": true,
+            "testivai": 395983
+          },
+          "index.html@mobile": {
+            "any": 162018,
+            "playwright": true,
+            "testivai": 153463
+          }
+        }
+      },
+      "rejected": [
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-indigo",
+          "from": "#6610f2",
+          "to": "#9cf210",
+          "valueStart": 528,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-secondary-rgb",
+          "from": "108, 117, 125",
+          "to": "130, 139, 147",
+          "valueStart": 1291,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 679,
+          "selector": ".navbar",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-navbar-toggler-border-color",
+          "from": "rgba(0, 0, 0, 0.1)",
+          "to": "rgba(255, 255, 255, 0.1)",
+          "valueStart": 82960,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t47",
+      "stratum": "S3",
+      "site": "shop-item",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 14,
+          "selector": "h5, .h5",
+          "media": null,
+          "class": "font-size",
+          "property": "font-size",
+          "from": "1.25rem",
+          "to": "1.875rem",
+          "valueStart": 3950,
+          "valueEnd": 3957,
+          "effect": {
+            "measured": 143,
+            "elements": 85,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 188679,
+                "playwright": true,
+                "testivai": 146548
+              },
+              "index.html@mobile": {
+                "any": 170463,
+                "playwright": true,
+                "testivai": 111418
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t48",
+      "stratum": "S4",
+      "site": "shop-item",
+      "drift": true,
+      "mutations": [],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t49",
+      "stratum": "S3",
+      "site": "heroic-features",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 109,
+          "selector": ".row > *",
+          "media": null,
+          "class": "width",
+          "property": "width",
+          "from": "100%",
+          "to": "50%",
+          "valueStart": 11362,
+          "valueEnd": 11366,
+          "effect": {
+            "measured": 155,
+            "elements": 43,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              },
+              "index.html@mobile": {
+                "any": 372343,
+                "playwright": true,
+                "testivai": 269382
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t50",
+      "stratum": "S1",
+      "site": "full-width-pics",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 755,
+          "selector": ".navbar-dark",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-navbar-brand-color",
+          "from": "#fff",
+          "to": "#000000",
+          "valueStart": 92868,
+          "valueEnd": 92872,
+          "effect": {
+            "measured": 2,
+            "elements": 2,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 1040,
+                "playwright": true,
+                "testivai": 958
+              },
+              "index.html@mobile": {
+                "any": 1040,
+                "playwright": true,
+                "testivai": 958
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-gray-400",
+          "from": "#ced4da",
+          "to": "#252b31",
+          "valueStart": 903,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-gray-700",
+          "from": "#495057",
+          "to": "#a8afb6",
+          "valueStart": 981,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-indigo",
+          "from": "#6610f2",
+          "to": "#9cf210",
+          "valueStart": 528,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 679,
+          "selector": ".navbar",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-navbar-color",
+          "from": "rgba(0, 0, 0, 0.55)",
+          "to": "rgba(255, 255, 255, 0.55)",
+          "valueStart": 82102,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-link-color",
+          "from": "#0d6efd",
+          "to": "#fd9c0d",
+          "valueStart": 2591,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t51",
+      "stratum": "S1",
+      "site": "small-business",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 755,
+          "selector": ".navbar-dark",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-navbar-brand-color",
+          "from": "#fff",
+          "to": "#000000",
+          "valueStart": 92865,
+          "valueEnd": 92869,
+          "effect": {
+            "measured": 2,
+            "elements": 2,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 1040,
+                "playwright": true,
+                "testivai": 958
+              },
+              "index.html@mobile": {
+                "any": 1040,
+                "playwright": true,
+                "testivai": 958
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-danger",
+          "from": "#dc3545",
+          "to": "#35dccc",
+          "valueStart": 1178,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t52",
+      "stratum": "S2",
+      "site": "heroic-features",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 583,
+          "selector": ".collapse:not(.show)",
+          "media": null,
+          "class": "display-and-flex",
+          "property": "display",
+          "from": "none",
+          "to": "flex",
+          "valueStart": 68261,
+          "valueEnd": 68265,
+          "effect": {
+            "measured": 112,
+            "elements": 60,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              },
+              "index.html@mobile": {
+                "any": 494616,
+                "playwright": true,
+                "testivai": 264057
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 559,
+          "selector": ".btn-primary",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-btn-bg",
+          "from": "#0d6efd",
+          "to": "#fd9c0d",
+          "valueStart": 58734,
+          "valueEnd": 58741,
+          "effect": {
+            "measured": 2,
+            "elements": 2,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 6921,
+                "playwright": true,
+                "testivai": 6745
+              },
+              "index.html@mobile": {
+                "any": 6921,
+                "playwright": true,
+                "testivai": 6745
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 114,
+        "elements": 61,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 6921,
+            "playwright": true,
+            "testivai": 6745
+          },
+          "index.html@mobile": {
+            "any": 494616,
+            "playwright": true,
+            "testivai": 265211
+          }
+        }
+      },
+      "rejected": [
+        {
+          "ruleId": 756,
+          "selector": ".card",
+          "media": null,
+          "class": "display-and-flex",
+          "property": "flex-direction",
+          "from": "column",
+          "to": "row",
+          "valueStart": 93893,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 2525,
+          "selector": ".feature",
+          "media": null,
+          "class": "display-and-flex",
+          "property": "justify-content",
+          "from": "center",
+          "to": "flex-end",
+          "valueStart": 250156,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-purple",
+          "from": "#6f42c1",
+          "to": "#94c142",
+          "valueStart": 552,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-black-rgb",
+          "from": "0, 0, 0",
+          "to": "255, 255, 255",
+          "valueStart": 1548,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-gray",
+          "from": "#6c757d",
+          "to": "#828b93",
+          "valueStart": 772,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 550,
+          "selector": ".btn",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-btn-box-shadow",
+          "from": "inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075)",
+          "to": "inset 0 1px 0 rgba(0, 0, 0, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075)",
+          "valueStart": 56277,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 679,
+          "selector": ".navbar",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-navbar-hover-color",
+          "from": "rgba(0, 0, 0, 0.7)",
+          "to": "rgba(255, 255, 255, 0.7)",
+          "valueStart": 82150,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-gray-300",
+          "from": "#dee2e6",
+          "to": "#191d21",
+          "valueStart": 877,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 679,
+          "selector": ".navbar",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-navbar-disabled-color",
+          "from": "rgba(0, 0, 0, 0.3)",
+          "to": "rgba(255, 255, 255, 0.3)",
+          "valueStart": 82200,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-info-rgb",
+          "from": "13, 202, 240",
+          "to": "240, 51, 13",
+          "valueStart": 1356,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-border-color",
+          "from": "#dee2e6",
+          "to": "#191d21",
+          "valueStart": 2312,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 559,
+          "selector": ".btn-primary",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-btn-active-color",
+          "from": "#fff",
+          "to": "#000000",
+          "valueStart": 58945,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 755,
+          "selector": ".navbar-dark",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-navbar-disabled-color",
+          "from": "rgba(255, 255, 255, 0.25)",
+          "to": "rgba(0, 0, 0, 0.25)",
+          "valueStart": 92780,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-red",
+          "from": "#dc3545",
+          "to": "#35dccc",
+          "valueStart": 595,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-gradient",
+          "from": "linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0))",
+          "to": "linear-gradient(180deg, rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0))",
+          "valueStart": 1970,
+          "reason": "arm B's check (Playwright) does not flag it"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-primary",
+          "from": "#0d6efd",
+          "to": "#fd9c0d",
+          "valueStart": 1058,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 559,
+          "selector": ".btn-primary",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-btn-disabled-bg",
+          "from": "#0d6efd",
+          "to": "#fd9c0d",
+          "valueStart": 59144,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 559,
+          "selector": ".btn-primary",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-btn-disabled-border-color",
+          "from": "#0d6efd",
+          "to": "#fd9c0d",
+          "valueStart": 59187,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-green",
+          "from": "#198754",
+          "to": "#87194c",
+          "valueStart": 666,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t53",
+      "stratum": "S3",
+      "site": "small-business",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 5,
+          "selector": "h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1",
+          "media": null,
+          "class": "margin",
+          "property": "margin-bottom",
+          "from": "0.5rem",
+          "to": "0.75rem",
+          "valueStart": 3414,
+          "valueEnd": 3420,
+          "effect": {
+            "measured": 70,
+            "elements": 70,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 99597,
+                "playwright": true,
+                "testivai": 80162
+              },
+              "index.html@mobile": {
+                "any": 80839,
+                "playwright": true,
+                "testivai": 62822
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t54",
+      "stratum": "S2",
+      "site": "small-business",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 102,
+          "selector": ".container, .container-fluid, .container-xxl, .container-xl, .container-lg, .container-md, .container-sm",
+          "media": null,
+          "class": "width",
+          "property": "width",
+          "from": "100%",
+          "to": "150%",
+          "valueStart": 10355,
+          "valueEnd": 10359,
+          "effect": {
+            "measured": 102,
+            "elements": 37,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              },
+              "index.html@mobile": {
+                "any": 626485,
+                "playwright": true,
+                "testivai": 583208
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 1402,
+          "selector": ".py-5",
+          "media": null,
+          "class": "padding",
+          "property": "padding-top",
+          "from": "3rem !important",
+          "to": "4.5rem !important",
+          "valueStart": 179638,
+          "valueEnd": 179653,
+          "effect": {
+            "measured": 8,
+            "elements": 8,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 33690,
+                "playwright": true,
+                "testivai": 33286
+              },
+              "index.html@mobile": {
+                "any": 12330,
+                "playwright": true,
+                "testivai": 11926
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 107,
+        "elements": 41,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 33690,
+            "playwright": true,
+            "testivai": 33286
+          },
+          "index.html@mobile": {
+            "any": 631269,
+            "playwright": true,
+            "testivai": 583181
+          }
+        }
+      },
+      "rejected": []
+    },
+    {
+      "id": "s2t55",
+      "stratum": "S1",
+      "site": "shop-item",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 1373,
+          "selector": ".mb-2",
+          "media": null,
+          "class": "margin",
+          "property": "margin-bottom",
+          "from": "0.5rem !important",
+          "to": "0.75rem !important",
+          "valueStart": 177979,
+          "valueEnd": 177996,
+          "effect": {
+            "measured": 86,
+            "elements": 75,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 23891,
+                "playwright": true,
+                "testivai": 19829
+              },
+              "index.html@mobile": {
+                "any": 28379,
+                "playwright": true,
+                "testivai": 21563
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t56",
+      "stratum": "S1",
+      "site": "bare",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 588,
+          "selector": ".dropup, .dropend, .dropdown, .dropstart, .dropup-center, .dropdown-center",
+          "media": null,
+          "class": "position-and-z-index",
+          "property": "position",
+          "from": "relative",
+          "to": "absolute",
+          "valueStart": 68697,
+          "valueEnd": 68705,
+          "effect": {
+            "measured": 12,
+            "elements": 7,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 1257,
+                "playwright": true,
+                "testivai": 1053
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 685,
+          "selector": ".navbar-nav .dropdown-menu",
+          "media": null,
+          "class": "position-and-z-index",
+          "property": "position",
+          "from": "static",
+          "to": "absolute",
+          "valueStart": 84485,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 717,
+          "selector": ".navbar-expand-lg .navbar-nav .dropdown-menu",
+          "media": "(min-width: 992px)",
+          "class": "position-and-z-index",
+          "property": "position",
+          "from": "absolute",
+          "to": "static",
+          "valueStart": 88353,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 592,
+          "selector": ".dropdown-menu",
+          "media": null,
+          "class": "position-and-z-index",
+          "property": "position",
+          "from": "absolute",
+          "to": "relative",
+          "valueStart": 70155,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t57",
+      "stratum": "S3",
+      "site": "bare",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 693,
+          "selector": ".navbar-toggler-icon",
+          "media": null,
+          "class": "width",
+          "property": "width",
+          "from": "1.5em",
+          "to": "0.75em",
+          "valueStart": 85523,
+          "valueEnd": 85528,
+          "effect": {
+            "measured": 4,
+            "elements": 2,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              },
+              "index.html@mobile": {
+                "any": 303,
+                "playwright": true,
+                "testivai": 163
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 689,
+          "selector": ".navbar-toggler",
+          "media": null,
+          "class": "line-height",
+          "property": "line-height",
+          "from": "1",
+          "to": "0.5",
+          "valueStart": 84944,
+          "reason": "no pixel changed"
+        }
+      ]
+    },
+    {
+      "id": "s2t58",
+      "stratum": "S3",
+      "site": "agency",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 2325,
+          "selector": "#mainNav .navbar-toggler",
+          "media": null,
+          "class": "font-weight",
+          "property": "font-weight",
+          "from": "700",
+          "to": "400",
+          "valueStart": 238963,
+          "valueEnd": 238966,
+          "effect": {
+            "measured": 1,
+            "elements": 1,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              },
+              "index.html@mobile": {
+                "any": 241,
+                "playwright": true,
+                "testivai": 129
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t59",
+      "stratum": "S3",
+      "site": "bare",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-body-color",
+          "from": "#212529",
+          "to": "#d6dade",
+          "valueStart": 2173,
+          "valueEnd": 2180,
+          "effect": {
+            "measured": 19,
+            "elements": 19,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 10601,
+                "playwright": true,
+                "testivai": 9496
+              },
+              "index.html@mobile": {
+                "any": 7408,
+                "playwright": true,
+                "testivai": 6377
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-white",
+          "from": "#fff",
+          "to": "#000000",
+          "valueStart": 720,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 592,
+          "selector": ".dropdown-menu",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-dropdown-link-color",
+          "from": "#212529",
+          "to": "#d6dade",
+          "valueStart": 69723,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-gray-800",
+          "from": "#343a40",
+          "to": "#bfc5cb",
+          "valueStart": 974,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-gray-100",
+          "from": "#f8f9fa",
+          "to": "#faf9f8",
+          "valueStart": 792,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-secondary",
+          "from": "#6c757d",
+          "to": "#828b93",
+          "valueStart": 1052,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 679,
+          "selector": ".navbar",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-navbar-color",
+          "from": "rgba(0, 0, 0, 0.55)",
+          "to": "rgba(255, 255, 255, 0.55)",
+          "valueStart": 82069,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-primary",
+          "from": "#0d6efd",
+          "to": "#fd9c0d",
+          "valueStart": 1025,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-dark",
+          "from": "#212529",
+          "to": "#d6dade",
+          "valueStart": 1193,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-gray-600",
+          "from": "#6c757d",
+          "to": "#828b93",
+          "valueStart": 922,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 592,
+          "selector": ".dropdown-menu",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-dropdown-link-hover-color",
+          "from": "#1e2125",
+          "to": "#dadde1",
+          "valueStart": 69766,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 592,
+          "selector": ".dropdown-menu",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-dropdown-link-active-bg",
+          "from": "#0d6efd",
+          "to": "#fd9c0d",
+          "valueStart": 69888,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 755,
+          "selector": ".navbar-dark",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-navbar-toggler-border-color",
+          "from": "rgba(255, 255, 255, 0.1)",
+          "to": "rgba(0, 0, 0, 0.1)",
+          "valueStart": 92916,
+          "reason": "neither arm's check flags it"
+        },
+        {
+          "ruleId": 679,
+          "selector": ".navbar",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-navbar-toggler-border-color",
+          "from": "rgba(0, 0, 0, 0.1)",
+          "to": "rgba(255, 255, 255, 0.1)",
+          "valueStart": 82927,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 592,
+          "selector": ".dropdown-menu",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-dropdown-link-active-color",
+          "from": "#fff",
+          "to": "#000000",
+          "valueStart": 69850,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-border-color-translucent",
+          "from": "rgba(0, 0, 0, 0.175)",
+          "to": "rgba(255, 255, 255, 0.175)",
+          "valueStart": 2321,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t60",
+      "stratum": "S1",
+      "site": "full-width-pics",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 5,
+          "selector": "h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1",
+          "media": null,
+          "class": "line-height",
+          "property": "line-height",
+          "from": "1.2",
+          "to": "1.8",
+          "valueStart": 3460,
+          "valueEnd": 3463,
+          "effect": {
+            "measured": 78,
+            "elements": 46,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 333949,
+                "playwright": true,
+                "testivai": 323783
+              },
+              "index.html@mobile": {
+                "any": 129490,
+                "playwright": true,
+                "testivai": 119613
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t61",
+      "stratum": "S1",
+      "site": "agency",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 2369,
+          "selector": ".timeline > li .timeline-image",
+          "media": null,
+          "class": "border",
+          "property": "border",
+          "from": "7px solid #e9ecef",
+          "to": "11px solid #e9ecef",
+          "valueStart": 245404,
+          "valueEnd": 245421,
+          "effect": {
+            "measured": 80,
+            "elements": 20,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 80506,
+                "playwright": true,
+                "testivai": 32933
+              },
+              "index.html@mobile": {
+                "any": 15895,
+                "playwright": true,
+                "testivai": 8794
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t62",
+      "stratum": "S3",
+      "site": "shop-item",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 1230,
+          "selector": ".position-absolute",
+          "media": null,
+          "class": "position-and-z-index",
+          "property": "position",
+          "from": "absolute !important",
+          "to": "static !important",
+          "valueStart": 169649,
+          "valueEnd": 169668,
+          "effect": {
+            "measured": 105,
+            "elements": 85,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 106031,
+                "playwright": true,
+                "testivai": 86391
+              },
+              "index.html@mobile": {
+                "any": 88699,
+                "playwright": true,
+                "testivai": 63494
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 679,
+          "selector": ".navbar",
+          "media": null,
+          "class": "position-and-z-index",
+          "property": "position",
+          "from": "relative",
+          "to": "static",
+          "valueStart": 83129,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t63",
+      "stratum": "S1",
+      "site": "full-width-pics",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 721,
+          "selector": ".navbar-expand-lg .navbar-toggler",
+          "media": "(min-width: 992px)",
+          "class": "display-and-flex",
+          "property": "display",
+          "from": "none",
+          "to": "block",
+          "valueStart": 88773,
+          "valueEnd": 88777,
+          "effect": {
+            "measured": 14,
+            "elements": 3,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 348,
+                "playwright": true,
+                "testivai": 144
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t64",
+      "stratum": "S3",
+      "site": "agency",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 2342,
+          "selector": "header.masthead .masthead-subheading",
+          "media": "(min-width: 768px)",
+          "class": "line-height",
+          "property": "line-height",
+          "from": "2.25rem",
+          "to": "3.375rem",
+          "valueStart": 241775,
+          "valueEnd": 241782,
+          "effect": {
+            "measured": 200,
+            "elements": 198,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 2345662,
+                "playwright": true,
+                "testivai": 846532
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t65",
+      "stratum": "S1",
+      "site": "bare",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 590,
+          "selector": ".dropdown-toggle::after",
+          "media": null,
+          "class": "border",
+          "property": "border-left",
+          "from": "0.3em solid transparent",
+          "to": "0.15em solid transparent",
+          "valueStart": 68974,
+          "valueEnd": 68997,
+          "effect": {
+            "measured": 10,
+            "elements": 7,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 1376,
+                "playwright": true,
+                "testivai": 1145
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t66",
+      "stratum": "S2",
+      "site": "agency",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 1401,
+          "selector": ".py-4",
+          "media": null,
+          "class": "padding",
+          "property": "padding-bottom",
+          "from": "1.5rem !important",
+          "to": "2.25rem !important",
+          "valueStart": 180216,
+          "valueEnd": 180233,
+          "effect": {
+            "measured": 4,
+            "elements": 4,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 15360,
+                "playwright": true,
+                "testivai": 15360
+              },
+              "index.html@mobile": {
+                "any": 4680,
+                "playwright": true,
+                "testivai": 4680
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 559,
+          "selector": ".btn-primary",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-btn-bg",
+          "from": "#ffc800",
+          "to": "#0037ff",
+          "valueStart": 59042,
+          "valueEnd": 59049,
+          "effect": {
+            "measured": 2,
+            "elements": 2,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 13696,
+                "playwright": true,
+                "testivai": 13607
+              },
+              "index.html@mobile": {
+                "any": 13696,
+                "playwright": true,
+                "testivai": 13607
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 6,
+        "elements": 6,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 29056,
+            "playwright": true,
+            "testivai": 28967
+          },
+          "index.html@mobile": {
+            "any": 18376,
+            "playwright": true,
+            "testivai": 18287
+          }
+        }
+      },
+      "rejected": [
+        {
+          "ruleId": 413,
+          "selector": ".form-control",
+          "media": null,
+          "class": "padding",
+          "property": "padding",
+          "from": "0.375rem 0.75rem",
+          "to": "0.188rem 0.75rem",
+          "valueStart": 32836,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 566,
+          "selector": ".btn-dark",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-btn-disabled-bg",
+          "from": "#212529",
+          "to": "#d6dade",
+          "valueStart": 63077,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 0,
+          "selector": ":root",
+          "media": null,
+          "class": "colour",
+          "property": "--bs-warning-rgb",
+          "from": "255, 200, 0",
+          "to": "0, 55, 255",
+          "valueStart": 1360,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t67",
+      "stratum": "S3",
+      "site": "heroic-features",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 84,
+          "selector": ".display-5",
+          "media": null,
+          "class": "line-height",
+          "property": "line-height",
+          "from": "1.2",
+          "to": "0.6",
+          "valueStart": 9007,
+          "valueEnd": 9010,
+          "effect": {
+            "measured": 105,
+            "elements": 100,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 403633,
+                "playwright": true,
+                "testivai": 188701
+              },
+              "index.html@mobile": {
+                "any": 312026,
+                "playwright": true,
+                "testivai": 135600
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 689,
+          "selector": ".navbar-toggler",
+          "media": null,
+          "class": "line-height",
+          "property": "line-height",
+          "from": "1",
+          "to": "0.5",
+          "valueStart": 84977,
+          "reason": "no pixel changed"
+        }
+      ]
+    },
+    {
+      "id": "s2t68",
+      "stratum": "S3",
+      "site": "shop-item",
+      "drift": true,
+      "mutations": [
+        {
+          "ruleId": 51,
+          "selector": "button, select",
+          "media": null,
+          "class": "text-transform",
+          "property": "text-transform",
+          "from": "none",
+          "to": "uppercase",
+          "valueStart": 6409,
+          "valueEnd": 6413,
+          "effect": {
+            "measured": 15,
+            "elements": 7,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 1412,
+                "playwright": true,
+                "testivai": 1230
+              },
+              "index.html@mobile": {
+                "any": 910,
+                "playwright": true,
+                "testivai": 793
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t69",
+      "stratum": "S2",
+      "site": "shop-item",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 775,
+          "selector": ".card-img, .card-img-top, .card-img-bottom",
+          "media": null,
+          "class": "width",
+          "property": "width",
+          "from": "100%",
+          "to": "50%",
+          "valueStart": 96621,
+          "valueEnd": 96625,
+          "effect": {
+            "measured": 168,
+            "elements": 124,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 1234390,
+                "playwright": true,
+                "testivai": 794653
+              },
+              "index.html@mobile": {
+                "any": 527895,
+                "playwright": true,
+                "testivai": 365681
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 5,
+          "selector": "h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1",
+          "media": null,
+          "class": "line-height",
+          "property": "line-height",
+          "from": "1.2",
+          "to": "0.6",
+          "valueStart": 3442,
+          "valueEnd": 3445,
+          "effect": {
+            "measured": 169,
+            "elements": 96,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 175454,
+                "playwright": true,
+                "testivai": 128767
+              },
+              "index.html@mobile": {
+                "any": 136992,
+                "playwright": true,
+                "testivai": 88538
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 106,
+          "selector": ".container-xl, .container-lg, .container-md, .container-sm, .container",
+          "media": "(min-width: 1200px)",
+          "class": "width",
+          "property": "max-width",
+          "from": "1140px",
+          "to": "1710px",
+          "valueStart": 10911,
+          "valueEnd": 10917,
+          "effect": {
+            "measured": 192,
+            "elements": 75,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 860335,
+                "playwright": true,
+                "testivai": 518030
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 335,
+        "elements": 137,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 1285439,
+            "playwright": true,
+            "testivai": 862273
+          },
+          "index.html@mobile": {
+            "any": 506840,
+            "playwright": true,
+            "testivai": 370997
+          }
+        }
+      },
+      "rejected": [
+        {
+          "ruleId": 413,
+          "selector": ".form-control",
+          "media": null,
+          "class": "width",
+          "property": "width",
+          "from": "100%",
+          "to": "50%",
+          "valueStart": 32488,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 632,
+          "selector": ".dropdown-item",
+          "media": null,
+          "class": "width",
+          "property": "width",
+          "from": "100%",
+          "to": "150%",
+          "valueStart": 74386,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 105,
+          "selector": ".container-lg, .container-md, .container-sm, .container",
+          "media": "(min-width: 992px)",
+          "class": "width",
+          "property": "max-width",
+          "from": "960px",
+          "to": "1440px",
+          "valueStart": 10779,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 109,
+          "selector": ".row > *",
+          "media": null,
+          "class": "width",
+          "property": "max-width",
+          "from": "100%",
+          "to": "150%",
+          "valueStart": 11363,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    },
+    {
+      "id": "s2t70",
+      "stratum": "S2",
+      "site": "shop-item",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 16,
+          "selector": "p",
+          "media": null,
+          "class": "margin",
+          "property": "margin-bottom",
+          "from": "1rem",
+          "to": "1.5rem",
+          "valueStart": 4032,
+          "valueEnd": 4036,
+          "effect": {
+            "measured": 65,
+            "elements": 64,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 26108,
+                "playwright": true,
+                "testivai": 21929
+              },
+              "index.html@mobile": {
+                "any": 54404,
+                "playwright": true,
+                "testivai": 37851
+              }
+            }
+          }
+        },
+        {
+          "ruleId": 588,
+          "selector": ".dropup, .dropend, .dropdown, .dropstart, .dropup-center, .dropdown-center",
+          "media": null,
+          "class": "position-and-z-index",
+          "property": "position",
+          "from": "relative",
+          "to": "absolute",
+          "valueStart": 68712,
+          "valueEnd": 68720,
+          "effect": {
+            "measured": 5,
+            "elements": 5,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 574,
+                "playwright": true,
+                "testivai": 412
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        }
+      ],
+      "together": {
+        "measured": 70,
+        "elements": 69,
+        "pixels": {
+          "index.html@desktop": {
+            "any": 26682,
+            "playwright": true,
+            "testivai": 22341
+          },
+          "index.html@mobile": {
+            "any": 54404,
+            "playwright": true,
+            "testivai": 37851
+          }
+        }
+      },
+      "rejected": []
+    },
+    {
+      "id": "s2t71",
+      "stratum": "S4",
+      "site": "agency",
+      "drift": true,
+      "mutations": [],
+      "together": null,
+      "rejected": []
+    },
+    {
+      "id": "s2t72",
+      "stratum": "S1",
+      "site": "heroic-features",
+      "drift": false,
+      "mutations": [
+        {
+          "ruleId": 2514,
+          "selector": ".fs-4",
+          "media": "(min-width: 1200px)",
+          "class": "font-size",
+          "property": "font-size",
+          "from": "1.5rem !important",
+          "to": "2.25rem !important",
+          "valueStart": 249457,
+          "valueEnd": 249474,
+          "effect": {
+            "measured": 112,
+            "elements": 49,
+            "pixels": {
+              "index.html@desktop": {
+                "any": 895503,
+                "playwright": true,
+                "testivai": 539007
+              },
+              "index.html@mobile": {
+                "any": 0,
+                "playwright": false,
+                "testivai": 0
+              }
+            }
+          }
+        }
+      ],
+      "together": null,
+      "rejected": [
+        {
+          "ruleId": 5,
+          "selector": "h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1",
+          "media": null,
+          "class": "font-weight",
+          "property": "font-weight",
+          "from": "500",
+          "to": "300",
+          "valueStart": 3440,
+          "reason": "no measured change on a rendered element"
+        },
+        {
+          "ruleId": 84,
+          "selector": ".display-5",
+          "media": null,
+          "class": "font-weight",
+          "property": "font-weight",
+          "from": "300",
+          "to": "700",
+          "valueStart": 8987,
+          "reason": "no measured change on a rendered element"
+        }
+      ]
+    }
+  ]
+}

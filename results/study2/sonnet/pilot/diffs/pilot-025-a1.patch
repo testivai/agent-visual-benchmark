@@ -1,0 +1,13 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 176b927..33c7833 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -7060,7 +7060,7 @@ textarea.form-control-lg {
+ }
+ 
+ .position-absolute {
+-  position: static !important;
++  position: absolute !important;
+ }
+ 
+ .position-fixed {

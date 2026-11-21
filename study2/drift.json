@@ -1,0 +1,115 @@
+{
+  "chosen": "font-hinting-full",
+  "run": "2026-11-18T02:57:28.545Z",
+  "chromium": "153.0.8010.12",
+  "settings": [
+    {
+      "name": "font-hinting-full",
+      "fontconfig": "<match target=\"font\"><edit name=\"hinting\" mode=\"assign\"><bool>true</bool></edit><edit name=\"hintstyle\" mode=\"assign\"><const>hintfull</const></edit></match>"
+    },
+    {
+      "name": "font-antialias-off",
+      "fontconfig": "<match target=\"font\"><edit name=\"antialias\" mode=\"assign\"><bool>false</bool></edit></match>"
+    },
+    {
+      "name": "no-subpixel-positioning",
+      "args": [
+        "--disable-font-subpixel-positioning"
+      ]
+    },
+    {
+      "name": "angle-swiftshader",
+      "args": [
+        "--use-angle=swiftshader",
+        "--use-gl=angle"
+      ]
+    }
+  ],
+  "tried": [
+    {
+      "name": "font-hinting-full",
+      "problems": {
+        "heroic-features": [],
+        "agency": [],
+        "full-width-pics": [],
+        "bare": [],
+        "shop-item": [],
+        "small-business": []
+      },
+      "pixels": {
+        "heroic-features": {
+          "index.html@desktop": {
+            "any": 51258,
+            "playwright": true,
+            "testivai": 38778
+          },
+          "index.html@mobile": {
+            "any": 312185,
+            "playwright": true,
+            "testivai": 136585
+          }
+        },
+        "agency": {
+          "index.html@desktop": {
+            "any": 138802,
+            "playwright": true,
+            "testivai": 97041
+          },
+          "index.html@mobile": {
+            "any": 124808,
+            "playwright": true,
+            "testivai": 83279
+          }
+        },
+        "full-width-pics": {
+          "index.html@desktop": {
+            "any": 132538,
+            "playwright": true,
+            "testivai": 121578
+          },
+          "index.html@mobile": {
+            "any": 45713,
+            "playwright": true,
+            "testivai": 35282
+          }
+        },
+        "bare": {
+          "index.html@desktop": {
+            "any": 13296,
+            "playwright": true,
+            "testivai": 10845
+          },
+          "index.html@mobile": {
+            "any": 8749,
+            "playwright": true,
+            "testivai": 6883
+          }
+        },
+        "shop-item": {
+          "index.html@desktop": {
+            "any": 42831,
+            "playwright": true,
+            "testivai": 32504
+          },
+          "index.html@mobile": {
+            "any": 35277,
+            "playwright": true,
+            "testivai": 25581
+          }
+        },
+        "small-business": {
+          "index.html@desktop": {
+            "any": 55676,
+            "playwright": true,
+            "testivai": 41890
+          },
+          "index.html@mobile": {
+            "any": 50641,
+            "playwright": true,
+            "testivai": 37992
+          }
+        }
+      }
+    }
+  ]
+}

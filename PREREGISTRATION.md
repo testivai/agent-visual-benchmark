@@ -211,3 +211,15 @@ again under the fix; the first is kept in `results/deepseek/pilot-leaked/`.
 **2026-11-15: how the pinned Claude Code is installed.** The container came back with newer Claude
 Code builds (2.1.323, then 2.1.325). The study still runs 2.1.322 (section 3), installed in its own
 prefix and put first on PATH (`RUNNING.md`). Every run records the version it ran.
+
+**2026-11-17: the replications are closed out, not run.** The maintainer decided not to run the Opus 5.5
+and DeepSeek-V4.1-Flash full studies (section 3). This decision was made **after** the Sonnet 5.5 result
+was known (C − B +1 point, the kill line reached). Reasons:
+
+- Both models' pilots showed the same ceiling as Sonnet's (B and C at or near 100% on the pilot
+  tasks), so a full run would most likely repeat the null at 12 to 38 hours each.
+- The question the replications would answer is better asked by a follow-up study with tasks that a
+  pixel comparison does not already solve.
+
+The study's result therefore rests on Sonnet 5.5 alone. The write-up (`RESULTS.md`) says so, and the
+pilots on the other two models are reported as pilots only.

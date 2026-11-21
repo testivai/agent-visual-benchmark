@@ -4,3 +4,4 @@
 {"model_id":"sonnet","model":"claude-sonnet-5-5","at":"2026-11-15T04:44:39.140Z","pass":true,"problems":[],"permission_denials":1,"claude_code_version":"2.1.322"}
 {"model_id":"opus","model":"claude-opus-5-5","at":"2026-11-15T04:45:13.766Z","pass":false,"problems":["the CA bundle is not readable, so HTTPS through the proxy fails"],"permission_denials":3,"claude_code_version":"2.1.322"}
 {"model_id":"opus","model":"claude-opus-5-5","at":"2026-11-15T04:47:37.718Z","pass":true,"problems":[],"permission_denials":1,"claude_code_version":"2.1.322"}
+{"model_id":"sonnet","model":"claude-sonnet-5-5","at":"2026-11-21T04:39:54.939Z","pass":true,"problems":[],"permission_denials":1,"claude_code_version":"2.1.322"}

@@ -180,9 +180,12 @@ async function settle(page) {
 
 const firstLine = (err) => String(err?.message ?? err).split('\n')[0];
 
-async function captureView(page, baseUrl, view, stateTimeout) {
+// A study 1 page by its name in PAGES; a study 2 page by its file name.
+const pageFile = (name) => PAGES[name] ?? name;
+
+async function captureView(page, baseUrl, view, stateTimeout, shots) {
   try {
-    await page.goto(`${baseUrl}/${PAGES[view.page]}`, { waitUntil: 'load', timeout: 15000 });
+    await page.goto(`${baseUrl}/${pageFile(view.page)}`, { waitUntil: 'load', timeout: 15000 });
     await page.addStyleTag({ content: STILL });
     await settle(page);
   } catch (err) {
@@ -196,22 +199,27 @@ async function captureView(page, baseUrl, view, stateTimeout) {
       return { error: `could not ${STATES[view.state].what}: ${firstLine(err)}` };
     }
   }
+  if (shots) shots[viewId(view)] = await page.screenshot({ fullPage: true });
   return page.evaluate(measurePage);
 }
 
-// Measures every view of the site served at baseUrl.
-export async function captureSnapshot(browser, baseUrl, { views = VIEWS, stateTimeout = 3000 } = {}) {
+// Measures every view of the site served at baseUrl. With screenshots, also a
+// full-page PNG of each view, taken just before it is measured, kept apart from
+// the measurements in out.screenshots.
+export async function captureSnapshot(browser, baseUrl, { views = VIEWS, stateTimeout = 3000, screenshots = false } = {}) {
   const out = { views: {} };
+  const shots = screenshots ? {} : null;
   for (const viewport of Object.keys(VIEWPORTS)) {
     const mine = views.filter((v) => v.viewport === viewport);
     if (mine.length === 0) continue;
     const context = await browser.newContext({ viewport: VIEWPORTS[viewport], deviceScaleFactor: 1, reducedMotion: 'reduce' });
     const page = await context.newPage();
     try {
-      for (const view of mine) out.views[viewId(view)] = await captureView(page, baseUrl, view, stateTimeout);
+      for (const view of mine) out.views[viewId(view)] = await captureView(page, baseUrl, view, stateTimeout, shots);
     } finally {
       await context.close();
     }
   }
+  if (shots) out.screenshots = shots;
   return out;
 }
