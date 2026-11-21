@@ -105,6 +105,7 @@ function parseArgs(argv, loaded) {
     model,
     study,
     studyConfig: value('--study-config', path.join('study2', 'study.config.json')),
+    resultsGiven: argv.includes('--results'),
     confirm: argv.includes('--confirm'),
     pushEvery: Number(value('--push-every', '0')),
     resultsDir: value('--results', path.join(REPO_ROOT, 'results', ...(study === '2' ? ['study2'] : []), model, phase)),
@@ -133,13 +134,15 @@ function studySetup(args, config) {
   return {
     config: { ...config, arms: two.config.arms, repeats: two.config.repeats },
     study: studyTwo({ tasks: two.tasks }),
-    plan: (phase) => studyTwoPlan({ tasks: two.tasks, config: two.config, phase }),
+    plan: (phase) => studyTwoPlan({ tasks: two.tasks, config: two.config, phase, rung: two.rung }),
     pilotSeed: two.config.seeds.pilot,
-    label: 'study 2, ',
+    label: two.rung > 0 ? `study 2 (rung ${two.rung}), ` : 'study 2, ',
+    // a set at a higher rung gets its own results folder by default
+    resultsSuffix: two.rung > 0 ? `-rung${two.rung}` : '',
   };
 }
 
-function cmdPlan(config, { phase, setup }) {
+function cmdPlan(config, { phase, setup, resultsDir }) {
   const plan = setup.plan(phase);
   const tasks = [...new Set(plan.runs.map((r) => r.task))].sort();
   print([
@@ -147,6 +150,7 @@ function cmdPlan(config, { phase, setup }) {
     `tasks: ${tasks.join(', ')}${phase === 'pilot' ? ` (chosen with seed ${setup.pilotSeed})` : ''}`,
     `order: shuffled with seed ${plan.seed}; first runs:`,
     ...plan.runs.slice(0, 9).map((r) => `  ${r.runId}  ${r.task}  arm ${r.arm}  repeat ${r.repeat}`),
+    `results: ${resultsDir}`,
   ]);
 }
 
@@ -355,7 +359,8 @@ async function main() {
     process.exit(2);
   }
   const setup = studySetup(args, config);
-  await command(setup.config, { ...args, setup });
+  const resultsDir = args.resultsGiven || !setup.resultsSuffix ? args.resultsDir : `${args.resultsDir}${setup.resultsSuffix}`;
+  await command(setup.config, { ...args, resultsDir, setup });
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

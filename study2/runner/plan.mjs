@@ -28,12 +28,16 @@ export function pilotTasks(tasks, { seed, perStratum }) {
   });
 }
 
-export function studyTwoPlan({ tasks, config, phase }) {
+// rung: the ladder rung the task set was generated at. Above 0, the run ids
+// carry it (pilot-r1-001), so a later pilot's runs never mix with an earlier one's.
+export function studyTwoPlan({ tasks, config, phase, rung = 0 }) {
   const seed = requireSeed(config, 'order');
   const taskIds = phase === 'pilot'
     ? pilotTasks(tasks, { seed: requireSeed(config, 'pilot'), perStratum: config.pilot.perStratum })
     : tasks.map((t) => t.id);
-  return buildPlan({ phase, taskIds, arms: config.arms, repeats: config.repeats[phase], seed });
+  const plan = buildPlan({ phase, taskIds, arms: config.arms, repeats: config.repeats[phase], seed });
+  if (rung === 0) return plan;
+  return { ...plan, rung, runs: plan.runs.map((r) => ({ ...r, runId: r.runId.replace(`${phase}-`, `${phase}-r${rung}-`) })) };
 }
 
 // The config and the task set generated with its seed.
@@ -44,5 +48,5 @@ export function loadStudyTwo({ configFile = path.join('study2', 'study.config.js
   if (!fs.existsSync(file)) throw new Error(`no task set at ${config.tasksFile}: it is generated with seeds.generation after the freeze`);
   const record = JSON.parse(fs.readFileSync(file, 'utf8'));
   if (record.seed !== generation) throw new Error(`${config.tasksFile} was generated with seed ${record.seed}, not seeds.generation (${generation})`);
-  return { config, tasks: record.tasks };
+  return { config, tasks: record.tasks, rung: record.rung ?? 0 };
 }

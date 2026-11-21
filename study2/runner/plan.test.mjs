@@ -56,3 +56,20 @@ test('the seeds in the config are the ones written in the frozen preregistration
   assert.deepEqual(config.seeds, written);
   for (const v of Object.values(config.seeds)) assert.ok(Number.isInteger(v) && v < 2 ** 32, `${v} is a 32-bit seed`);
 });
+
+test('a set generated at a higher rung gets run ids of its own, so its runs never mix with an earlier pilot\'s', () => {
+  const r0 = studyTwoPlan({ tasks: TASKS, config: CONFIG, phase: 'pilot' });
+  const r1 = studyTwoPlan({ tasks: TASKS, config: CONFIG, phase: 'pilot', rung: 1 });
+  assert.equal(r0.runs[0].runId, 'pilot-001');
+  assert.equal(r1.runs[0].runId, 'pilot-r1-001');
+  assert.equal(r1.rung, 1);
+  assert.deepEqual(r1.runs.map((r) => [r.task, r.arm, r.repeat]), r0.runs.map((r) => [r.task, r.arm, r.repeat]), 'the same runs, in the same order');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'avb-s2-rung-'));
+  try {
+    fs.writeFileSync(path.join(dir, 'tasks.json'), JSON.stringify({ seed: 1, rung: 1, tasks: TASKS }));
+    fs.writeFileSync(path.join(dir, 'study.json'), JSON.stringify({ ...CONFIG, tasksFile: path.join(dir, 'tasks.json') }));
+    assert.equal(loadStudyTwo({ configFile: path.join(dir, 'study.json') }).rung, 1);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});

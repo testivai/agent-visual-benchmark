@@ -63,3 +63,19 @@ test('a task set generated with another seed than the one written is refused', (
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test('at a higher rung, the results go to a folder of their own unless --results says otherwise', () => {
+  const dir = frozenSetup();
+  try {
+    const tasks = JSON.parse(fs.readFileSync(path.join(dir, 'tasks.json'), 'utf8'));
+    fs.writeFileSync(path.join(dir, 'tasks.json'), JSON.stringify({ ...tasks, rung: 1 }));
+    const r = cli('plan', '--study', '2', '--study-config', path.join(dir, 'study.json'), '--phase', 'pilot');
+    assert.equal(r.status, 0, r.stderr);
+    assert.match(r.stdout, /results: .*results\/study2\/sonnet\/pilot-rung1$/m);
+    assert.match(r.stdout, /pilot-r1-001/);
+    const given = cli('plan', '--study', '2', '--study-config', path.join(dir, 'study.json'), '--phase', 'pilot', '--results', path.join(dir, 'mine'));
+    assert.match(given.stdout, new RegExp(`results: ${path.join(dir, 'mine').replace(/[/.]/g, '\\$&')}$`, 'm'));
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
