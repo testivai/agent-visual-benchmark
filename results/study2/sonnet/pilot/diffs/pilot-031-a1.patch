@@ -1,0 +1,31 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 373090b..33c7833 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -3208,7 +3208,7 @@ textarea.form-control-lg {
+   border-top: 0.3em solid;
+   border-right: 0.3em solid transparent;
+   border-bottom: 0;
+-  border-left: 0.45em solid transparent;
++  border-left: 0.3em solid transparent;
+ }
+ .dropdown-toggle:empty::after {
+   margin-left: 0;
+@@ -3785,7 +3785,7 @@ textarea.form-control-lg {
+   --bs-nav-link-color: var(--bs-navbar-color);
+   --bs-nav-link-hover-color: var(--bs-navbar-hover-color);
+   --bs-nav-link-disabled-color: var(--bs-navbar-disabled-color);
+-  display: none;
++  display: flex;
+   flex-direction: column;
+   padding-left: 0;
+   margin-bottom: 0;
+@@ -7748,7 +7748,7 @@ textarea.form-control-lg {
+ 
+ .px-4 {
+   padding-right: 1.5rem !important;
+-  padding-left: 2.25rem !important;
++  padding-left: 1.5rem !important;
+ }
+ 
+ .px-5 {
