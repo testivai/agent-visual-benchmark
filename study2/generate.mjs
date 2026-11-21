@@ -19,6 +19,23 @@ export const STRATA = {
   S4: { tasks: 12, drift: true, counts: [0], mutations: () => 0 },
 };
 
+// The difficulty ladder (study2/PREREGISTRATION.md, section 7), as far as the
+// pilot has called for it. Each rung changes only how many mutations a task
+// has; the slots, sites and seeds stay the same.
+const RUNGS = {
+  0: STRATA,
+  1: {
+    ...STRATA,
+    S1: { ...STRATA.S1, counts: [2], mutations: () => 2 },
+    S2: { ...STRATA.S2, counts: [3], mutations: () => 3 },
+  },
+};
+
+export function strataForRung(rung) {
+  if (!(rung in RUNGS)) throw new Error(`rung ${rung} is not built: the pilot has not called for it`);
+  return RUNGS[rung];
+}
+
 const nextSeed = (random) => Math.floor(random() * 2 ** 32);
 
 // One site order from the seed, dealt round-robin through the strata in turn,

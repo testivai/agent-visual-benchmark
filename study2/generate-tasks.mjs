@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 // Generates study 2's tasks on the drawn sites (study2/PREREGISTRATION.md, section 4).
-//   node study2/generate-tasks.mjs --seed <n> --out <dir>
+//   node study2/generate-tasks.mjs --seed <n> --out <dir> [--rung <n>]
+// --rung: the difficulty ladder's rung (section 7); 0, the strata as drafted, by default.
 // The study's own seed is written in the preregistration before the real run;
 // any other seed is a trial whose tasks are not used.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
-import { generateTasks, siteChecker, drawStats } from './generate.mjs';
+import { generateTasks, siteChecker, drawStats, strataForRung } from './generate.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SITES = path.join(HERE, 'sites');
@@ -22,6 +23,8 @@ function arg(name) {
 const seed = Number(arg('seed'));
 if (!Number.isInteger(seed) || seed < 0) throw new Error(`--seed must be a whole number, not ${arg('seed')}`);
 const out = path.resolve(arg('out'));
+const rung = process.argv.includes('--rung') ? Number(arg('rung')) : 0;
+const strata = strataForRung(rung);
 const manifest = JSON.parse(fs.readFileSync(path.join(SITES, 'manifest.json'), 'utf8'));
 
 const started = Date.now();
@@ -32,11 +35,12 @@ try {
     const short = name.replace(/^startbootstrap-/, '');
     sites[short] = await siteChecker(browser, { siteDir: path.join(SITES, short, 'site'), cssFile: CSS_FILE, pages: manifest.imported[name].pages });
   }
-  const result = await generateTasks({ sites, seed, check: (site, ms) => sites[site].check(ms) });
+  const result = await generateTasks({ sites, seed, strata, check: (site, ms) => sites[site].check(ms) });
   const stats = drawStats(result.tasks);
   fs.mkdirSync(out, { recursive: true });
   const record = {
     seed,
+    rung,
     generated: new Date().toISOString(),
     chromium: browser.version(),
     sites: Object.fromEntries(Object.entries(sites).map(([k, s]) => [k, { rules: s.rules.length, used: s.used.size }])),

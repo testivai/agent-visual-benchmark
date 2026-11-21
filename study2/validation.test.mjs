@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
 import { setProblems, taskProblems } from './validation.mjs';
-import { STRATA } from './generate.mjs';
+import { STRATA, strataForRung } from './generate.mjs';
 import { parseRules } from './css.mjs';
 import { captureSite, siteViews } from './validity.mjs';
 import { DRIFT_SETTINGS, withDriftBrowser } from './drift.mjs';
@@ -58,6 +58,19 @@ test('the set: strata counts, drift flags, mutation counts, ids, and every mutat
   const same = good();
   same[1].mutations[0].to = '1rem';
   assert.deepEqual(setProblems(same, { strata: SMALL, css }), ['s2t02: .a padding is "1rem" before and after']);
+});
+
+test('the set is checked against the rung it was generated at', () => {
+  const r1 = strataForRung(1);
+  const small = { S1: { ...r1.S1, tasks: 1 }, S2: { ...r1.S2, tasks: 1 }, S4: { ...r1.S4, tasks: 1 } };
+  const set = [
+    { id: 's2t01', stratum: 'S2', site: 'x', drift: false, mutations: [mut(0, 'color', '#fd9c0d'), mut(1, 'margin', '1.5rem'), mut(1, 'font-weight', '400')] },
+    { id: 's2t02', stratum: 'S1', site: 'x', drift: false, mutations: [mut(0, 'padding', '0.5rem')] },
+    { id: 's2t03', stratum: 'S4', site: 'x', drift: true, mutations: [] },
+  ];
+  set[0].mutations[2].ruleId = 1;
+  const problems = setProblems(set, { strata: small, css: { x: CSS } });
+  assert.ok(problems.includes('s2t02: 1 mutation, S1 has 2'), problems.join('\n'));
 });
 
 let browser;

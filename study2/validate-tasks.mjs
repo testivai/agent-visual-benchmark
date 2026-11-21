@@ -9,6 +9,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
 import { setProblems, taskProblems } from './validation.mjs';
+import { strataForRung } from './generate.mjs';
 import { captureSite, siteViews } from './validity.mjs';
 import { DRIFT_SETTINGS, withDriftBrowser } from './drift.mjs';
 import { armTestFlags } from './runner/arm-check.mjs';
@@ -34,7 +35,7 @@ async function armProblems(task) {
   }
   return out;
 }
-const { tasks } = JSON.parse(fs.readFileSync(file, 'utf8'));
+const { tasks, rung = 0 } = JSON.parse(fs.readFileSync(file, 'utf8'));
 const manifest = JSON.parse(fs.readFileSync(path.join(SITES, 'manifest.json'), 'utf8'));
 const { chosen } = JSON.parse(fs.readFileSync(path.join(HERE, 'drift.json'), 'utf8'));
 const setting = DRIFT_SETTINGS.find((s) => s.name === chosen);
@@ -46,7 +47,8 @@ const sites = Object.fromEntries(manifest.chosen.map((name) => {
 }));
 const css = Object.fromEntries(Object.entries(sites).map(([k, s]) => [k, fs.readFileSync(path.join(s.siteDir, CSS_FILE), 'utf8')]));
 
-const problems = setProblems(tasks, { css });
+// the set is checked against the rung it was generated at
+const problems = setProblems(tasks, { strata: strataForRung(rung), css });
 const browser = await chromium.launch();
 try {
   for (const site of Object.values(sites)) site.clean = await captureSite(browser, site.siteDir, siteViews(site.pages));

@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
-import { STRATA, allocate, drawTask, generateTasks, reasonOf, siteChecker, drawStats, siteState } from './generate.mjs';
+import { STRATA, allocate, drawTask, generateTasks, reasonOf, siteChecker, drawStats, siteState, strataForRung } from './generate.mjs';
 import { CLASSES } from './mutate.mjs';
 import { parseRules } from './css.mjs';
 import { mulberry32 } from '../runner/rng.mjs';
@@ -23,6 +23,19 @@ test('the strata: 72 tasks; one mutation in S1 and S3, two or three in S2, none 
   assert.deepEqual([...counts('S3')], [1]);
   assert.deepEqual([...counts('S4')], [0]);
   for (const k of Object.keys(STRATA)) assert.deepEqual([...counts(k)].sort(), STRATA[k].counts, `${k}: the counts listed are the counts drawn`);
+});
+
+test('the ladder (section 7): rung 0 is the strata as drafted; rung 1 has two mutations per S1 task and three in S2', () => {
+  assert.equal(strataForRung(0), STRATA);
+  const r1 = strataForRung(1);
+  assert.deepEqual(Object.fromEntries(Object.entries(r1).map(([k, s]) => [k, [s.tasks, s.drift, s.counts]])), {
+    S1: [20, false, [2]], S2: [20, false, [3]], S3: [20, true, [1]], S4: [12, true, [0]],
+  });
+  for (const [k, s] of Object.entries(r1)) {
+    for (let seed = 1; seed <= 50; seed++) assert.ok(s.counts.includes(s.mutations(mulberry32(seed))), k);
+  }
+  assert.deepEqual(allocate(r1, SITES, 7), allocate(STRATA, SITES, 7), 'the same slots: only the number of mutations changes');
+  assert.throws(() => strataForRung(2), /rung 2 is not built: the pilot has not called for it/);
 });
 
 test('allocation: each stratum spread evenly over the sites in a seeded order; ids in a seeded order that hides the stratum', () => {
