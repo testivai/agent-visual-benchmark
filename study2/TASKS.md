@@ -82,6 +82,14 @@ against rung 1's rules (log: `study2/tasks.validation.txt`):
   are the same, but the mutations are rung 1's.
 - **48 runs,** in the same order. Their run ids carry the rung (`pilot-r1-001`), and their results
   go to `results/study2/sonnet/pilot-rung1/`, so the two pilots never mix.
+- **Calibration** (arm-blind, `results/study2/sonnet/pilot-rung1/calibration.json`):
+  - Pooled over B and C on S1 to S3, 30 of 36 runs succeeded (83%). That is inside the 40–85%
+    band, so the decision is to keep: the difficulty is settled at rung 1.
+  - The SD of the per-task C − B difference is 0 over the 6 tasks, so the power rule adds no task.
+    The full study is 72 tasks, 60 of them in S1 to S3.
+  - **An SD of 0 from 6 tasks is a weak estimate,** not evidence that the true spread is 0. The
+    study's power is therefore less certain than the rule's figure (100%) suggests: section 6's
+    table gives 83% at an SD of 0.3 and 61% at 0.4. The write-up says so.
 
 ## The first set: rung 0 (its pilot was too easy)
 

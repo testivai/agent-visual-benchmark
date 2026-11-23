@@ -1,0 +1,19 @@
+{
+  "runs": 48,
+  "errors": 0,
+  "pooled": {
+    "successes": 30,
+    "runs": 36,
+    "rate": 0.8333333333333334
+  },
+  "decision": "keep",
+  "next": null,
+  "note": null,
+  "costPerRun": 0.14413105,
+  "spread": {
+    "sd": 0,
+    "tasks": 6,
+    "powerAt60": 1,
+    "tasksNeeded": 60
+  }
+}
