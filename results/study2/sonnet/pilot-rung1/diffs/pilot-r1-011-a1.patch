@@ -1,0 +1,22 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 9975d2a..5af8c5a 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -220,7 +220,7 @@ strong {
+ }
+ 
+ small, .small {
+-  font-size: 0.438em;
++  font-size: .875em;
+ }
+ 
+ mark, .mark {
+@@ -3202,7 +3202,7 @@ textarea.form-control-lg {
+ }
+ .dropdown-toggle::after {
+   display: inline-block;
+-  margin-left: 0.383em;
++  margin-left: 0.255em;
+   vertical-align: 0.255em;
+   content: "";
+   border-top: 0.3em solid;
