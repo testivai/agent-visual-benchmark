@@ -1,0 +1,31 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index c3f12b6..33c7833 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -488,7 +488,7 @@ progress {
+ 
+ .lead {
+   font-size: 1.25rem;
+-  font-weight: 700;
++  font-weight: 300;
+ }
+ 
+ .display-1 {
+@@ -7060,7 +7060,7 @@ textarea.form-control-lg {
+ }
+ 
+ .position-absolute {
+-  position: relative !important;
++  position: absolute !important;
+ }
+ 
+ .position-fixed {
+@@ -7655,7 +7655,7 @@ textarea.form-control-lg {
+ }
+ 
+ .mb-2 {
+-  margin-bottom: 0.25rem !important;
++  margin-bottom: 0.5rem !important;
+ }
+ 
+ .mb-3 {
