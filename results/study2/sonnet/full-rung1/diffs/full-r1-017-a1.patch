@@ -1,0 +1,13 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 3819a20..d1e4f12 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -4138,7 +4138,7 @@ textarea.form-control-lg {
+ }
+ 
+ .navbar-dark {
+-  --bs-navbar-color: rgba(0, 0, 0, 0.55);
++  --bs-navbar-color: rgba(255, 255, 255, 0.55);
+   --bs-navbar-hover-color: rgba(255, 255, 255, 0.75);
+   --bs-navbar-disabled-color: rgba(255, 255, 255, 0.25);
+   --bs-navbar-active-color: #fff;

@@ -1,0 +1,20 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index cf208b9..8bf30e0 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -536,13 +536,13 @@ progress {
+ }
+ 
+ .display-5 {
+-  font-size: calc(1.425rem + 2.1vw);
++  font-size: calc(1.4rem + 2.1vw);
+   font-weight: 300;
+   line-height: 1.2;
+ }
+ @media (min-width: 1200px) {
+   .display-5 {
+-    font-size: 1.5rem;
++    font-size: 3rem;
+   }
+ }
+ 

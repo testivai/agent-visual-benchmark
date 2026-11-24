@@ -1,0 +1,31 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index c2b6c61..ff6c520 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -658,7 +658,7 @@ progress {
+ }
+ @media (min-width: 1200px) {
+   .container-xl, .container-lg, .container-md, .container-sm, .container {
+-    max-width: 570px;
++    max-width: 1140px;
+   }
+ }
+ @media (min-width: 1400px) {
+@@ -7869,7 +7869,7 @@ textarea.form-control-lg {
+ }
+ 
+ .p-4 {
+-  padding: 0.75rem !important;
++  padding: 1.5rem !important;
+ }
+ 
+ .p-5 {
+@@ -10154,7 +10154,7 @@ textarea.form-control-lg {
+     padding-left: 1.5rem !important;
+   }
+   .px-lg-5 {
+-    padding-right: 1.5rem !important;
++    padding-right: 3rem !important;
+     padding-left: 3rem !important;
+   }
+   .py-lg-0 {
