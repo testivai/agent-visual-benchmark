@@ -1,0 +1,22 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 17d34d0..d1e4f12 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -115,7 +115,7 @@ hr {
+ h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
+   margin-top: 0;
+   margin-bottom: 0.5rem;
+-  font-weight: 300;
++  font-weight: 500;
+   line-height: 1.2;
+ }
+ 
+@@ -7581,7 +7581,7 @@ textarea.form-control-lg {
+ }
+ 
+ .my-5 {
+-  margin-top: 4.5rem !important;
++  margin-top: 3rem !important;
+   margin-bottom: 3rem !important;
+ }
+ 

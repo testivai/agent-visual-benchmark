@@ -1,0 +1,22 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 8ccc214..8d7e16b 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -677,7 +677,7 @@ progress {
+ }
+ .row > * {
+   flex-shrink: 0;
+-  width: 50%;
++  width: 100%;
+   max-width: 100%;
+   padding-right: calc(var(--bs-gutter-x) * 0.5);
+   padding-left: calc(var(--bs-gutter-x) * 0.5);
+@@ -3844,7 +3844,7 @@ textarea.form-control-lg {
+   display: inline-block;
+   width: 1.5em;
+   height: 1.5em;
+-  vertical-align: middle;
++  vertical-align: top;
+   background-image: var(--bs-navbar-toggler-icon-bg);
+   background-repeat: no-repeat;
+   background-position: center;
