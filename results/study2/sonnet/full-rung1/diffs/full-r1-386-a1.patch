@@ -1,0 +1,22 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 8ccc214..d1e4f12 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -677,7 +677,7 @@ progress {
+ }
+ .row > * {
+   flex-shrink: 0;
+-  width: 50%;
++  width: 100%;
+   max-width: 100%;
+   padding-right: calc(var(--bs-gutter-x) * 0.5);
+   padding-left: calc(var(--bs-gutter-x) * 0.5);
+@@ -3819,7 +3819,7 @@ textarea.form-control-lg {
+ .navbar-toggler {
+   padding: var(--bs-navbar-toggler-padding-y) var(--bs-navbar-toggler-padding-x);
+   font-size: var(--bs-navbar-toggler-font-size);
+-  line-height: 1.5;
++  line-height: 1;
+   color: var(--bs-navbar-color);
+   background-color: transparent;
+   border: var(--bs-border-width) solid var(--bs-navbar-toggler-border-color);

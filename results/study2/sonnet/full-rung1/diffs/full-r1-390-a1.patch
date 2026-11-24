@@ -1,0 +1,31 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 2f1cbf6..d4a7591 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -8264,7 +8264,7 @@ textarea.form-control-lg {
+ }
+ 
+ .rounded-circle {
+-  border-radius: 25% !important;
++  border-radius: 50% !important;
+ }
+ 
+ .rounded-pill {
+@@ -10859,7 +10859,7 @@ p {
+   }
+ }
+ .btn-xl {
+-  padding: 1.875rem 2.5rem;
++  padding: 1.25rem 2.5rem;
+   font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+   font-size: 1.125rem;
+   font-weight: 700;
+@@ -10956,7 +10956,7 @@ header.masthead {
+ header.masthead .masthead-subheading {
+   font-size: 1.5rem;
+   font-style: italic;
+-  line-height: 0.75rem;
++  line-height: 1.5rem;
+   margin-bottom: 25px;
+   font-family: "Roboto Slab", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+ }

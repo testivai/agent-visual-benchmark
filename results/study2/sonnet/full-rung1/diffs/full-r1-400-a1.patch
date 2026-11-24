@@ -1,0 +1,31 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index d1ea091..a5a7185 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -124,7 +124,7 @@ h1, .h1 {
+ }
+ @media (min-width: 1200px) {
+   h1, .h1 {
+-    font-size: 3.75rem;
++    font-size: 2.5rem;
+   }
+ }
+ 
+@@ -133,7 +133,7 @@ h2, .h2 {
+ }
+ @media (min-width: 1200px) {
+   h2, .h2 {
+-    font-size: 1rem;
++    font-size: 2rem;
+   }
+ }
+ 
+@@ -4138,7 +4138,7 @@ textarea.form-control-lg {
+ }
+ 
+ .navbar-dark {
+-  --bs-navbar-color: rgba(0, 0, 0, 0.55);
++  --bs-navbar-color: rgba(255, 255, 255, 0.55);
+   --bs-navbar-hover-color: rgba(255, 255, 255, 0.75);
+   --bs-navbar-disabled-color: rgba(255, 255, 255, 0.25);
+   --bs-navbar-active-color: #fff;
