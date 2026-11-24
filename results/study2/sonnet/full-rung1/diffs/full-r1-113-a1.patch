@@ -1,0 +1,31 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index be3c1ca..41cb9d2 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -61,7 +61,7 @@
+   --bs-body-font-size: 1rem;
+   --bs-body-font-weight: 400;
+   --bs-body-line-height: 1.5;
+-  --bs-body-color: #d6dade;
++  --bs-body-color: #212529;
+   --bs-body-bg: #fff;
+   --bs-border-width: 1px;
+   --bs-border-style: solid;
+@@ -658,7 +658,7 @@ progress {
+ }
+ @media (min-width: 1200px) {
+   .container-xl, .container-lg, .container-md, .container-sm, .container {
+-    max-width: 570px;
++    max-width: 1140px;
+   }
+ }
+ @media (min-width: 1400px) {
+@@ -3194,7 +3194,7 @@ textarea.form-control-lg {
+ .dropstart,
+ .dropup-center,
+ .dropdown-center {
+-  position: absolute;
++  position: relative;
+ }
+ 
+ .dropdown-toggle {

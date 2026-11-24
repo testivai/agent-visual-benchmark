@@ -1,0 +1,22 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index ef2e982..ff6c520 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -538,7 +538,7 @@ progress {
+ .display-5 {
+   font-size: calc(1.425rem + 2.1vw);
+   font-weight: 300;
+-  line-height: 1.8;
++  line-height: 1.2;
+ }
+ @media (min-width: 1200px) {
+   .display-5 {
+@@ -8105,7 +8105,7 @@ textarea.form-control-lg {
+ }
+ 
+ .fw-bold {
+-  font-weight: 400 !important;
++  font-weight: 700 !important;
+ }
+ 
+ .fw-semibold {
