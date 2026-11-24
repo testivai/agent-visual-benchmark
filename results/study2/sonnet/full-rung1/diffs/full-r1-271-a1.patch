@@ -1,0 +1,31 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index ceb3623..ff6c520 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -50,7 +50,7 @@
+   --bs-danger-rgb: 220, 53, 69;
+   --bs-light-rgb: 248, 249, 250;
+   --bs-dark-rgb: 33, 37, 41;
+-  --bs-white-rgb: 0, 0, 0;
++  --bs-white-rgb: 255, 255, 255;
+   --bs-black-rgb: 0, 0, 0;
+   --bs-body-color-rgb: 33, 37, 41;
+   --bs-body-bg-rgb: 255, 255, 255;
+@@ -116,7 +116,7 @@ h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
+   margin-top: 0;
+   margin-bottom: 0.5rem;
+   font-weight: 500;
+-  line-height: 1.8;
++  line-height: 1.2;
+ }
+ 
+ h1, .h1 {
+@@ -3164,7 +3164,7 @@ textarea.form-control-lg {
+ }
+ 
+ .collapse:not(.show) {
+-  display: block;
++  display: none;
+ }
+ 
+ .collapsing {
