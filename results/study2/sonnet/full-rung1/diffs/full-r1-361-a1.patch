@@ -1,0 +1,31 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index ea22489..a5a7185 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -598,7 +598,7 @@ progress {
+ }
+ 
+ .img-fluid {
+-  max-width: 150%;
++  max-width: 100%;
+   height: auto;
+ }
+ 
+@@ -3956,7 +3956,7 @@ textarea.form-control-lg {
+     justify-content: flex-start;
+   }
+   .navbar-expand-lg .navbar-nav {
+-    flex-direction: column;
++    flex-direction: row;
+   }
+   .navbar-expand-lg .navbar-nav .dropdown-menu {
+     position: absolute;
+@@ -4141,7 +4141,7 @@ textarea.form-control-lg {
+   --bs-navbar-color: rgba(255, 255, 255, 0.55);
+   --bs-navbar-hover-color: rgba(255, 255, 255, 0.75);
+   --bs-navbar-disabled-color: rgba(255, 255, 255, 0.25);
+-  --bs-navbar-active-color: #000000;
++  --bs-navbar-active-color: #fff;
+   --bs-navbar-brand-color: #fff;
+   --bs-navbar-brand-hover-color: #fff;
+   --bs-navbar-toggler-border-color: rgba(255, 255, 255, 0.1);

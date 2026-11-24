@@ -1,0 +1,13 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index aa8076f..d1e4f12 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -658,7 +658,7 @@ progress {
+ }
+ @media (min-width: 1200px) {
+   .container-xl, .container-lg, .container-md, .container-sm, .container {
+-    max-width: 1710px;
++    max-width: 1140px;
+   }
+ }
+ @media (min-width: 1400px) {
