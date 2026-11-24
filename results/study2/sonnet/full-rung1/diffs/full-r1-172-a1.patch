@@ -1,0 +1,31 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index d5ff8d1..d1e4f12 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -165,7 +165,7 @@ h6, .h6 {
+ 
+ p {
+   margin-top: 0;
+-  margin-bottom: 1.5rem;
++  margin-bottom: 1rem;
+ }
+ 
+ abbr[title] {
+@@ -3956,7 +3956,7 @@ textarea.form-control-lg {
+     justify-content: flex-start;
+   }
+   .navbar-expand-lg .navbar-nav {
+-    flex-direction: column;
++    flex-direction: row;
+   }
+   .navbar-expand-lg .navbar-nav .dropdown-menu {
+     position: absolute;
+@@ -8100,7 +8100,7 @@ textarea.form-control-lg {
+ 
+ .text-white-50 {
+   --bs-text-opacity: 1;
+-  color: rgba(0, 0, 0, 0.5) !important;
++  color: rgba(255, 255, 255, 0.5) !important;
+ }
+ 
+ .text-reset {
