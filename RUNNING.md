@@ -136,9 +136,12 @@ with `--study 2`. Arms B and C only; results go to `results/study2/<model>/<phas
 2. **The task set,** with the generation seed written first:
 
    ```bash
-   node study2/generate-tasks.mjs --seed 2026111901 --out study2   # seeds.generation
+   node study2/generate-tasks.mjs --seed 2026111901 --out study2 --rung 1   # seeds.generation
    node study2/validate-tasks.mjs study2/tasks.json --arms   # every task, and each arm's own test
    ```
+
+   `--rung` is the difficulty ladder's rung (section 7). The study ran at rung 1, after the first
+   pilot at rung 0 was too easy; the rung 0 set is kept as `study2/tasks-rung0.json`.
 
    `--arms` builds every template (site × arm × clean or drifted baselines) and runs each arm's
    visual test in each task's workspace. Every task must pass before the freeze.
@@ -156,12 +159,18 @@ with `--study 2`. Arms B and C only; results go to `results/study2/<model>/<phas
    ```bash
    node runner/run.mjs dry-run --study 2 --phase pilot
    node runner/run.mjs start   --study 2 --phase pilot
-   node study2/calibrate.mjs results/study2/sonnet/pilot/runs.jsonl study2/tasks.json
+   node study2/calibrate.mjs results/study2/sonnet/pilot-rung1/runs.jsonl study2/tasks.json --rung 1
    ```
+
+   A rung above 0 adds `-rung<n>` to the results folder (`pilot-rung1`, `full-rung1`).
 
 5. **The full study and its analysis:**
 
    ```bash
    node runner/run.mjs start --study 2 --phase full
-   node study2/analyze.mjs results/study2/sonnet/full/runs.jsonl study2/tasks.json
+   node study2/analyze.mjs results/study2/sonnet/full-rung1/runs.jsonl study2/tasks.json \
+     --write --pilot results/study2/sonnet/pilot-rung1/calibration.json
    ```
+
+   The JSON goes to stdout; `--write` also writes `summary.md` and `analysis.json` beside
+   `runs.jsonl`. The write-up is `study2/RESULTS.md`.

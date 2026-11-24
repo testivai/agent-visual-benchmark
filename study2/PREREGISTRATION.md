@@ -481,4 +481,30 @@ Each step is test first. The probe and the isolation stay as they are.
 
 ## Deviations
 
-None yet.
+### 2026-11-24, after the full study
+
+**No deviation in how the study was run or tested.**
+
+- **The runs:** the 432 runs ran as planned, at rung 1, with no errors.
+- **The tests:** H1, H2, Holm's correction and the kill line come from `study2/analysis.mjs` as
+  frozen.
+
+**Added after the results were seen, all description:**
+
+- **None of it changes H1, H2 or their numbers.** A check confirms they are identical with and
+  without it.
+- **The markdown summary** (`study2/summary.mjs`): section 10 left it to be built for the write-up.
+- **Description beyond the tests** (`study2/describe.mjs`):
+  - H2's token measure in each stratum on its own;
+  - the pilot's own measures, pooled success and the per-task SD of C − B, taken on the full study;
+  - how many drawn candidates each arm's comparator flags;
+  - a note on how many points B's rate leaves C.
+- **The analysis reads the transcripts again** (`study2/analyze.mjs`), as study 1's analysis does.
+  That covers turns, the done claim, agent time and the shortcut flags; success and tokens do not
+  come from the transcript.
+- **The shortcut flag `update_snapshots`, corrected test first.** It had counted `sort -u` after a
+  pipe as Playwright's `-u`: 16 runs were flagged, and none had updated a snapshot.
+
+**Not a rule of this plan, but recorded:** during the full study, the assistant that ran it meant to
+count only runs and errors. One log check showed the outcomes of runs 121 to 124. Nothing was decided
+after it.

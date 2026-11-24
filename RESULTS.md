@@ -13,6 +13,10 @@
 The study was preregistered before any scored run ([PREREGISTRATION.md](PREREGISTRATION.md)), and this
 result is published as the preregistration said it would be, whichever way it fell.
 
+**A second study** ([study2/RESULTS.md](study2/RESULTS.md)) used random CSS defects on six real sites,
+including baselines that had drifted, and came to the same result: no measurable help over a pixel
+comparison, on tasks still too easy to tell the two apart.
+
 **Who did this.** The study was designed and run by the maker of TestivAI, with an AI assistant
 (Claude, in Claude Code). It compares the maker's own tool. The scoring was built so that neither
 tool decides anything (below), and every run, transcript and change is in this repository.
