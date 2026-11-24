@@ -1,0 +1,31 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 96a1f85..d1e4f12 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -487,7 +487,7 @@ progress {
+ }
+ 
+ .lead {
+-  font-size: 1.875rem;
++  font-size: 1.25rem;
+   font-weight: 300;
+ }
+ 
+@@ -3973,7 +3973,7 @@ textarea.form-control-lg {
+     flex-basis: auto;
+   }
+   .navbar-expand-lg .navbar-toggler {
+-    display: inline-block;
++    display: none;
+   }
+   .navbar-expand-lg .offcanvas {
+     position: static;
+@@ -7783,7 +7783,7 @@ textarea.form-control-lg {
+ 
+ .py-5 {
+   padding-top: 3rem !important;
+-  padding-bottom: 4.5rem !important;
++  padding-bottom: 3rem !important;
+ }
+ 
+ .pt-0 {

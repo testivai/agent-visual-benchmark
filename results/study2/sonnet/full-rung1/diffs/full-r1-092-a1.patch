@@ -1,0 +1,13 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 8356621..a5a7185 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -114,7 +114,7 @@ hr {
+ 
+ h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
+   margin-top: 0;
+-  margin-bottom: 0.75rem;
++  margin-bottom: 0.5rem;
+   font-weight: 500;
+   line-height: 1.2;
+ }
