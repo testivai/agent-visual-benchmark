@@ -1,0 +1,13 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index c46a9c5..33c7833 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -700,7 +700,7 @@ progress {
+ 
+ .row-cols-2 > * {
+   flex: 0 0 auto;
+-  width: 25%;
++  width: 50%;
+ }
+ 
+ .row-cols-3 > * {
