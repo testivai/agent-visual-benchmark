@@ -1,0 +1,23 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index eb803f0..e6c3fab 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -10846,7 +10846,7 @@ p {
+   margin-bottom: 1rem;
+ }
+ .page-section h3.section-subheading, .page-section .section-subheading.h3 {
+-  font-size: 1.5rem;
++  font-size: 1rem;
+   font-weight: 400;
+   font-style: italic;
+   font-family: "Roboto Slab", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+@@ -11158,9 +11158,6 @@ header.masthead .masthead-heading {
+   margin-top: 0;
+   color: inherit;
+ }
+-.timeline .timeline-heading h4.subheading, .timeline .timeline-heading .subheading.h4 {
+-  text-transform: uppercase;
+-}
+ .timeline .timeline-body > ul,
+ .timeline .timeline-body > p {
+   margin-bottom: 0;

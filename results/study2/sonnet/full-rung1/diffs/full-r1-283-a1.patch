@@ -1,0 +1,22 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index a0186fa..41cb9d2 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -3206,7 +3206,7 @@ textarea.form-control-lg {
+   vertical-align: 0.255em;
+   content: "";
+   border-top: 0.3em solid;
+-  border-right: 0.45em solid transparent;
++  border-right: 0.3em solid transparent;
+   border-bottom: 0;
+   border-left: 0.3em solid transparent;
+ }
+@@ -3760,7 +3760,7 @@ textarea.form-control-lg {
+ .navbar > .container-lg,
+ .navbar > .container-xl,
+ .navbar > .container-xxl {
+-  display: none;
++  display: flex;
+   flex-wrap: inherit;
+   align-items: center;
+   justify-content: space-between;

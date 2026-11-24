@@ -1,0 +1,13 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 8d4e8b6..41cb9d2 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -7611,7 +7611,7 @@ textarea.form-control-lg {
+ }
+ 
+ .mt-5 {
+-  margin-top: 1.5rem !important;
++  margin-top: 3rem !important;
+ }
+ 
+ .mt-auto {

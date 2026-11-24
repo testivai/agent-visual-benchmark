@@ -1,0 +1,296 @@
+{
+  "drawn": "2026-11-18T02:07:47.221Z",
+  "seed": 20261118,
+  "count": 6,
+  "order": [
+    "startbootstrap-heroic-features",
+    "startbootstrap-portfolio-item",
+    "startbootstrap-agency",
+    "startbootstrap-full-width-pics",
+    "startbootstrap-bare",
+    "startbootstrap-4-col-portfolio",
+    "startbootstrap-shop-item",
+    "startbootstrap-round-about",
+    "startbootstrap-small-business",
+    "startbootstrap-freelancer",
+    "startbootstrap-shop-homepage",
+    "startbootstrap-full",
+    "startbootstrap-modern-business",
+    "startbootstrap-simple-sidebar",
+    "startbootstrap-landing-page",
+    "startbootstrap-sb-admin-2",
+    "startbootstrap-logo-nav",
+    "startbootstrap-personal",
+    "startbootstrap-2-col-portfolio",
+    "startbootstrap-new-age",
+    "startbootstrap-stylish-portfolio",
+    "startbootstrap-grayscale",
+    "startbootstrap-blog-home",
+    "startbootstrap-business-frontpage",
+    "startbootstrap-resume",
+    "startbootstrap-the-big-picture",
+    "startbootstrap-sb-admin-2-bs5",
+    "startbootstrap-coming-soon",
+    "startbootstrap-thumbnail-gallery",
+    "startbootstrap-half-slider",
+    "startbootstrap-scrolling-nav",
+    "startbootstrap-creative",
+    "startbootstrap-one-page-wonder",
+    "startbootstrap-sb-admin",
+    "startbootstrap-full-slider",
+    "startbootstrap-blog-post",
+    "startbootstrap-business-casual",
+    "startbootstrap-clean-blog",
+    "startbootstrap-3-col-portfolio"
+  ],
+  "tried": [
+    {
+      "name": "startbootstrap-heroic-features",
+      "version": "5.0.6",
+      "integrity": "sha512-kdfxTa39LkPATbYkFZ3DKYkSolcmgYRwk8tt8OkYoOWzZ0i3UTQrNTz/C6bsEWRM5U/lMgHCJEDgNdiPcnzuLA==",
+      "ok": true,
+      "reasons": [],
+      "pages": [
+        "index.html"
+      ],
+      "removed": [
+        "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css",
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      ],
+      "remoteRequestsAfterStrip": 0
+    },
+    {
+      "name": "startbootstrap-portfolio-item",
+      "version": "4.1.1",
+      "integrity": "sha512-LWpVho+0s4ERbFATIPwR8ZKeHIMH2oLomixdVOa/5YRJiRrFeRqNeTZvDO/kWDRqs1A00pw6vCzP/FZzckwO2g==",
+      "ok": false,
+      "reasons": [
+        "no built page",
+        "no visible text offline"
+      ],
+      "pages": [],
+      "removed": [],
+      "remoteRequestsAfterStrip": 0
+    },
+    {
+      "name": "startbootstrap-agency",
+      "version": "7.0.12",
+      "integrity": "sha512-VpdOVgqYq+Yomt72/gZueBuB99wWyqL1rvqaGaqRwHtDMJlXSf9eGfisyQXPx7//z3dnlGHIMzIk2I8CCmtXOQ==",
+      "ok": true,
+      "reasons": [],
+      "pages": [
+        "index.html"
+      ],
+      "removed": [
+        "https://use.fontawesome.com/releases/v6.3.0/js/all.js",
+        "https://fonts.googleapis.com/css?family=Montserrat:400,700",
+        "https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700",
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js",
+        "https://cdn.startbootstrap.com/sb-forms-latest.js"
+      ],
+      "remoteRequestsAfterStrip": 0
+    },
+    {
+      "name": "startbootstrap-full-width-pics",
+      "version": "5.0.6",
+      "integrity": "sha512-elMMyzVPQ9RhaTnrXRGqWYCdj3CIfX2lSEIed7UEQOJuvre/0Ac0SAwB+0KME9bIPF7pviAS/D90rjMSXzsr5w==",
+      "ok": true,
+      "reasons": [],
+      "pages": [
+        "index.html"
+      ],
+      "removed": [
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      ],
+      "remoteRequestsAfterStrip": 3
+    },
+    {
+      "name": "startbootstrap-bare",
+      "version": "5.0.9",
+      "integrity": "sha512-ZxzRl/s5YHq5kykvTqPHMIP1SokZcW86dOrhEg619+n5aY6PRdV4BMieR3JGSqaIHG+zR9CnH/EPQQkNRko76A==",
+      "ok": true,
+      "reasons": [],
+      "pages": [
+        "index.html"
+      ],
+      "removed": [
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      ],
+      "remoteRequestsAfterStrip": 0
+    },
+    {
+      "name": "startbootstrap-4-col-portfolio",
+      "version": "4.1.1",
+      "integrity": "sha512-LtIV18T3271Gr6K1UvjJk3rkhJuaUZHPH13QVSLve59qJuJoIN9qOTqCwscJxe9b1mkJDN3OQiOydtPVJyuWeQ==",
+      "ok": false,
+      "reasons": [
+        "no built page",
+        "no visible text offline"
+      ],
+      "pages": [],
+      "removed": [],
+      "remoteRequestsAfterStrip": 0
+    },
+    {
+      "name": "startbootstrap-shop-item",
+      "version": "5.0.6",
+      "integrity": "sha512-2u6+IC1znfs6G7rmigBLu8h0NUrtV7jlNDrAXj+k9ftMcMwSNkkU1HR8RFnDn0i+x+qZBrSbg6pA4YItikDWHg==",
+      "ok": true,
+      "reasons": [],
+      "pages": [
+        "index.html"
+      ],
+      "removed": [
+        "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css",
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      ],
+      "remoteRequestsAfterStrip": 2
+    },
+    {
+      "name": "startbootstrap-round-about",
+      "version": "4.1.1",
+      "integrity": "sha512-Yp+rZIewqWrAktL03ZlVgW+O9UMX7YthrLhJkHDGV00Hhc6kJZe+sM5lB6gX21cbqFJAifuWETdoaolY3YmLhg==",
+      "ok": false,
+      "reasons": [
+        "no built page",
+        "no visible text offline"
+      ],
+      "pages": [],
+      "removed": [],
+      "remoteRequestsAfterStrip": 0
+    },
+    {
+      "name": "startbootstrap-small-business",
+      "version": "5.0.6",
+      "integrity": "sha512-aDhr66TCI1mn3T0N8lOjK0KElkuxntzptLMmK50DHDtuXxi+CZdGnXC1+DCsfafwGAnyPTNO4l3SmqSKXfTywg==",
+      "ok": true,
+      "reasons": [],
+      "pages": [
+        "index.html"
+      ],
+      "removed": [
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      ],
+      "remoteRequestsAfterStrip": 1
+    }
+  ],
+  "chosen": [
+    "startbootstrap-heroic-features",
+    "startbootstrap-agency",
+    "startbootstrap-full-width-pics",
+    "startbootstrap-bare",
+    "startbootstrap-shop-item",
+    "startbootstrap-small-business"
+  ],
+  "reimported": "2026-11-18T02:09:21.716Z",
+  "imported": {
+    "startbootstrap-heroic-features": {
+      "version": "5.0.6",
+      "pages": [
+        "index.html"
+      ],
+      "removed": [
+        "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css",
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      ],
+      "remoteLeft": 0,
+      "localized": [],
+      "unknownImages": [],
+      "failedLocal": [],
+      "remoteRequests": 0,
+      "textChars": 794
+    },
+    "startbootstrap-agency": {
+      "version": "7.0.12",
+      "pages": [
+        "index.html"
+      ],
+      "removed": [
+        "https://use.fontawesome.com/releases/v6.3.0/js/all.js",
+        "https://fonts.googleapis.com/css?family=Montserrat:400,700",
+        "https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700",
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js",
+        "https://cdn.startbootstrap.com/sb-forms-latest.js"
+      ],
+      "remoteLeft": 0,
+      "localized": [],
+      "unknownImages": [],
+      "failedLocal": [],
+      "remoteRequests": 0,
+      "textChars": 2276
+    },
+    "startbootstrap-full-width-pics": {
+      "version": "5.0.6",
+      "pages": [
+        "index.html"
+      ],
+      "removed": [
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      ],
+      "remoteLeft": 0,
+      "localized": [
+        "https://source.unsplash.com/wfh8dDlNFOk/1600x900",
+        "https://dummyimage.com/150x150/6c757d/dee2e6.jpg",
+        "https://source.unsplash.com/4ulffa6qoKA/1200x800"
+      ],
+      "unknownImages": [],
+      "failedLocal": [],
+      "remoteRequests": 0,
+      "textChars": 765
+    },
+    "startbootstrap-bare": {
+      "version": "5.0.9",
+      "pages": [
+        "index.html"
+      ],
+      "removed": [
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      ],
+      "remoteLeft": 0,
+      "localized": [],
+      "unknownImages": [],
+      "failedLocal": [],
+      "remoteRequests": 0,
+      "textChars": 136
+    },
+    "startbootstrap-shop-item": {
+      "version": "5.0.6",
+      "pages": [
+        "index.html"
+      ],
+      "removed": [
+        "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css",
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      ],
+      "remoteLeft": 0,
+      "localized": [
+        "https://dummyimage.com/600x700/dee2e6/6c757d.jpg",
+        "https://dummyimage.com/450x300/dee2e6/6c757d.jpg",
+        "https://dummyimage.com/450x300/dee2e6/6c757d.jpg",
+        "https://dummyimage.com/450x300/dee2e6/6c757d.jpg",
+        "https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
+      ],
+      "unknownImages": [],
+      "failedLocal": [],
+      "remoteRequests": 0,
+      "textChars": 524
+    },
+    "startbootstrap-small-business": {
+      "version": "5.0.6",
+      "pages": [
+        "index.html"
+      ],
+      "removed": [
+        "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      ],
+      "remoteLeft": 0,
+      "localized": [
+        "https://dummyimage.com/900x400/dee2e6/6c757d.jpg"
+      ],
+      "unknownImages": [],
+      "failedLocal": [],
+      "remoteRequests": 0,
+      "textChars": 1014
+    }
+  }
+}

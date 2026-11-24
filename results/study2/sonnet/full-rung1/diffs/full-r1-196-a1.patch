@@ -1,0 +1,18 @@
+diff --git a/try.mjs b/try.mjs
+new file mode 100644
+index 0000000..7be4c5f
+--- /dev/null
++++ b/try.mjs
+@@ -0,0 +1,12 @@
++import { chromium } from '@playwright/test';
++import fs from 'fs';
++import {createRequire} from 'module';
++const css = process.argv[2];
++const b = await chromium.launch();
++const p = await b.newPage({viewport:{width:1280,height:800}});
++await p.goto('http://127.0.0.1:'+process.env.PORT+'/');
++if(css) await p.addStyleTag({content:css});
++await p.evaluate(()=>document.fonts.ready);
++await p.screenshot({path:process.env.TMPDIR+'/o.png',fullPage:true});
++console.log(await p.evaluate(()=>{const s=getComputedStyle(document.querySelector('#services p'));return [s.fontFamily.slice(0,30),s.fontSize,s.letterSpacing,s.fontWeight,s.fontKerning,s.textRendering,s.fontVariationSettings,s.fontOpticalSizing,s.width]}));
++await b.close();

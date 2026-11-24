@@ -1,0 +1,13 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 34be173..ff6c520 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -42,7 +42,7 @@
+   --bs-danger: #dc3545;
+   --bs-light: #f8f9fa;
+   --bs-dark: #212529;
+-  --bs-primary-rgb: 253, 156, 13;
++  --bs-primary-rgb: 13, 110, 253;
+   --bs-secondary-rgb: 108, 117, 125;
+   --bs-success-rgb: 25, 135, 84;
+   --bs-info-rgb: 13, 202, 240;

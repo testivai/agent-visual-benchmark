@@ -1,0 +1,22 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 90835a7..a5a7185 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -3747,7 +3747,7 @@ textarea.form-control-lg {
+   --bs-navbar-toggler-focus-width: 0.25rem;
+   --bs-navbar-toggler-transition: box-shadow 0.15s ease-in-out;
+   position: relative;
+-  display: inline-block;
++  display: flex;
+   flex-wrap: wrap;
+   align-items: center;
+   justify-content: space-between;
+@@ -4168,7 +4168,7 @@ textarea.form-control-lg {
+   --bs-card-group-margin: 0.75rem;
+   position: relative;
+   display: flex;
+-  flex-direction: row;
++  flex-direction: column;
+   min-width: 0;
+   height: var(--bs-card-height);
+   word-wrap: break-word;

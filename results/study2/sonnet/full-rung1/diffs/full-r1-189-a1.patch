@@ -1,0 +1,13 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 7f96b9d..d4a7591 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -11004,7 +11004,7 @@ header.masthead .masthead-heading {
+   background: rgba(255, 200, 0, 0.9);
+   align-items: center;
+   justify-content: center;
+-  opacity: 1;
++  opacity: 0;
+   transition: opacity ease-in-out 0.25s;
+ }
+ #portfolio .portfolio-item .portfolio-link .portfolio-hover .portfolio-hover-content {

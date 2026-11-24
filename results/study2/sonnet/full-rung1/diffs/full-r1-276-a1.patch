@@ -1,0 +1,13 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 6be7ccd..ff6c520 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -11554,6 +11554,6 @@ textarea.form-control-lg {
+   align-items: center;
+   justify-content: center;
+   height: 4rem;
+-  width: 6rem;
++  width: 4rem;
+   font-size: 2rem;
+ }
+\ No newline at end of file

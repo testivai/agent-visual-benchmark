@@ -136,13 +136,13 @@ export function analyze(records, { arms = ['A', 'B', 'C'], resamples = 10000, se
   };
 }
 
-const pct = (x) => (x === null || x === undefined ? 'n/a' : `${(x * 100).toFixed(0)}%`);
-const ci = (w) => (w.rate === null ? 'n/a' : `${pct(w.rate)} (${pct(w.low)} to ${pct(w.high)})`);
-const num = (x, d = 0) => (x === null || x === undefined ? 'n/a' : Number(x).toFixed(d));
-const usd = (x) => (x === null || x === undefined ? 'n/a' : `$${Number(x).toFixed(2)}`);
-const signed = (x) => (x === null ? 'n/a' : `${x >= 0 ? '+' : ''}${(x * 100).toFixed(0)} points`);
+export const pct = (x) => (x === null || x === undefined ? 'n/a' : `${(x * 100).toFixed(0)}%`);
+export const ci = (w) => (w.rate === null ? 'n/a' : `${pct(w.rate)} (${pct(w.low)} to ${pct(w.high)})`);
+export const num = (x, d = 0) => (x === null || x === undefined ? 'n/a' : Number(x).toFixed(d));
+export const usd = (x) => (x === null || x === undefined ? 'n/a' : `$${Number(x).toFixed(2)}`);
+export const signed = (x) => (x === null ? 'n/a' : `${x >= 0 ? '+' : ''}${(x * 100).toFixed(0)} points`);
 
-function armTable(result, arms) {
+export function armTable(result, arms) {
   return [
     '| arm | runs | success (95% Wilson) | false "done" | collateral broken | tampered | median turns | median tokens | median seconds (agent) | median cost |',
     '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |',
@@ -153,7 +153,7 @@ function armTable(result, arms) {
   ];
 }
 
-function groupTable(groups, arms, label) {
+export function groupTable(groups, arms, label) {
   return [
     `| ${label} | ${arms.join(' | ')} |`,
     `| --- | ${arms.map(() => '---').join(' | ')} |`,
@@ -161,7 +161,7 @@ function groupTable(groups, arms, label) {
   ];
 }
 
-function taskRows(tasks, arms) {
+export function taskRows(tasks, arms) {
   if (tasks.length === 0) return ['None.'];
   return [
     `| task | type | category | ${arms.join(' | ')} |`,
@@ -170,7 +170,7 @@ function taskRows(tasks, arms) {
   ];
 }
 
-function pairedTable(set) {
+export function pairedTable(set) {
   const rows = Object.entries(set).filter(([key]) => key !== 'tasks');
   return [
     '| comparison | tasks | mean difference | 95% bootstrap interval | one-sided 95%: above |',
@@ -227,7 +227,7 @@ function strictPrimary(result, arm) {
 }
 
 // rederived: { checked, missing, changed: [{ run_id, attempt, fields }] } from rederive.mjs
-function rederivedNote(rederived) {
+export function rederivedNote(rederived) {
   if (!rederived) return [];
   const list = rederived.changed.map((c) => `${c.run_id} (${c.fields.join(', ')})`).join(', ');
   return [

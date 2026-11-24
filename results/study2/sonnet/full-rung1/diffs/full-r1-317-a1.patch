@@ -1,0 +1,22 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index d1b9d29..c29675b 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -10981,7 +10981,7 @@ header.masthead .masthead-heading {
+   }
+   header.masthead .masthead-heading {
+     font-size: 4.5rem;
+-    font-weight: 400;
++    font-weight: 700;
+     line-height: 4.5rem;
+     margin-bottom: 4rem;
+   }
+@@ -11017,7 +11017,7 @@ header.masthead .masthead-heading {
+ #portfolio .portfolio-item .portfolio-caption {
+   padding: 1.5rem;
+   text-align: center;
+-  background-color: #000000;
++  background-color: #fff;
+ }
+ #portfolio .portfolio-item .portfolio-caption .portfolio-caption-heading {
+   font-size: 1.5rem;

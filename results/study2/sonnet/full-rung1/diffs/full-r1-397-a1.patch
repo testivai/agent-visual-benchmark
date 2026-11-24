@@ -1,0 +1,22 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index d33d8f0..55fd5cd 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -7667,7 +7667,7 @@ textarea.form-control-lg {
+ }
+ 
+ .mb-5 {
+-  margin-bottom: 4.5rem !important;
++  margin-bottom: 3rem !important;
+ }
+ 
+ .mb-auto {
+@@ -7785,7 +7785,7 @@ textarea.form-control-lg {
+ }
+ 
+ .mt-n4 {
+-  margin-top: -1.5rem !important;
++  margin-top: -0.875rem !important;
+ }
+ 
+ .mt-n5 {

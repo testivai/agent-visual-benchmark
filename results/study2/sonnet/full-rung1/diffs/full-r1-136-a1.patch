@@ -1,0 +1,31 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 2ccf8f5..a5a7185 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -670,7 +670,7 @@ progress {
+   --bs-gutter-x: 1.5rem;
+   --bs-gutter-y: 0;
+   display: flex;
+-  flex-wrap: nowrap;
++  flex-wrap: wrap;
+   margin-top: calc(-1 * var(--bs-gutter-y));
+   margin-right: calc(-0.5 * var(--bs-gutter-x));
+   margin-left: calc(-0.5 * var(--bs-gutter-x));
+@@ -2844,7 +2844,7 @@ textarea.form-control-lg {
+ }
+ 
+ .btn-primary {
+-  --bs-btn-color: #000000;
++  --bs-btn-color: #fff;
+   --bs-btn-bg: #0d6efd;
+   --bs-btn-border-color: #0d6efd;
+   --bs-btn-hover-color: #fff;
+@@ -3842,7 +3842,7 @@ textarea.form-control-lg {
+ 
+ .navbar-toggler-icon {
+   display: inline-block;
+-  width: 2.25em;
++  width: 1.5em;
+   height: 1.5em;
+   vertical-align: middle;
+   background-image: var(--bs-navbar-toggler-icon-bg);

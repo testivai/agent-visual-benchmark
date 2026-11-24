@@ -1,0 +1,31 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 59b8165..a5a7185 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -634,7 +634,7 @@ progress {
+ .container-sm {
+   --bs-gutter-x: 1.5rem;
+   --bs-gutter-y: 0;
+-  width: 50%;
++  width: 100%;
+   padding-right: calc(var(--bs-gutter-x) * 0.5);
+   padding-left: calc(var(--bs-gutter-x) * 0.5);
+   margin-right: auto;
+@@ -7581,7 +7581,7 @@ textarea.form-control-lg {
+ }
+ 
+ .my-5 {
+-  margin-top: 1.5rem !important;
++  margin-top: 3rem !important;
+   margin-bottom: 3rem !important;
+ }
+ 
+@@ -9660,7 +9660,7 @@ textarea.form-control-lg {
+   }
+   .px-lg-5 {
+     padding-right: 3rem !important;
+-    padding-left: 4.5rem !important;
++    padding-left: 3rem !important;
+   }
+   .py-lg-0 {
+     padding-top: 0 !important;

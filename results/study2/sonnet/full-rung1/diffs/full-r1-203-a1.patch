@@ -1,0 +1,22 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 268bd6a..41cb9d2 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -487,7 +487,7 @@ progress {
+ }
+ 
+ .lead {
+-  font-size: 1.875rem;
++  font-size: 1.25rem;
+   font-weight: 300;
+ }
+ 
+@@ -634,7 +634,7 @@ progress {
+ .container-sm {
+   --bs-gutter-x: 1.5rem;
+   --bs-gutter-y: 0;
+-  width: 150%;
++  width: 100%;
+   padding-right: calc(var(--bs-gutter-x) * 0.5);
+   padding-left: calc(var(--bs-gutter-x) * 0.5);
+   margin-right: auto;

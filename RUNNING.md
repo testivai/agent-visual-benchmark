@@ -124,3 +124,53 @@ results/probe/        probe and image-check transcripts, image-check.jsonl
 Credentials are removed from every transcript, diff and error before it is written (any value of
 `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, `CLAUDE_CODE_OAUTH_TOKEN` or `DEEPSEEK_API_KEY`, and
 anything shaped like an Anthropic key). Read through the results before publishing them anyway.
+
+## Study 2
+
+Study 2 (`study2/PREREGISTRATION.md`) runs through the same runner, agent, limits and isolation,
+with `--study 2`. Arms B and C only; results go to `results/study2/<model>/<phase>/`.
+
+1. **The seeds are written at the freeze,** in `study2/PREREGISTRATION.md` ("Seeds") and in
+   `study2/study.config.json`; a test checks that the two agree. Without them, or without the task
+   set generated with `seeds.generation`, `plan --study 2` refuses.
+2. **The task set,** with the generation seed written first:
+
+   ```bash
+   node study2/generate-tasks.mjs --seed 2026111901 --out study2 --rung 1   # seeds.generation
+   node study2/validate-tasks.mjs study2/tasks.json --arms   # every task, and each arm's own test
+   ```
+
+   `--rung` is the difficulty ladder's rung (section 7). The study ran at rung 1, after the first
+   pilot at rung 0 was too easy; the rung 0 set is kept as `study2/tasks-rung0.json`.
+
+   `--arms` builds every template (site × arm × clean or drifted baselines) and runs each arm's
+   visual test in each task's workspace. Every task must pass before the freeze.
+3. **Prepare and check, at no cost:**
+
+   ```bash
+   node runner/run.mjs plan    --study 2 --phase pilot
+   node runner/run.mjs prepare --study 2   # templates, and the scorer's measurements
+   node runner/run.mjs check
+   node runner/run.mjs probe                # the isolation, as in study 1
+   ```
+
+4. **The pilot,** then the arm-blind calibration (never per arm before the freeze):
+
+   ```bash
+   node runner/run.mjs dry-run --study 2 --phase pilot
+   node runner/run.mjs start   --study 2 --phase pilot
+   node study2/calibrate.mjs results/study2/sonnet/pilot-rung1/runs.jsonl study2/tasks.json --rung 1
+   ```
+
+   A rung above 0 adds `-rung<n>` to the results folder (`pilot-rung1`, `full-rung1`).
+
+5. **The full study and its analysis:**
+
+   ```bash
+   node runner/run.mjs start --study 2 --phase full
+   node study2/analyze.mjs results/study2/sonnet/full-rung1/runs.jsonl study2/tasks.json \
+     --write --pilot results/study2/sonnet/pilot-rung1/calibration.json
+   ```
+
+   The JSON goes to stdout; `--write` also writes `summary.md` and `analysis.json` beside
+   `runs.jsonl`. The write-up is `study2/RESULTS.md`.

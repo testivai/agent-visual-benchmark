@@ -1,0 +1,22 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 01f6432..33c7833 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -361,7 +361,7 @@ textarea {
+ 
+ button,
+ select {
+-  text-transform: uppercase;
++  text-transform: none;
+ }
+ 
+ [role=button] {
+@@ -1421,7 +1421,7 @@ progress {
+   }
+   .row-cols-xl-4 > * {
+     flex: 0 0 auto;
+-    width: 37.5%;
++    width: 25%;
+   }
+   .row-cols-xl-5 > * {
+     flex: 0 0 auto;

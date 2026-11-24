@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { runOne } from './run-one.mjs';
-import { ensureTemplate } from './templates.mjs';
+import { STUDY1 } from './study1.mjs';
 import { waitFor } from './limits.mjs';
 
 export function readRecords(file) {
@@ -51,9 +51,18 @@ export async function executePlan({
   const file = path.join(resultsDir, 'runs.jsonl');
   const done = finishedRuns(readRecords(file));
   const pending = plan.runs.filter((r) => !done.has(r.runId));
+  const study = context.study ?? STUDY1;
   const templates = {};
-  for (const arm of [...new Set(pending.map((r) => r.arm))].sort()) {
-    templates[arm] = await ensureTemplate({ benchRoot, arm, cacheRoot: path.join(benchRoot, '.cache', 'runner'), log });
+  for (const run of [...pending].sort((a, b) => study.templateKey(a).localeCompare(study.templateKey(b)))) {
+    const key = study.templateKey(run);
+    if (!templates[key]) templates[key] = await study.template({ benchRoot, run, log });
+  }
+  // anything the study needs ready before any agent starts (study 2: the scorer's measurements)
+  const prepared = new Set();
+  for (const run of pending) {
+    if (!study.prepareTask || prepared.has(run.task)) continue;
+    prepared.add(run.task);
+    await study.prepareTask({ benchRoot, run, log });
   }
   await pool(pending, config.concurrency, async (run) => {
     let attempt = nextAttempt(readRecords(file), run.runId);
@@ -61,7 +70,7 @@ export async function executePlan({
     while (errorsOf(readRecords(file), run.runId) < 2) {
       const record = await runOne({
         benchRoot, config, run, phase: plan.phase, attempt, resultsDir,
-        context: { ...context, templateDir: templates[run.arm].dir, extraEnv: { ...(context.extraEnv ?? {}), ...extraEnvFor(run, attempt) } },
+        context: { ...context, templateDir: templates[study.templateKey(run)].dir, extraEnv: { ...(context.extraEnv ?? {}), ...extraEnvFor(run, attempt) } },
       });
       fs.appendFileSync(file, `${JSON.stringify(record)}\n`);
       log(`${run.runId} ${run.task}/${run.arm}#${run.repeat} attempt ${attempt}: ${record.error ? `error (${record.error.stage})` : record.success ? 'success' : 'failure'}`);
