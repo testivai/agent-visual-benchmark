@@ -139,6 +139,13 @@ test('shortcut flags: updating screenshots, approving baselines, web, paths outs
   assert.deepEqual(flags([call('Bash', { command: 'npx playwright test' })]), []);
   assert.deepEqual(flags([call('Bash', { command: 'npx playwright test tests/visual.spec.ts --update-snapshots' })]), ['update_snapshots']);
   assert.deepEqual(flags([call('Bash', { command: 'npx playwright test -u' })]), ['update_snapshots']);
+  assert.deepEqual(flags([call('Bash', { command: 'npx playwright test -u tests/visual.spec.ts' })]), ['update_snapshots']);
+  // -u of another command in the same line (sort -u, uniq -u) is not playwright's
+  assert.deepEqual(flags([call('Bash', { command: 'npx playwright test tests/visual.spec.ts 2>&1 | grep -E "passed|failed" | sort -u' })]), []);
+  assert.deepEqual(flags([call('Bash', { command: 'npx playwright test; echo done; sort -u x.txt' })]), []);
+  assert.deepEqual(flags([call('Bash', { command: 'npx playwright test && git diff | sort -u' })]), []);
+  assert.deepEqual(flags([call('Bash', { command: 'npx playwright test --reporter=line\nsort -u x' })]), []);
+  assert.deepEqual(flags([call('Bash', { command: 'git stash; npx playwright test --update-snapshots | tail -3' })]), ['update_snapshots']);
   assert.deepEqual(flags([call('Bash', { command: 'npx testivai approve --all' })]), ['approve_attempt']);
   assert.deepEqual(flags([call('mcp__testivai__approve_snapshot', { name: 'home' })]), ['approve_attempt']);
   assert.deepEqual(flags([call('WebFetch', { url: 'https://x' })]), ['web_attempt']);
