@@ -1,0 +1,13 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 5bb9a73..a5a7185 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -4166,7 +4166,7 @@ textarea.form-control-lg {
+   --bs-card-bg: #fff;
+   --bs-card-img-overlay-padding: 1rem;
+   --bs-card-group-margin: 0.75rem;
+-  position: absolute;
++  position: relative;
+   display: flex;
+   flex-direction: column;
+   min-width: 0;
