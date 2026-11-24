@@ -1,0 +1,22 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 66d818f..d4a7591 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -166,7 +166,7 @@ h6, .h6 {
+ 
+ p {
+   margin-top: 0;
+-  margin-bottom: 1.5rem;
++  margin-bottom: 1rem;
+ }
+ 
+ abbr[title] {
+@@ -10909,7 +10909,7 @@ p {
+ 
+ @media (min-width: 992px) {
+   #mainNav {
+-    padding-top: 0.75rem;
++    padding-top: 1.5rem;
+     padding-bottom: 1.5rem;
+     border: none;
+     background-color: transparent;
