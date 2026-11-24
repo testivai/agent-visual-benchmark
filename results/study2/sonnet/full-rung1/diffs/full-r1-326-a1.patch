@@ -1,0 +1,22 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 971d5f2..ff6c520 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -165,7 +165,7 @@ h6, .h6 {
+ 
+ p {
+   margin-top: 0;
+-  margin-bottom: 1.5rem;
++  margin-bottom: 1rem;
+ }
+ 
+ abbr[title] {
+@@ -11550,7 +11550,7 @@ textarea.form-control-lg {
+   }
+ }
+ .feature {
+-  display: inline-block;
++  display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   height: 4rem;

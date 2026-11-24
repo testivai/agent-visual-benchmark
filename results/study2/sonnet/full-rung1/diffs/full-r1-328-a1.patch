@@ -1,0 +1,22 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 6bab9f4..d1e4f12 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -61,7 +61,7 @@
+   --bs-body-font-size: 1rem;
+   --bs-body-font-weight: 400;
+   --bs-body-line-height: 1.5;
+-  --bs-body-color: #d6dade;
++  --bs-body-color: #212529;
+   --bs-body-bg: #fff;
+   --bs-border-width: 1px;
+   --bs-border-style: solid;
+@@ -114,7 +114,7 @@ hr {
+ 
+ h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
+   margin-top: 0;
+-  margin-bottom: 0.75rem;
++  margin-bottom: 0.5rem;
+   font-weight: 500;
+   line-height: 1.2;
+ }
