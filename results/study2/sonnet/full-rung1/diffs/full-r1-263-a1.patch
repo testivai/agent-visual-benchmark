@@ -1,0 +1,31 @@
+diff --git a/site/css/styles.css b/site/css/styles.css
+index 97c7308..d4a7591 100644
+--- a/site/css/styles.css
++++ b/site/css/styles.css
+@@ -7033,7 +7033,7 @@ textarea.form-control-lg {
+ }
+ 
+ .d-none {
+-  display: block !important;
++  display: none !important;
+ }
+ 
+ .shadow {
+@@ -11022,7 +11022,7 @@ header.masthead .masthead-heading {
+ #portfolio .portfolio-item .portfolio-caption .portfolio-caption-heading {
+   font-size: 1.5rem;
+   font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+-  font-weight: 400;
++  font-weight: 700;
+   margin-bottom: 0;
+ }
+ #portfolio .portfolio-item .portfolio-caption .portfolio-caption-subheading {
+@@ -11242,7 +11242,7 @@ header.masthead .masthead-heading {
+   text-align: center;
+ }
+ .team-member img {
+-  width: 7rem;
++  width: 14rem;
+   height: 14rem;
+   border: 0.5rem solid rgba(0, 0, 0, 0.1);
+ }
