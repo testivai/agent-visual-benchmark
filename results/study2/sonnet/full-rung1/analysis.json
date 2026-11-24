@@ -1,0 +1,527 @@
+{
+  "runs": {
+    "total": 432,
+    "scored": 432,
+    "errors": 0,
+    "attempts": 432,
+    "errorShare": 0
+  },
+  "h1": {
+    "tasks": 60,
+    "mean": 0.02222222222222223,
+    "lowerOneSided": -0.0055555555555555575,
+    "p": 0.1141
+  },
+  "h2": {
+    "tasks": 60,
+    "ratio": 1.173124990918975,
+    "low": 1.0291385874848136,
+    "high": 1.3290803360301562,
+    "p": 0.0182
+  },
+  "holm": [
+    {
+      "test": "H1",
+      "p": 0.1141,
+      "adjusted": 0.1141,
+      "rejected": false
+    },
+    {
+      "test": "H2",
+      "p": 0.0182,
+      "adjusted": 0.0364,
+      "rejected": true
+    }
+  ],
+  "verdict": {
+    "h1Supported": false,
+    "h2Rejected": true,
+    "killLine": true
+  },
+  "primary": {
+    "tasks": [
+      "s2t01",
+      "s2t03",
+      "s2t04",
+      "s2t05",
+      "s2t07",
+      "s2t08",
+      "s2t09",
+      "s2t11",
+      "s2t12",
+      "s2t13",
+      "s2t14",
+      "s2t15",
+      "s2t16",
+      "s2t17",
+      "s2t18",
+      "s2t19",
+      "s2t20",
+      "s2t21",
+      "s2t23",
+      "s2t24",
+      "s2t25",
+      "s2t27",
+      "s2t28",
+      "s2t29",
+      "s2t30",
+      "s2t31",
+      "s2t32",
+      "s2t33",
+      "s2t34",
+      "s2t35",
+      "s2t36",
+      "s2t39",
+      "s2t41",
+      "s2t43",
+      "s2t45",
+      "s2t46",
+      "s2t47",
+      "s2t49",
+      "s2t50",
+      "s2t51",
+      "s2t52",
+      "s2t53",
+      "s2t54",
+      "s2t55",
+      "s2t56",
+      "s2t57",
+      "s2t58",
+      "s2t59",
+      "s2t60",
+      "s2t61",
+      "s2t62",
+      "s2t63",
+      "s2t64",
+      "s2t65",
+      "s2t66",
+      "s2t67",
+      "s2t68",
+      "s2t69",
+      "s2t70",
+      "s2t72"
+    ],
+    "C-B": {
+      "mean": 0.02222222222222223,
+      "low": -0.011111111111111112,
+      "high": 0.06111111111111112,
+      "lowerOneSided": -0.0055555555555555575,
+      "n": 60
+    }
+  },
+  "decoys": {
+    "tasks": [
+      "s2t02",
+      "s2t06",
+      "s2t10",
+      "s2t22",
+      "s2t26",
+      "s2t37",
+      "s2t38",
+      "s2t40",
+      "s2t42",
+      "s2t44",
+      "s2t48",
+      "s2t71"
+    ],
+    "C-B": {
+      "mean": 0,
+      "low": 0,
+      "high": 0,
+      "lowerOneSided": 0,
+      "n": 12
+    }
+  },
+  "perArm": {
+    "B": {
+      "n": 216,
+      "successes": 202,
+      "wilson": {
+        "rate": 0.9351851851851852,
+        "low": 0.8941596350414283,
+        "high": 0.9610020844844194
+      },
+      "falseDone": {
+        "k": 2,
+        "n": 216,
+        "rate": 0.009259259259259259
+      },
+      "collateralBroken": {
+        "k": 3,
+        "n": 216,
+        "rate": 0.013888888888888888
+      },
+      "tampered": 0,
+      "medianTurns": 17,
+      "medianTokens": 259504.5,
+      "medianSeconds": 43.2565,
+      "medianCost": 0.16575915000000002,
+      "totalCost": 45.43489980000002
+    },
+    "C": {
+      "n": 216,
+      "successes": 206,
+      "wilson": {
+        "rate": 0.9537037037037037,
+        "low": 0.9168903220886465,
+        "high": 0.9746612578425563
+      },
+      "falseDone": {
+        "k": 1,
+        "n": 215,
+        "rate": 0.004651162790697674
+      },
+      "collateralBroken": {
+        "k": 0,
+        "n": 216,
+        "rate": 0
+      },
+      "tampered": 0,
+      "medianTurns": 16,
+      "medianTokens": 337826.5,
+      "medianSeconds": 40.1325,
+      "medianCost": 0.1958264,
+      "totalCost": 44.14228559999999
+    }
+  },
+  "byStratum": {
+    "S1": {
+      "B": {
+        "n": 60,
+        "successes": 58,
+        "wilson": {
+          "rate": 0.9666666666666667,
+          "low": 0.886362256341505,
+          "high": 0.9908106808265498
+        },
+        "falseDone": {
+          "k": 2,
+          "n": 60,
+          "rate": 0.03333333333333333
+        },
+        "collateralBroken": {
+          "k": 1,
+          "n": 60,
+          "rate": 0.016666666666666666
+        },
+        "tampered": 0,
+        "medianTurns": 13,
+        "medianTokens": 183575.5,
+        "medianSeconds": 32.8405,
+        "medianCost": 0.13023764999999998,
+        "totalCost": 8.4385469
+      },
+      "C": {
+        "n": 60,
+        "successes": 59,
+        "wilson": {
+          "rate": 0.9833333333333333,
+          "low": 0.9114487018291041,
+          "high": 0.9970518402378096
+        },
+        "falseDone": {
+          "k": 1,
+          "n": 59,
+          "rate": 0.01694915254237288
+        },
+        "collateralBroken": {
+          "k": 0,
+          "n": 60,
+          "rate": 0
+        },
+        "tampered": 0,
+        "medianTurns": 15,
+        "medianTokens": 298453.5,
+        "medianSeconds": 35.72,
+        "medianCost": 0.1692041,
+        "totalCost": 10.966558100000002
+      }
+    },
+    "S2": {
+      "B": {
+        "n": 60,
+        "successes": 59,
+        "wilson": {
+          "rate": 0.9833333333333333,
+          "low": 0.9114487018291041,
+          "high": 0.9970518402378096
+        },
+        "falseDone": {
+          "k": 0,
+          "n": 60,
+          "rate": 0
+        },
+        "collateralBroken": {
+          "k": 0,
+          "n": 60,
+          "rate": 0
+        },
+        "tampered": 0,
+        "medianTurns": 17,
+        "medianTokens": 253793,
+        "medianSeconds": 40.783500000000004,
+        "medianCost": 0.16704635,
+        "totalCost": 10.2423878
+      },
+      "C": {
+        "n": 60,
+        "successes": 60,
+        "wilson": {
+          "rate": 1,
+          "low": 0.9398281469657729,
+          "high": 1
+        },
+        "falseDone": {
+          "k": 0,
+          "n": 60,
+          "rate": 0
+        },
+        "collateralBroken": {
+          "k": 0,
+          "n": 60,
+          "rate": 0
+        },
+        "tampered": 0,
+        "medianTurns": 17,
+        "medianTokens": 360251,
+        "medianSeconds": 39.487,
+        "medianCost": 0.2093492,
+        "totalCost": 12.714790800000001
+      }
+    },
+    "S3": {
+      "B": {
+        "n": 60,
+        "successes": 49,
+        "wilson": {
+          "rate": 0.8166666666666667,
+          "low": 0.7008024615073325,
+          "high": 0.8944220315709903
+        },
+        "falseDone": {
+          "k": 0,
+          "n": 60,
+          "rate": 0
+        },
+        "collateralBroken": {
+          "k": 2,
+          "n": 60,
+          "rate": 0.03333333333333333
+        },
+        "tampered": 0,
+        "medianTurns": 26.5,
+        "medianTokens": 632418.5,
+        "medianSeconds": 115.619,
+        "medianCost": 0.3051868,
+        "totalCost": 18.850751499999998
+      },
+      "C": {
+        "n": 60,
+        "successes": 51,
+        "wilson": {
+          "rate": 0.85,
+          "low": 0.7388541082856404,
+          "high": 0.9190255945904007
+        },
+        "falseDone": {
+          "k": 0,
+          "n": 60,
+          "rate": 0
+        },
+        "collateralBroken": {
+          "k": 0,
+          "n": 60,
+          "rate": 0
+        },
+        "tampered": 0,
+        "medianTurns": 19,
+        "medianTokens": 440614.5,
+        "medianSeconds": 50.5025,
+        "medianCost": 0.24218485,
+        "totalCost": 14.752331600000002
+      }
+    },
+    "S4": {
+      "B": {
+        "n": 36,
+        "successes": 36,
+        "wilson": {
+          "rate": 1,
+          "low": 0.9035813700311206,
+          "high": 1
+        },
+        "falseDone": {
+          "k": 0,
+          "n": 36,
+          "rate": 0
+        },
+        "collateralBroken": {
+          "k": 0,
+          "n": 36,
+          "rate": 0
+        },
+        "tampered": 0,
+        "medianTurns": 12,
+        "medianTokens": 193382,
+        "medianSeconds": 33.359,
+        "medianCost": 0.15576805,
+        "totalCost": 7.9032136
+      },
+      "C": {
+        "n": 36,
+        "successes": 36,
+        "wilson": {
+          "rate": 1,
+          "low": 0.9035813700311206,
+          "high": 1
+        },
+        "falseDone": {
+          "k": 0,
+          "n": 36,
+          "rate": 0
+        },
+        "collateralBroken": {
+          "k": 0,
+          "n": 36,
+          "rate": 0
+        },
+        "tampered": 0,
+        "medianTurns": 13,
+        "medianTokens": 232411,
+        "medianSeconds": 30.227,
+        "medianCost": 0.15793915,
+        "totalCost": 5.708605099999999
+      }
+    }
+  },
+  "partialCredit": {
+    "perArm": {
+      "B": {
+        "runs": 60,
+        "meanShare": 0.9944444444444444
+      },
+      "C": {
+        "runs": 60,
+        "meanShare": 1
+      }
+    },
+    "paired": {
+      "mean": 0.005555555555555558,
+      "low": 0,
+      "high": 0.016666666666666673,
+      "lowerOneSided": 0,
+      "n": 20
+    }
+  },
+  "bBeatC": [
+    {
+      "task": "s2t25",
+      "type": "fix",
+      "category": "S1",
+      "B": 1,
+      "nB": 3,
+      "C": 0.6666666666666666,
+      "nC": 3
+    },
+    {
+      "task": "s2t45",
+      "type": "fix",
+      "category": "S3",
+      "B": 1,
+      "nB": 3,
+      "C": 0.6666666666666666,
+      "nC": 3
+    },
+    {
+      "task": "s2t68",
+      "type": "fix",
+      "category": "S3",
+      "B": 0.3333333333333333,
+      "nB": 3,
+      "C": 0,
+      "nC": 3
+    }
+  ],
+  "cBeatB": [
+    {
+      "task": "s2t07",
+      "type": "fix",
+      "category": "S3",
+      "B": 0.6666666666666666,
+      "nB": 3,
+      "C": 1,
+      "nC": 3
+    },
+    {
+      "task": "s2t08",
+      "type": "fix",
+      "category": "S1",
+      "B": 0.6666666666666666,
+      "nB": 3,
+      "C": 1,
+      "nC": 3
+    },
+    {
+      "task": "s2t49",
+      "type": "fix",
+      "category": "S3",
+      "B": 0.3333333333333333,
+      "nB": 3,
+      "C": 1,
+      "nC": 3
+    },
+    {
+      "task": "s2t50",
+      "type": "fix",
+      "category": "S1",
+      "B": 0.6666666666666666,
+      "nB": 3,
+      "C": 1,
+      "nC": 3
+    },
+    {
+      "task": "s2t59",
+      "type": "fix",
+      "category": "S3",
+      "B": 0.6666666666666666,
+      "nB": 3,
+      "C": 1,
+      "nC": 3
+    },
+    {
+      "task": "s2t66",
+      "type": "fix",
+      "category": "S2",
+      "B": 0.6666666666666666,
+      "nB": 3,
+      "C": 1,
+      "nC": 3
+    }
+  ],
+  "cost": {
+    "meanPerRun": 0.20735459583333357,
+    "medianPerRun": 0.18013685000000002,
+    "meanSecondsPerRun": 57.52615740740739,
+    "total": 89.5771854000001,
+    "projectedFull": 89.5771854000001,
+    "fullRuns": 432
+  },
+  "errored": [],
+  "flags": {
+    "B": {
+      "outside_workspace": 11,
+      "searched_disk": 7,
+      "viewed_baseline": 54
+    },
+    "C": {
+      "viewed_baseline": 132,
+      "outside_workspace": 1,
+      "searched_disk": 2
+    }
+  },
+  "rederived": {
+    "checked": 432,
+    "missing": 0,
+    "changed": 16
+  }
+}
