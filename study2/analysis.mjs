@@ -70,7 +70,7 @@ function byTask(runs, value) {
   return [...out.values()].filter((t) => t.B.length > 0 && t.C.length > 0);
 }
 
-function tokensTest(primaryRuns, options) {
+export function tokensTest(primaryRuns, options) {
   const logRatios = byTask(primaryRuns, totalTokens)
     .map((t) => [median(t.C), median(t.B)])
     .filter(([c, b]) => c > 0 && b > 0)
